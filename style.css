@@ -6,6 +6,4 @@ body {
 
 canvas {
     display: block;
-    background: url('space-background.jpg') no-repeat center center;
-    background-size: cover;
 }
