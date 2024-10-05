@@ -16,6 +16,11 @@ canvas {
     margin-top: 10px;
 }
 
+#upgradeMenu {
+    margin-top: 20px;
+    display: inline-block;
+}
+
 button {
     margin: 5px;
     padding: 10px;
