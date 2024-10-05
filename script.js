@@ -3,67 +3,72 @@ const wordInput = document.getElementById('word-input');
 const timeDisplay = document.getElementById('time');
 const scoreDisplay = document.getElementById('score');
 const startButton = document.getElementById('start-button');
-const tpsDisplay = document.getElementById('tps');
+const logoutButton = document.getElementById('logout-button');
+
+// Auth elements
+const authContainer = document.getElementById('auth-container');
+const gameContainer = document.getElementById('game-container');
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
-const gameContainer = document.getElementById('game-container');
-const authContainer = document.getElementById('auth-container');
 
-let users = {};  // Store registered users in-memory
-let currentUser = null;  // Keep track of the logged-in user
+// Login form inputs
+const loginUsername = document.getElementById('login-username');
+const loginPassword = document.getElementById('login-password');
+const loginButton = document.getElementById('login-button');
+
+// Register form inputs
+const registerUsername = document.getElementById('register-username');
+const registerPassword = document.getElementById('register-password');
+const registerButton = document.getElementById('register-button');
+
+// Toggle forms
+const showRegister = document.getElementById('show-register');
+const showLogin = document.getElementById('show-login');
 
 const words = ['javascript', 'coding', 'challenge', 'programming', 'fast', 'game', 'developer', 'function', 'variable', 'script'];
 
 let time = 10;
 let score = 0;
-let correctWords = 0;
-let startTime = 0;
 let currentWord = '';
 let isPlaying = false;
 let timerInterval;
 
-// Event Listeners for Login/Register
-document.getElementById('login-btn').addEventListener('click', login);
-document.getElementById('register-btn').addEventListener('click', register);
-document.getElementById('register-link').addEventListener('click', showRegisterForm);
-document.getElementById('login-link').addEventListener('click', showLoginForm);
+// Check if user is logged in
+if (localStorage.getItem('loggedInUser')) {
+    showGame();
+} else {
+    showAuth();
+}
 
-function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+// Register functionality
+registerButton.addEventListener('click', function() {
+    const username = registerUsername.value;
+    const password = registerPassword.value;
 
-    if (users[username] && users[username] === password) {
-        currentUser = username;
-        alert(`Welcome, ${username}!`);
-        authContainer.style.display = 'none';
-        gameContainer.style.display = 'block';
+    if (username && password) {
+        localStorage.setItem(username, password);
+        alert('Registration successful!');
+        showLoginForm();
+    } else {
+        alert('Please enter both a username and password.');
+    }
+});
+
+// Login functionality
+loginButton.addEventListener('click', function() {
+    const username = loginUsername.value;
+    const password = loginPassword.value;
+    
+    const storedPassword = localStorage.getItem(username);
+
+    if (storedPassword && storedPassword === password) {
+        localStorage.setItem('loggedInUser', username);
+        alert('Login successful!');
+        showGame();
     } else {
         alert('Invalid username or password.');
     }
-}
-
-function register() {
-    const username = document.getElementById('register-username').value;
-    const password = document.getElementById('register-password').value;
-
-    if (username && password && !users[username]) {
-        users[username] = password;
-        alert('Account registered successfully! You can now login.');
-        showLoginForm();
-    } else {
-        alert('Username already exists or invalid details.');
-    }
-}
-
-function showRegisterForm() {
-    loginForm.style.display = 'none';
-    registerForm.style.display = 'block';
-}
-
-function showLoginForm() {
-    loginForm.style.display = 'block';
-    registerForm.style.display = 'none';
-}
+});
 
 // Start Game
 startButton.addEventListener('click', startGame);
@@ -72,8 +77,6 @@ function startGame() {
     if (isPlaying) return;  // Prevents multiple game starts
     isPlaying = true;
     score = 0;
-    correctWords = 0;
-    startTime = Date.now();
     time = 10;
     wordInput.disabled = false;
     wordInput.focus();
@@ -106,11 +109,6 @@ function endGame() {
     wordInput.disabled = true;
     clearInterval(timerInterval);
     wordDisplay.textContent = `Game Over! Your final score is ${score}.`;
-
-    const elapsedTime = (Date.now() - startTime) / 1000;
-    const tps = (correctWords / elapsedTime).toFixed(2);  // Calculate TPS
-    tpsDisplay.textContent = tps;
-
     startButton.disabled = false;
     startButton.textContent = 'Start Game';
 }
@@ -121,9 +119,40 @@ wordInput.addEventListener('input', checkMatch);
 function checkMatch() {
     if (wordInput.value === currentWord) {
         score++;
-        correctWords++;
         scoreDisplay.textContent = score;
         showNewWord();
         time = 10;  // Reset time for each correct word
     }
+}
+
+// Show game if logged in
+function showGame() {
+    authContainer.style.display = 'none';
+    gameContainer.style.display = 'block';
+}
+
+// Show auth if not logged in
+function showAuth() {
+    authContainer.style.display = 'block';
+    gameContainer.style.display = 'none';
+}
+
+// Logout functionality
+logoutButton.addEventListener('click', function() {
+    localStorage.removeItem('loggedInUser');
+    showAuth();
+});
+
+// Toggle login and register forms
+showRegister.addEventListener('click', showRegisterForm);
+showLogin.addEventListener('click', showLoginForm);
+
+function showRegisterForm() {
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'flex';
+}
+
+function showLoginForm() {
+    loginForm.style.display = 'flex';
+    registerForm.style.display = 'none';
 }
