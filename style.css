@@ -15,3 +15,16 @@ canvas {
 #gameInfo {
     margin-top: 10px;
 }
+
+button {
+    margin: 5px;
+    padding: 10px;
+    background-color: #444;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #777;
+}
