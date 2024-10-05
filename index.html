@@ -3,13 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shooter Game</title>
+    <title>Advanced Website</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="gameContainer">
-        <canvas id="gameCanvas"></canvas>
-    </div>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">MySite</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="theme-toggle">Dark Mode</button>
+    </nav>
+
+    <!-- Main Content -->
+    <section id="home">
+        <div class="hero">
+            <h1>Welcome to My Advanced Website</h1>
+            <p>Building a responsive and interactive site with HTML, CSS, and JavaScript!</p>
+            <button class="cta-btn">Get Started</button>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2>About Us</h2>
+        <p>We are a team of developers creating modern web applications.</p>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <h2>Our Services</h2>
+        <div class="services-container">
+            <div class="service-item">
+                <h3>Web Development</h3>
+                <p>Creating responsive and scalable web apps.</p>
+            </div>
+            <div class="service-item">
+                <h3>Design</h3>
+                <p>Designing beautiful and user-friendly interfaces.</p>
+            </div>
+            <div class="service-item">
+                <h3>SEO Optimization</h3>
+                <p>Improving your website's search engine rankings.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form -->
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <form id="contactForm">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <textarea id="message" placeholder="Your Message"></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+
     <script src="script.js"></script>
 </body>
 </html>
