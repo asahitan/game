@@ -8,26 +8,26 @@
 </head>
 <body>
     <div class="container" id="auth-container">
-        <h1>Fast Typer Game</h1>
-
-        <div id="login-form">
-            <h2>Login</h2>
-            <input type="text" id="login-username" placeholder="Username" required>
-            <input type="password" id="login-password" placeholder="Password" required>
-            <button id="login-button">Login</button>
-            <p>Don't have an account? <a href="#" id="show-register">Register here</a></p>
-        </div>
-
-        <div id="register-form" style="display:none;">
-            <h2>Register</h2>
-            <input type="text" id="register-username" placeholder="Username" required>
-            <input type="password" id="register-password" placeholder="Password" required>
-            <button id="register-button">Register</button>
-            <p>Already have an account? <a href="#" id="show-login">Login here</a></p>
+        <h1>Login or Register</h1>
+        <div id="auth-forms">
+            <div id="login-form">
+                <h2>Login</h2>
+                <input type="text" id="login-username" placeholder="Username" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button id="login-button">Login</button>
+                <p id="login-error" class="error"></p>
+            </div>
+            <div id="register-form">
+                <h2>Register</h2>
+                <input type="text" id="register-username" placeholder="Username" required>
+                <input type="password" id="register-password" placeholder="Password" required>
+                <button id="register-button">Register</button>
+                <p id="register-error" class="error"></p>
+            </div>
         </div>
     </div>
 
-    <div class="container" id="game-container" style="display:none;">
+    <div class="container" id="game-container" style="display: none;">
         <h1>Fast Typer Game</h1>
         <div id="word-display">Click Start to Begin</div>
         <input type="text" id="word-input" placeholder="Type the word here" disabled>
