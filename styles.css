@@ -9,6 +9,13 @@ h1 {
     margin-bottom: 20px;
 }
 
+.controls {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
 #game-board {
     display: grid;
     grid-template-columns: repeat(10, 40px);
@@ -34,4 +41,15 @@ h1 {
 .cell.revealed {
     background-color: #eee;
     cursor: default;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
