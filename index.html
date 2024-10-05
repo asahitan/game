@@ -3,33 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple RPG Game</title>
+    <title>Ultimate RPG Adventure</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="game-container">
-        <h1>Turn-Based RPG Game</h1>
+        <h1>Ultimate RPG Adventure</h1>
 
-        <div class="status-bar">
-            <div class="player-info">
-                <h2>Player</h2>
-                <p>HP: <span id="player-hp">100</span></p>
-                <p>Attack: 10</p>
-            </div>
-
-            <div class="enemy-info">
-                <h2>Enemy</h2>
-                <p>HP: <span id="enemy-hp">50</span></p>
-                <p>Attack: 5</p>
+        <!-- Character Selection Screen -->
+        <div class="character-selection">
+            <h2>Select Your Hero</h2>
+            <div class="characters">
+                <div class="character" id="warrior">
+                    <img src="images/warrior.png" alt="Warrior" class="character-portrait">
+                    <p>Warrior</p>
+                </div>
+                <div class="character" id="mage">
+                    <img src="images/mage.png" alt="Mage" class="character-portrait">
+                    <p>Mage</p>
+                </div>
+                <div class="character" id="archer">
+                    <img src="images/archer.png" alt="Archer" class="character-portrait">
+                    <p>Archer</p>
+                </div>
             </div>
         </div>
 
-        <div class="actions">
-            <button id="attack-btn">Attack</button>
-            <button id="heal-btn">Heal</button>
-        </div>
+        <!-- Battle Area -->
+        <div id="battle-area" class="hidden">
+            <div class="battle-screen">
+                <div class="player-info">
+                    <img src="images/player.png" id="player-sprite" alt="Player Character">
+                    <div class="stats">
+                        <h3>Player: <span id="player-class"></span></h3>
+                        <p>Level: <span id="player-level">1</span></p>
+                        <div class="hp-bar">
+                            <div class="hp-fill" id="player-hp-bar"></div>
+                        </div>
+                        <div class="mana-bar">
+                            <div class="mana-fill" id="player-mana-bar"></div>
+                        </div>
+                    </div>
+                </div>
 
-        <div id="game-message"></div>
+                <div class="enemy-info">
+                    <img src="images/enemy.png" id="enemy-sprite" alt="Enemy Character">
+                    <div class="stats">
+                        <h3>Enemy</h3>
+                        <div class="hp-bar">
+                            <div class="hp-fill" id="enemy-hp-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="attack-btn">Attack</button>
+                <button id="magic-btn">Magic</button>
+                <button id="heal-btn">Heal</button>
+                <button id="inventory-btn">Inventory</button>
+            </div>
+
+            <div id="game-message"></div>
+        </div>
     </div>
 
     <script src="script.js"></script>
