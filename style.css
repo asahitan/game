@@ -95,49 +95,31 @@ h1 {
         font-size: 0.9rem;
     }
 }
-/* Style for login/register form */
-#auth-container {
-    text-align: center;
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    margin: auto;
-}
-
-#error {
-    color: red;
-    margin-top: 10px;
-    font-size: 14px;
-}
-
+/* Add this to the existing style.css */
 input[type="text"], input[type="password"] {
     padding: 10px 15px;
     font-size: 18px;
     border: 2px solid #bdc3c7;
     border-radius: 8px;
     width: 100%;
-    margin-bottom: 20px;
+    max-width: 300px;
+    margin-bottom: 10px;
     outline: none;
+    transition: all 0.2s ease;
 }
 
-button {
-    padding: 10px 30px;
-    font-size: 1rem;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+#auth-container {
+    text-align: center;
 }
 
-button:hover {
-    background-color: #2980b9;
+#auth-container h1 {
+    margin-bottom: 20px;
 }
 
-#error {
-    color: red;
-    margin: 10px 0;
+#auth-container p {
+    margin-top: 10px;
+}
+
+#register-form, #login-form {
+    margin-bottom: 20px;
 }
