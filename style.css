@@ -1,35 +1,115 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Cinzel', serif;
+    background: url('images/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
     text-align: center;
-    background-color: #f4f4f4;
+}
+
+.hidden {
+    display: none;
 }
 
 .game-container {
+    width: 70%;
     margin: 50px auto;
     padding: 20px;
-    width: 400px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 }
 
-.status-bar {
+.character-selection {
+    display: flex;
+    justify-content: center;
+}
+
+.characters {
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
 }
 
-.actions {
-    margin: 20px 0;
+.character {
+    margin: 0 15px;
+    transition: transform 0.3s ease;
 }
 
-button {
-    padding: 10px 20px;
-    margin: 5px;
-    font-size: 16px;
+.character:hover {
+    transform: scale(1.1);
     cursor: pointer;
+}
+
+.character-portrait {
+    width: 150px;
+    height: auto;
+    border-radius: 10px;
+    border: 2px solid #fff;
+}
+
+.battle-screen {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.player-info, .enemy-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#player-sprite, #enemy-sprite {
+    width: 200px;
+    height: auto;
+}
+
+.stats {
+    margin-top: 10px;
+}
+
+.hp-bar, .mana-bar {
+    width: 150px;
+    height: 15px;
+    background-color: #333;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.hp-fill {
+    width: 100%;
+    height: 100%;
+    background-color: #e74c3c;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.mana-fill {
+    width: 100%;
+    height: 100%;
+    background-color: #3498db;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.actions button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #2ecc71;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.actions button:hover {
+    background-color: #27ae60;
 }
 
 #game-message {
     margin-top: 20px;
     font-weight: bold;
+    font-size: 1.2em;
 }
