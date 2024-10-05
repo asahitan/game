@@ -1,115 +1,47 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+// JavaScript for theme toggling and form handling
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// Theme toggle between light and dark mode
+const themeToggle = document.querySelector('.theme-toggle');
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+    if (document.body.classList.contains('dark-theme')) {
+        themeToggle.textContent = 'Light Mode';
+    } else {
+        themeToggle.textContent = 'Dark Mode';
+    }
+});
 
-let player = {
-    x: canvas.width / 2 - 25,
-    y: canvas.height - 100,
-    width: 50,
-    height: 50,
-    speed: 5,
-    movingLeft: false,
-    movingRight: false,
-    bullets: []
+// Form Validation
+const form = document.getElementById('contactForm');
+form.addEventListener('submit', function(event) {
+    event.preventDefault();  // Prevent form from submitting normally
+
+    // Gather form data
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    // Simple form validation
+    if (name === '' || email === '' || message === '') {
+        alert('Please fill out all fields.');
+    } else {
+        alert('Message sent successfully!');
+    }
+});
+
+// Save user's dark mode preference using localStorage
+window.onload = () => {
+    if (localStorage.getItem('dark-mode') === 'enabled') {
+        document.body.classList.add('dark-theme');
+        themeToggle.textContent = 'Light Mode';
+    }
 };
 
-let enemies = [];
-let enemySpeed = 2;
-
-function drawPlayer() {
-    ctx.fillStyle = 'red';
-    ctx.fillRect(player.x, player.y, player.width, player.height);
-}
-
-function movePlayer() {
-    if (player.movingLeft && player.x > 0) {
-        player.x -= player.speed;
-    }
-    if (player.movingRight && player.x + player.width < canvas.width) {
-        player.x += player.speed;
-    }
-}
-
-function shootBullet() {
-    player.bullets.push({
-        x: player.x + player.width / 2 - 5,
-        y: player.y,
-        width: 5,
-        height: 10,
-        speed: 7
-    });
-}
-
-function drawBullets() {
-    player.bullets.forEach((bullet, index) => {
-        ctx.fillStyle = 'yellow';
-        ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-        bullet.y -= bullet.speed;
-
-        // Remove bullets that go off screen
-        if (bullet.y < 0) {
-            player.bullets.splice(index, 1);
-        }
-    });
-}
-
-function createEnemy() {
-    let x = Math.random() * (canvas.width - 50);
-    enemies.push({
-        x: x,
-        y: -50,
-        width: 50,
-        height: 50
-    });
-}
-
-function drawEnemies() {
-    enemies.forEach((enemy, index) => {
-        ctx.fillStyle = 'green';
-        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-        enemy.y += enemySpeed;
-
-        // Remove enemies that go off screen
-        if (enemy.y > canvas.height) {
-            enemies.splice(index, 1);
-        }
-    });
-}
-
-function updateGame() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    drawPlayer();
-    movePlayer();
-    drawBullets();
-    drawEnemies();
-
-    requestAnimationFrame(updateGame);
-}
-
-// Controls
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') {
-        player.movingLeft = true;
-    } else if (e.key === 'ArrowRight') {
-        player.movingRight = true;
-    } else if (e.key === ' ') {
-        shootBullet();
+themeToggle.addEventListener('click', () => {
+    let darkMode = localStorage.getItem('dark-mode');
+    if (darkMode !== 'enabled') {
+        localStorage.setItem('dark-mode', 'enabled');
+    } else {
+        localStorage.setItem('dark-mode', 'disabled');
     }
 });
-
-window.addEventListener('keyup', (e) => {
-    if (e.key === 'ArrowLeft') {
-        player.movingLeft = false;
-    } else if (e.key === 'ArrowRight') {
-        player.movingRight = false;
-    }
-});
-
-// Spawn enemies every 2 seconds
-setInterval(createEnemy, 2000);
-
-// Start the game loop
-updateGame();
