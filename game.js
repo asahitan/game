@@ -6,6 +6,7 @@ canvas.height = 600;
 let enemies = [];
 let towers = [];
 let projectiles = [];
+let enemyProjectiles = [];
 let level = 1;
 let spawnInterval = 100;
 let frames = 0;
@@ -13,6 +14,7 @@ let lives = 10;
 let money = 100;
 let score = 0;
 let gameActive = false;
+let selectedTower = null;
 
 document.getElementById('lives').innerText = lives;
 document.getElementById('money').innerText = money;
@@ -28,17 +30,51 @@ class Enemy {
         this.health = health;
         this.size = 20;
         this.color = color;
+        this.fireRate = 100; // Fires every 100 frames
     }
-    
+
     move() {
         this.y += this.speed;
     }
-    
+
     draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
         ctx.fill();
+    }
+
+    shoot() {
+        if (frames % this.fireRate === 0) {
+            enemyProjectiles.push(new EnemyProjectile(this.x, this.y));
+        }
+    }
+}
+
+// Projectile class for enemy shooting
+class EnemyProjectile {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.speed = 3;
+        this.size = 5;
+    }
+
+    move() {
+        this.y += this.speed;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'red';
+        ctx.fill();
+    }
+
+    hit(tower) {
+        const dx = this.x - tower.x;
+        const dy = this.y - tower.y;
+        return Math.sqrt(dx * dx + dy * dy) < tower.size;
     }
 }
 
@@ -54,7 +90,7 @@ function createEnemy() {
     }
 }
 
-// Tower class with upgrades
+// Tower class with upgrades and HP
 class Tower {
     constructor(x, y) {
         this.x = x;
@@ -62,15 +98,14 @@ class Tower {
         this.range = 100;
         this.fireRate = 50; // Fires every 50 frames
         this.damage = 1;
-        this.type = Math.random() < 0.5 ? 'basic' : 'special'; // Randomly assign a type
-        this.upgradeCost = 50;
-        this.color = this.type === 'basic' ? 'blue' : 'purple';
+        this.health = 10; // Initial HP for towers
+        this.color = 'blue';
     }
 
     shoot() {
         const target = enemies.find(enemy => this.getDistance(enemy) <= this.range);
         if (target && frames % this.fireRate === 0) {
-            projectiles.push(new Projectile(this.x, this.y, target, this.damage, this.type));
+            projectiles.push(new Projectile(this.x, this.y, target, this.damage));
         }
     }
 
@@ -85,26 +120,30 @@ class Tower {
         ctx.arc(this.x, this.y, 20, 0, Math.PI * 2);
         ctx.fillStyle = this.color;
         ctx.fill();
+
+        // Draw HP bar
+        ctx.fillStyle = 'green';
+        ctx.fillRect(this.x - 10, this.y - 25, (this.health / 10) * 20, 5);
     }
 
     upgrade() {
-        if (money >= this.upgradeCost) {
+        if (money >= 50) {
             this.damage++;
-            money -= this.upgradeCost;
-            this.upgradeCost += 20; // Increase upgrade cost
+            this.health += 5; // Increase HP on upgrade
+            money -= 50;
+            document.getElementById('money').innerText = money;
         }
     }
 }
 
-// Projectile class with unique effects
+// Projectile class for towers
 class Projectile {
-    constructor(x, y, target, damage, type) {
+    constructor(x, y, target, damage) {
         this.x = x;
         this.y = y;
         this.target = target;
         this.speed = 5;
         this.damage = damage;
-        this.type = type;
     }
 
     move() {
@@ -116,7 +155,7 @@ class Projectile {
     draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
-        ctx.fillStyle = this.type === 'basic' ? 'yellow' : 'orange'; // Different color for special projectiles
+        ctx.fillStyle = 'yellow';
         ctx.fill();
     }
 
@@ -139,6 +178,7 @@ function gameLoop() {
     // Move and draw enemies
     enemies.forEach((enemy, index) => {
         enemy.move();
+        enemy.shoot(); // Enemies shoot at towers
         enemy.draw();
         
         // Remove enemies that reach the bottom
@@ -172,41 +212,39 @@ function gameLoop() {
                 score += 10; // Gain score for defeating an enemy
                 money += 20; // Gain money for defeating an enemy
                 document.getElementById('money').innerText = money;
-                document.getElementById('score').innerText = score;
             }
             projectiles.splice(index, 1);
         }
     });
-    
+
+    // Move and draw enemy projectiles
+    enemyProjectiles.forEach((ep, index) => {
+        ep.move();
+        ep.draw();
+        
+        // Check if enemy projectile hits a tower
+        towers.forEach(tower => {
+            if (ep.hit(tower)) {
+                tower.health -= 1; // Damage tower
+                enemyProjectiles.splice(index, 1);
+                if (tower.health <= 0) {
+                    towers.splice(towers.indexOf(tower), 1);
+                }
+            }
+        });
+    });
+
+    // Update frames and score display
     frames++;
-    
-    // Increase difficulty over time
-    if (frames % 1000 === 0) {
-        level++;
-        spawnInterval = Math.max(20, spawnInterval - 10);
-        document.getElementById('level').innerText = level;
-    }
-    
-    if (gameActive) {
-        requestAnimationFrame(gameLoop);
-    }
+    document.getElementById('score').innerText = score;
+    document.getElementById('level').innerText = level;
+
+    requestAnimationFrame(gameLoop);
 }
 
 // Start game function
 function startGame() {
     gameActive = true;
-    frames = 0;
-    lives = 10;
-    money = 100;
-    score = 0;
-    level = 1;
-    enemies = [];
-    towers = [];
-    projectiles = [];
-    document.getElementById('lives').innerText = lives;
-    document.getElementById('money').innerText = money;
-    document.getElementById('level').innerText = level;
-    document.getElementById('score').innerText = score;
     document.getElementById('startButton').disabled = true;
     document.getElementById('pauseButton').disabled = false;
     gameLoop();
@@ -219,10 +257,6 @@ function pauseGame() {
     document.getElementById('startButton').disabled = false;
 }
 
-// Add event listeners to buttons
-document.getElementById('startButton').addEventListener('click', startGame);
-document.getElementById('pauseButton').addEventListener('click', pauseGame);
-
 // Initialize towers on left click
 canvas.addEventListener('click', (event) => {
     if (!gameActive) return;
@@ -230,13 +264,21 @@ canvas.addEventListener('click', (event) => {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     if (money >= 50) { // Cost to place a tower
-        towers.push(new Tower(x, y));
+        const newTower = new Tower(x, y);
+        towers.push(newTower);
         money -= 50;
         document.getElementById('money').innerText = money;
     }
 });
 
-// Upgrade towers on right click
+// Upgrade tower on button click
+document.getElementById('upgradeButton').addEventListener('click', () => {
+    if (selectedTower) {
+        selectedTower.upgrade();
+    }
+});
+
+// Select tower for upgrade on right click
 canvas.addEventListener('contextmenu', (event) => {
     event.preventDefault();
     if (!gameActive) return;
@@ -245,7 +287,16 @@ canvas.addEventListener('contextmenu', (event) => {
     const y = event.clientY - rect.top;
     towers.forEach(tower => {
         if (Math.hypot(tower.x - x, tower.y - y) < 20) {
-            tower.upgrade();
+            selectedTower = tower;
+            document.getElementById('selectedTower').innerText = 'Selected Tower: Damage ' + tower.damage + ', HP ' + tower.health;
+            document.getElementById('upgradeButton').disabled = false; // Enable upgrade button
         }
     });
+});
+
+// Deselect tower when clicking outside
+canvas.addEventListener('click', () => {
+    selectedTower = null;
+    document.getElementById('selectedTower').innerText = 'Select a tower to upgrade';
+    document.getElementById('upgradeButton').disabled = true; // Disable upgrade button
 });
