@@ -95,35 +95,49 @@ h1 {
         font-size: 0.9rem;
     }
 }
-/* Keep existing styles */
-
-#login-form, #register-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+/* Style for login/register form */
+#auth-container {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: auto;
 }
 
-#login-form input, #register-form input {
-    padding: 10px;
-    font-size: 16px;
+#error {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+input[type="text"], input[type="password"] {
+    padding: 10px 15px;
+    font-size: 18px;
     border: 2px solid #bdc3c7;
     border-radius: 8px;
     width: 100%;
+    margin-bottom: 20px;
+    outline: none;
 }
 
-#login-button, #register-button, #logout-button {
-    padding: 10px;
+button {
+    padding: 10px 30px;
+    font-size: 1rem;
     background-color: #3498db;
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-#logout-button {
-    background-color: #e74c3c;
-}
-
-#login-button:hover, #register-button:hover, #logout-button:hover {
+button:hover {
     background-color: #2980b9;
+}
+
+#error {
+    color: red;
+    margin: 10px 0;
 }
