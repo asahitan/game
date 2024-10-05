@@ -3,25 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Tower Defense</title>
+    <title>Shooter Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Advanced Tower Defense</h1>
-    <canvas id="gameCanvas"></canvas>
-    <div id="gameInfo">
-        <p>Lives: <span id="lives">10</span></p>
-        <p>Money: <span id="money">100</span></p>
-        <p>Level: <span id="level">1</span></p>
-        <p>Score: <span id="score">0</span></p>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
     </div>
-    <div id="upgradePanel" style="display:none;">
-        <h3>Upgrade Towers</h3>
-        <p id="selectedTowerInfo">Select a tower to upgrade:</p>
-        <button id="upgradeButton">Upgrade Tower</button>
-    </div>
-    <button id="startButton">Start Game</button>
-    <button id="pauseButton" disabled>Pause Game</button>
-    <script src="game.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
