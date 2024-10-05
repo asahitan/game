@@ -1,6 +1,5 @@
 let balance = 5000;
-let employees = 3;
-let gamesDeveloped = 0;
+let employees = 1;
 
 function logMessage(message) {
   const logPanel = document.getElementById("log");
@@ -16,13 +15,12 @@ function updateUI() {
 }
 
 function developGame() {
-  const cost = 1000 + (employees * 100);  // Higher employee count increases game cost
+  const cost = 1000;
   if (balance >= cost) {
     balance -= cost;
-    gamesDeveloped++;
-    const revenue = 2000 + Math.floor(Math.random() * 2000);  // Random game revenue
+    const revenue = 2000 + Math.floor(Math.random() * 1000);
     balance += revenue;
-    logMessage(`Developed a game! It cost $${cost} and made $${revenue}.`);
+    logMessage(`Developed a game! It cost $${cost} and earned $${revenue}.`);
     updateUI();
   } else {
     logMessage("Not enough money to develop a game.");
@@ -33,24 +31,12 @@ function hireEmployee() {
   const cost = 500;
   if (balance >= cost) {
     balance -= cost;
-    employees++;
-    logMessage("Hired a new employee for $500.");
+    employees += 1;
+    logMessage(`Hired a new employee for $${cost}.`);
     updateUI();
   } else {
-    logMessage("Not enough money to hire a new employee.");
+    logMessage("Not enough money to hire an employee.");
   }
 }
 
-function upgradeOffice() {
-  const cost = 3000;
-  if (balance >= cost) {
-    balance -= cost;
-    logMessage("Upgraded the office for $3000. More space for new employees!");
-    updateUI();
-  } else {
-    logMessage("Not enough money to upgrade the office.");
-  }
-}
-
-// Initial UI setup
 updateUI();
