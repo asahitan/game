@@ -16,11 +16,6 @@ canvas {
     margin-top: 10px;
 }
 
-#upgradeMenu {
-    margin-top: 20px;
-    display: inline-block;
-}
-
 button {
     margin: 5px;
     padding: 10px;
@@ -32,4 +27,11 @@ button {
 
 button:disabled {
     background-color: #777;
+}
+
+#upgradePanel {
+    margin-top: 10px;
+    background-color: #222;
+    padding: 10px;
+    border: 1px solid white;
 }
