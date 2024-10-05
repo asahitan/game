@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simple Game Tycoon</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple RPG Game</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="game-container">
-    <h1>Simple Game Tycoon</h1>
+    <div class="game-container">
+        <h1>Turn-Based RPG Game</h1>
 
-    <div id="info-panel">
-      <p>Balance: $<span id="balance">5000</span></p>
-      <p>Employees: <span id="employees">1</span></p>
+        <div class="status-bar">
+            <div class="player-info">
+                <h2>Player</h2>
+                <p>HP: <span id="player-hp">100</span></p>
+                <p>Attack: 10</p>
+            </div>
+
+            <div class="enemy-info">
+                <h2>Enemy</h2>
+                <p>HP: <span id="enemy-hp">50</span></p>
+                <p>Attack: 5</p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="attack-btn">Attack</button>
+            <button id="heal-btn">Heal</button>
+        </div>
+
+        <div id="game-message"></div>
     </div>
 
-    <div id="actions">
-      <button onclick="developGame()">Develop Game</button>
-      <button onclick="hireEmployee()">Hire Employee</button>
-    </div>
-
-    <div id="log-panel">
-      <h2>Log</h2>
-      <div id="log"></div>
-    </div>
-  </div>
-
-  <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
