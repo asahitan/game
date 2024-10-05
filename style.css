@@ -1,115 +1,50 @@
 body {
-    font-family: 'Cinzel', serif;
-    background: url('images/background.jpg') no-repeat center center fixed;
-    background-size: cover;
-    color: #fff;
-    text-align: center;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.hidden {
-    display: none;
+.login-container, .register-container, .game-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
 }
 
-.game-container {
-    width: 70%;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.8);
-    border-radius: 15px;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+h2 {
+  text-align: center;
 }
 
-.character-selection {
-    display: flex;
-    justify-content: center;
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
 }
 
-.characters {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
-.character {
-    margin: 0 15px;
-    transition: transform 0.3s ease;
+button:hover {
+  background-color: #0056b3;
 }
 
-.character:hover {
-    transform: scale(1.1);
-    cursor: pointer;
+#error-message {
+  color: red;
+  text-align: center;
 }
 
-.character-portrait {
-    width: 150px;
-    height: auto;
-    border-radius: 10px;
-    border: 2px solid #fff;
-}
-
-.battle-screen {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.player-info, .enemy-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#player-sprite, #enemy-sprite {
-    width: 200px;
-    height: auto;
-}
-
-.stats {
-    margin-top: 10px;
-}
-
-.hp-bar, .mana-bar {
-    width: 150px;
-    height: 15px;
-    background-color: #333;
-    border-radius: 5px;
-    margin: 5px 0;
-}
-
-.hp-fill {
-    width: 100%;
-    height: 100%;
-    background-color: #e74c3c;
-    border-radius: 5px;
-    transition: width 0.3s ease;
-}
-
-.mana-fill {
-    width: 100%;
-    height: 100%;
-    background-color: #3498db;
-    border-radius: 5px;
-    transition: width 0.3s ease;
-}
-
-.actions button {
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #2ecc71;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.actions button:hover {
-    background-color: #27ae60;
-}
-
-#game-message {
-    margin-top: 20px;
-    font-weight: bold;
-    font-size: 1.2em;
+#scoreDisplay {
+  font-size: 1.2em;
+  text-align: center;
 }
