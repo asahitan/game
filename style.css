@@ -1,37 +1,16 @@
 body {
-    text-align: center;
-    font-family: sans-serif;
-    background-color: #000;
-    color: #fff;
+    margin: 0;
+    overflow: hidden;
+}
+
+#gameContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 canvas {
-    border: 2px solid white;
-    display: block;
-    margin: 0 auto;
-    background-color: #1e1e1e;
-}
-
-#gameInfo {
-    margin-top: 10px;
-}
-
-button {
-    margin: 5px;
-    padding: 10px;
-    background-color: #444;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:disabled {
-    background-color: #777;
-}
-
-#upgradePanel {
-    margin-top: 10px;
-    background-color: #222;
-    padding: 10px;
-    border: 1px solid white;
+    background: #000;
+    border: 2px solid #fff;
 }
