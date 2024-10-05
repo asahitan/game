@@ -1,9 +1,45 @@
 body {
-    margin: 0;
-    overflow: hidden;
-    background-color: black;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  text-align: center;
 }
 
-canvas {
-    display: block;
+#game-container {
+  width: 500px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 50px;
+}
+
+#info-panel {
+  margin-bottom: 20px;
+}
+
+#game-actions button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#game-actions button:hover {
+  background-color: #218838;
+}
+
+#log-panel {
+  margin-top: 20px;
+  background: #f9f9f9;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+#log-panel #log {
+  max-height: 150px;
+  overflow-y: auto;
+  text-align: left;
 }
