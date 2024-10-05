@@ -1,11 +1,19 @@
 const gameBoard = document.getElementById('game-board');
+const timerElement = document.getElementById('timer');
+const scoreElement = document.getElementById('score');
+const startButton = document.getElementById('start-btn');
+const restartButton = document.getElementById('restart-btn');
 const boardSize = 10;
 const numMines = 10;
 let board = [];
+let timer = 0;
+let score = 0;
+let timerInterval = null;
+let gameStarted = false;
 
 // Initialize the game
 function init() {
-    board = createBoard(boardSize, numMines);
+    resetGame();
     renderBoard(board);
 }
 
@@ -84,6 +92,8 @@ function renderBoard(board) {
 
 // Handle cell click
 function handleCellClick(event) {
+    if (!gameStarted) return;
+
     const row = parseInt(event.target.dataset.row);
     const col = parseInt(event.target.dataset.col);
     
@@ -92,10 +102,13 @@ function handleCellClick(event) {
 
     cellData.revealed = true;
     event.target.classList.add('revealed');
+    score += 10;  // Increase score by 10 for each revealed cell
+    updateScore();
     
     if (cellData.isMine) {
         event.target.classList.add('mine');
         alert('Game Over!');
+        stopTimer();
         return;
     }
     
@@ -103,6 +116,12 @@ function handleCellClick(event) {
         event.target.textContent = cellData.neighborMines;
     } else {
         revealAdjacentCells(row, col);
+    }
+
+    // Check if the player has won
+    if (checkWin()) {
+        alert('You Win!');
+        stopTimer();
     }
 }
 
@@ -122,6 +141,8 @@ function revealAdjacentCells(row, col) {
             if (!cellData.revealed && !cellData.isMine) {
                 cellData.revealed = true;
                 cellElement.classList.add('revealed');
+                score += 10;  // Increase score for each revealed adjacent cell
+                updateScore();
                 if (cellData.neighborMines > 0) {
                     cellElement.textContent = cellData.neighborMines;
                 } else {
@@ -132,4 +153,65 @@ function revealAdjacentCells(row, col) {
     }
 }
 
-init();
+// Check if the player has revealed all non-mine cells
+function checkWin() {
+    for (let row = 0; row < boardSize; row++) {
+        for (let col = 0; col < boardSize; col++) {
+            const cell = board[row][col];
+            if (!cell.isMine && !cell.revealed) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+// Timer Functions
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timer++;
+        timerElement.textContent = timer;
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+}
+
+function resetTimer() {
+    timer = 0;
+    timerElement.textContent = timer;
+}
+
+// Score Functions
+function resetScore() {
+    score = 0;
+    scoreElement.textContent = score;
+}
+
+function updateScore() {
+    scoreElement.textContent = score;
+}
+
+// Start game function
+function startGame() {
+    gameStarted = true;
+    startButton.disabled = true;
+    restartButton.disabled = false;
+    startTimer();
+}
+
+// Reset the game
+function resetGame() {
+    stopTimer();
+    resetTimer();
+    resetScore();
+    board = createBoard(boardSize, numMines);
+    renderBoard(board);
+    gameStarted = false;
+    startButton.disabled = false;
+    restartButton.disabled = true;
+}
+
+// Event listeners for start/restart buttons
+startButton.addEventListener('click
