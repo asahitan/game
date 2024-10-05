@@ -1,16 +1,104 @@
-body {
+/* General Styles */
+* {
     margin: 0;
-    overflow: hidden;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+}
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 1rem;
+}
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+.nav-links li {
+    margin-right: 20px;
+}
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+.logo {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.theme-toggle {
+    background-color: white;
+    color: #333;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
 }
 
-#gameContainer {
+/* Hero Section */
+.hero {
+    background-image: url('https://example.com/hero-image.jpg');
+    height: 90vh;
+    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    color: white;
+    text-align: center;
+}
+.cta-btn {
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
 }
 
-canvas {
-    background: #000;
-    border: 2px solid #fff;
+/* Sections */
+section {
+    padding: 50px;
+    text-align: center;
+}
+.service-item {
+    background-color: white;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Contact Form */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+form input, form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+form button {
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-links {
+        flex-direction: column;
+    }
+    .services-container {
+        flex-direction: column;
+    }
 }
