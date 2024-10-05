@@ -95,3 +95,35 @@ h1 {
         font-size: 0.9rem;
     }
 }
+/* Keep existing styles */
+
+#login-form, #register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#login-form input, #register-form input {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #bdc3c7;
+    border-radius: 8px;
+    width: 100%;
+}
+
+#login-button, #register-button, #logout-button {
+    padding: 10px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#logout-button {
+    background-color: #e74c3c;
+}
+
+#login-button:hover, #register-button:hover, #logout-button:hover {
+    background-color: #2980b9;
+}
