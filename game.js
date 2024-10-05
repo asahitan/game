@@ -11,10 +11,13 @@ let spawnInterval = 100;
 let frames = 0;
 let lives = 10;
 let money = 100;
+let score = 0;
+let gameActive = false;
 
 document.getElementById('lives').innerText = lives;
 document.getElementById('money').innerText = money;
 document.getElementById('level').innerText = level;
+document.getElementById('score').innerText = score;
 
 // Base class for enemies
 class Enemy {
@@ -44,8 +47,10 @@ function createEnemy() {
     const type = Math.random();
     if (type < 0.5) {
         return new Enemy(1, 2, 'red'); // Fast enemy
-    } else {
+    } else if (type < 0.8) {
         return new Enemy(0.5, 4, 'blue'); // Slower, tankier enemy
+    } else {
+        return new Enemy(0.75, 3, 'green'); // Balanced enemy
     }
 }
 
@@ -55,31 +60,33 @@ class Tower {
         this.x = x;
         this.y = y;
         this.range = 100;
-        this.fireRate = 50;  // Fires every 50 frames
+        this.fireRate = 50; // Fires every 50 frames
         this.damage = 1;
+        this.type = Math.random() < 0.5 ? 'basic' : 'special'; // Randomly assign a type
         this.upgradeCost = 50;
+        this.color = this.type === 'basic' ? 'blue' : 'purple';
     }
-    
+
     shoot() {
         const target = enemies.find(enemy => this.getDistance(enemy) <= this.range);
         if (target && frames % this.fireRate === 0) {
-            projectiles.push(new Projectile(this.x, this.y, target, this.damage));
+            projectiles.push(new Projectile(this.x, this.y, target, this.damage, this.type));
         }
     }
-    
+
     getDistance(enemy) {
         const dx = this.x - enemy.x;
         const dy = this.y - enemy.y;
         return Math.sqrt(dx * dx + dy * dy);
     }
-    
+
     draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, 20, 0, Math.PI * 2);
-        ctx.fillStyle = 'blue';
+        ctx.fillStyle = this.color;
         ctx.fill();
     }
-    
+
     upgrade() {
         if (money >= this.upgradeCost) {
             this.damage++;
@@ -89,29 +96,30 @@ class Tower {
     }
 }
 
-// Projectile class
+// Projectile class with unique effects
 class Projectile {
-    constructor(x, y, target, damage) {
+    constructor(x, y, target, damage, type) {
         this.x = x;
         this.y = y;
         this.target = target;
         this.speed = 5;
         this.damage = damage;
+        this.type = type;
     }
-    
+
     move() {
         const angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
         this.x += Math.cos(angle) * this.speed;
         this.y += Math.sin(angle) * this.speed;
     }
-    
+
     draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
-        ctx.fillStyle = 'yellow';
+        ctx.fillStyle = this.type === 'basic' ? 'yellow' : 'orange'; // Different color for special projectiles
         ctx.fill();
     }
-    
+
     hit() {
         const dx = this.x - this.target.x;
         const dy = this.y - this.target.y;
@@ -139,7 +147,7 @@ function gameLoop() {
             lives--;
             document.getElementById('lives').innerText = lives;
             if (lives <= 0) {
-                alert('Game Over!');
+                alert('Game Over! Your score: ' + score);
                 document.location.reload();
             }
         }
@@ -161,8 +169,10 @@ function gameLoop() {
             projectile.target.health -= projectile.damage;
             if (projectile.target.health <= 0) {
                 enemies.splice(enemies.indexOf(projectile.target), 1);
+                score += 10; // Gain score for defeating an enemy
                 money += 20; // Gain money for defeating an enemy
                 document.getElementById('money').innerText = money;
+                document.getElementById('score').innerText = score;
             }
             projectiles.splice(index, 1);
         }
@@ -177,11 +187,45 @@ function gameLoop() {
         document.getElementById('level').innerText = level;
     }
     
-    requestAnimationFrame(gameLoop);
+    if (gameActive) {
+        requestAnimationFrame(gameLoop);
+    }
 }
 
-// Initialize towers
+// Start game function
+function startGame() {
+    gameActive = true;
+    frames = 0;
+    lives = 10;
+    money = 100;
+    score = 0;
+    level = 1;
+    enemies = [];
+    towers = [];
+    projectiles = [];
+    document.getElementById('lives').innerText = lives;
+    document.getElementById('money').innerText = money;
+    document.getElementById('level').innerText = level;
+    document.getElementById('score').innerText = score;
+    document.getElementById('startButton').disabled = true;
+    document.getElementById('pauseButton').disabled = false;
+    gameLoop();
+}
+
+// Pause game function
+function pauseGame() {
+    gameActive = false;
+    document.getElementById('pauseButton').disabled = true;
+    document.getElementById('startButton').disabled = false;
+}
+
+// Add event listeners to buttons
+document.getElementById('startButton').addEventListener('click', startGame);
+document.getElementById('pauseButton').addEventListener('click', pauseGame);
+
+// Initialize towers on left click
 canvas.addEventListener('click', (event) => {
+    if (!gameActive) return;
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -192,9 +236,10 @@ canvas.addEventListener('click', (event) => {
     }
 });
 
-// Upgrade towers
+// Upgrade towers on right click
 canvas.addEventListener('contextmenu', (event) => {
     event.preventDefault();
+    if (!gameActive) return;
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
@@ -204,6 +249,3 @@ canvas.addEventListener('contextmenu', (event) => {
         }
     });
 });
-
-// Start the game loop
-gameLoop();
