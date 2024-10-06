@@ -4,7 +4,6 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
     margin: 0;
     background-color: #8bc34a;
 }
@@ -13,9 +12,10 @@ h1 {
     margin-bottom: 20px;
     font-size: 2rem;
     color: #333;
+    text-align: center;
 }
 
-.controls {
+.controls, .game-controls {
     display: flex;
     justify-content: space-between;
     width: 90%;
@@ -23,19 +23,32 @@ h1 {
     margin-bottom: 20px;
 }
 
+button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #1976d2;
+}
+
 #game-board {
     display: grid;
-    gap: 2px;
-    width: 90vw;
+    width: 100%;
     max-width: 400px;
-    height: auto;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 2px;
 }
 
 .cell {
-    width: 10vw; /* Responsive size based on viewport */
-    max-width: 40px;
-    height: 10vw; /* Responsive height based on viewport */
-    max-height: 40px;
+    width: 100%;
+    padding-top: 100%; /* Makes the cells square */
+    position: relative;
     background-color: #ddd;
     display: flex;
     align-items: center;
@@ -57,14 +70,35 @@ h1 {
     color: white;
 }
 
+.cell span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#flag-toggle {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    background-color: #ff5722;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 @media (min-width: 600px) {
     #game-board {
         grid-template-columns: repeat(10, 40px);
-        grid-template-rows: repeat(10, 40px);
     }
-
     .cell {
         width: 40px;
+        padding-top: 0;
         height: 40px;
     }
 }
