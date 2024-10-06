@@ -3,26 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social App</title>
+    <title>Modern Social Platform</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-
+<body class="light-theme">
     <div class="container">
-        <header>
-            <h1>What's on your mind?</h1>
-        </header>
-
-        <div class="post-box">
-            <textarea id="post-input" placeholder="Share what's on your mind..."></textarea>
-            <button id="post-btn">Post</button>
+        <h1>What's on your mind?</h1>
+        <div class="post-input">
+            <textarea id="status" placeholder="Write something..."></textarea>
+            <input type="file" id="imageUpload" accept="image/*">
+            <button onclick="addPost()">Post</button>
         </div>
-
-        <div id="posts-section">
-            <!-- Posts will be dynamically loaded here -->
+        <div class="theme-toggle">
+            <label for="themeToggle">Toggle Dark Theme</label>
+            <input type="checkbox" id="themeToggle" onclick="toggleTheme()">
         </div>
+        <div id="posts"></div>
     </div>
-
-    <script src="script.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
