@@ -3,48 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Social App</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Social App</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div class="container">
-        <!-- User Authentication -->
-        <div id="auth-section">
-            <h1>Login or Register</h1>
-            <div id="auth-forms">
-                <div id="login-form">
-                    <input type="text" id="login-username" placeholder="Username">
-                    <input type="password" id="login-password" placeholder="Password">
-                    <button onclick="login()">Login</button>
-                </div>
-                <div id="register-form">
-                    <input type="text" id="register-username" placeholder="Username">
-                    <input type="password" id="register-password" placeholder="Password">
-                    <button onclick="register()">Register</button>
-                </div>
-            </div>
-            <p id="auth-error" class="error"></p>
+        <header>
+            <h1>What's on your mind?</h1>
+        </header>
+
+        <div class="post-box">
+            <textarea id="post-input" placeholder="Share what's on your mind..."></textarea>
+            <button id="post-btn">Post</button>
         </div>
 
-        <!-- Post Input Section -->
-        <div id="post-section" class="hidden">
-            <header>
-                <h1>What's on your mind?</h1>
-            </header>
-
-            <div class="post-box">
-                <textarea id="post-input" placeholder="Type your thoughts here..."></textarea>
-                <input type="file" id="image-upload" accept="image/*">
-                <button onclick="submitPost()">Post</button>
-            </div>
-
-            <button onclick="logout()">Logout</button>
+        <div id="posts-section">
+            <!-- Posts will be dynamically loaded here -->
         </div>
-
-        <!-- Posts Section -->
-        <div id="posts-section" class="hidden"></div>
     </div>
 
-    <script src="scripts.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
