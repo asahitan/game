@@ -1,84 +1,113 @@
-/* Basic Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Styling the container */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
+body.light-theme {
+    --bg-color: #f4f4f4;
+    --text-color: black;
+}
+
+body.dark-theme {
+    --bg-color: #333;
+    --text-color: white;
+}
+
 .container {
-    width: 100%;
-    max-width: 600px;
+    width: 50%;
     background-color: white;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
 }
 
-header h1 {
-    text-align: center;
+h1 {
     margin-bottom: 20px;
+    text-align: center;
     font-size: 24px;
-    color: #333;
+    color: var(--text-color);
 }
 
-/* Styling the post box */
-.post-box {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 30px;
-}
-
-#post-input {
+textarea {
+    width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     resize: none;
-    font-size: 16px;
     height: 100px;
 }
 
-#post-btn {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 4px;
-}
-
-#post-btn:hover {
-    background-color: #45a049;
-}
-
-/* Styling posts */
-#posts-section .post {
-    background-color: #e9f5e9;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-}
-
-#posts-section .post p {
-    font-size: 16px;
+input[type="file"] {
     margin-bottom: 10px;
 }
 
-#posts-section .post small {
-    font-size: 12px;
-    color: #666;
-    display: block;
-    text-align: right;
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #165eac;
+}
+
+#posts {
+    margin-top: 20px;
+}
+
+.post {
+    background-color: #fafafa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    position: relative;
+}
+
+.post img {
+    max-width: 100%;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.delete-btn, .edit-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.edit-btn {
+    right: 70px;
+    background-color: #ffc107;
+}
+
+.theme-toggle {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--text-color);
+}
+
+.theme-toggle input[type="checkbox"] {
+    margin-left: 10px;
 }
