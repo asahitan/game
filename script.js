@@ -26,13 +26,16 @@ flagToggleBtn.addEventListener('click', () => {
 });
 
 function initGame() {
+    // Reset the game state variables
     gameBoard.innerHTML = '';
     board.length = 0;
     flagCount = 40;
     flagsDisplay.textContent = `Flags: ${flagCount}`;
     clearInterval(interval);
     timer = 0;
+    gameOver = false;
     timerDisplay.textContent = `Time: ${timer}`;
+
     interval = setInterval(() => {
         if (!gameOver) {
             timer++;
@@ -40,6 +43,7 @@ function initGame() {
         }
     }, 1000);
 
+    // Initialize the board
     for (let i = 0; i < boardSize; i++) {
         const row = [];
         for (let j = 0; j < boardSize; j++) {
@@ -125,9 +129,7 @@ function handleCellClick(row, col) {
     if (gameOver || board[row][col].revealed) return;
 
     if (flagMode) {
-        board[row][col].flagged = !board[row][col].flagged;
-        flagCount += board[row][col].flagged ? -1 : 1;
-        flagsDisplay.textContent = `Flags: ${flagCount}`;
+        toggleFlag(row, col);
     } else {
         revealCell(row, col);
     }
@@ -135,18 +137,30 @@ function handleCellClick(row, col) {
     renderBoard();
 }
 
+function toggleFlag(row, col) {
+    if (board[row][col].revealed) return;
+
+    if (!board[row][col].flagged && flagCount > 0) {
+        board[row][col].flagged = true;
+        flagCount--;
+    } else if (board[row][col].flagged) {
+        board[row][col].flagged = false;
+        flagCount++;
+    }
+    flagsDisplay.textContent = `Flags: ${flagCount}`;
+}
+
 function revealCell(row, col) {
     if (board[row][col].isMine) {
-        alert('Game over!');
         gameOver = true;
+        alert('Game over!');
         clearInterval(interval);
-        restartModal.style.display = 'block'; // Show restart modal when the game is lost
+        restartModal.style.display = 'block'; // Show restart modal
         return;
     }
 
     board[row][col].revealed = true;
     if (board[row][col].adjacentMines === 0) {
-        // Reveal surrounding cells if no adjacent mines
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
                 const newRow = row + i;
