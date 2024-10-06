@@ -1,82 +1,129 @@
-/* styles.css */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f2f5;
 }
 
-header {
-    background-color: #007bff;
-    color: white;
-    padding: 1.5em;
-    width: 100%;
-    text-align: center;
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #4267B2;
+  padding: 10px 20px;
+  color: white;
 }
 
-main {
-    background: white;
-    padding: 2em;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 600px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.navbar .logo {
+  font-size: 24px;
+  font-weight: bold;
 }
 
-input, textarea {
-    width: 100%;
-    padding: 0.75em;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    margin-bottom: 1em;
+.navbar .search-bar input {
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
 }
 
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 0.75em 1.25em;
-    border-radius: 6px;
-    cursor: pointer;
+.navbar .nav-links a {
+  color: white;
+  margin-left: 20px;
+  text-decoration: none;
 }
 
-button:hover {
-    background-color: #0056b3;
+.main-container {
+  display: flex;
+  padding: 20px;
 }
 
-.error-message {
-    color: red;
-    font-size: 0.9em;
-    margin-top: -0.75em;
-    margin-bottom: 1em;
+.sidebar {
+  width: 25%;
+  padding: 10px;
 }
 
-#feed {
-    margin-top: 2em;
+.profile-info {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.post {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 1em;
-    margin-bottom: 1.5em;
-    border-radius: 8px;
+.profile-info img {
+  width: 100px;
+  border-radius: 50%;
 }
 
-#logout-btn {
-    margin-top: 2em;
-    background-color: #dc3545;
+.friends-list ul {
+  list-style: none;
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
 }
 
-#logout-btn:hover {
-    background-color: #c82333;
+.feed {
+  width: 50%;
+  padding: 10px;
+}
+
+.status-update {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.status-update textarea {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+.status-update button {
+  padding: 10px;
+  background-color: #4267B2;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.posts .post {
+  background-color: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+}
+
+.post-header img {
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.post-actions button {
+  background-color: transparent;
+  border: none;
+  color: #4267B2;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.chatbox {
+  width: 25%;
+  padding: 10px;
+}
+
+.chatbox .chat {
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
 }
