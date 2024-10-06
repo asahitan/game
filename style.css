@@ -1,101 +1,84 @@
-/* General reset */
+/* Basic Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Styling the container */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 .container {
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Authentication Section */
-#error {
-    color: red;
-}
-
-.hidden {
-    display: none;
-}
-
-#auth-forms input {
-    display: block;
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+    max-width: 600px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-#auth-forms button {
-    background-color: #4267B2;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-header {
+header h1 {
     text-align: center;
     margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
 }
 
-textarea, input[type="file"] {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
+/* Styling the post box */
+.post-box {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
 }
 
-.post-box button {
-    background-color: #4267B2;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#posts-section {
-    margin-top: 20px;
-}
-
-.post {
-    background-color: #e9ebee;
+#post-input {
     padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+    font-size: 16px;
+    height: 100px;
+}
+
+#post-btn {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+}
+
+#post-btn:hover {
+    background-color: #45a049;
+}
+
+/* Styling posts */
+#posts-section .post {
+    background-color: #e9f5e9;
+    padding: 15px;
     border-radius: 5px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+#posts-section .post p {
+    font-size: 16px;
     margin-bottom: 10px;
 }
 
-.post small {
-    color: #777;
-}
-
-.post img {
-    max-width: 100%;
-    height: auto;
+#posts-section .post small {
+    font-size: 12px;
+    color: #666;
     display: block;
-    margin-top: 10px;
-}
-
-button.edit-btn, button.delete-btn {
-    margin-top: 10px;
-    padding: 5px 10px;
-    background-color: #f39c12;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-button.delete-btn {
-    background-color: #e74c3c;
+    text-align: right;
 }
