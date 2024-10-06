@@ -24,7 +24,8 @@ postBtn.addEventListener("click", () => {
     const post = {
         content: postContent,
         timestamp: new Date().toLocaleString(),
-        image: imageFile ? URL.createObjectURL(imageFile) : null
+        image: imageFile ? URL.createObjectURL(imageFile) : null,
+        comments: [] // Initialize comments as an empty array
     };
 
     savePost(post);
@@ -54,11 +55,19 @@ function loadPosts() {
             <small>${post.timestamp}</small>
             <button class="delete-btn" data-index="${index}">Delete</button>
             <button class="edit-btn" data-index="${index}">Edit</button>
+            <div class="comment-box">
+                <input type="text" class="comment-input" placeholder="Add a comment..." />
+                <button class="comment-btn" data-index="${index}">Comment</button>
+            </div>
+            <div class="comments-section" data-index="${index}">
+                ${post.comments.map(comment => `<div class="comment">${comment}</div>`).join('')}
+            </div>
         `;
 
         postElement.querySelector('.delete-btn').addEventListener('click', () => deletePost(index));
         postElement.querySelector('.edit-btn').addEventListener('click', () => editPost(index, post.content));
-        
+        postElement.querySelector('.comment-btn').addEventListener('click', () => addComment(index));
+
         postsSection.prepend(postElement);  // Add new post at the top
     });
 }
@@ -75,6 +84,23 @@ function deletePost(index) {
 function editPost(index, currentContent) {
     postInput.value = currentContent;
     deletePost(index); // Remove the current post to allow for editing
+}
+
+// Function to add a comment
+function addComment(postIndex) {
+    const commentInput = document.querySelector(`.comments-section[data-index="${postIndex}"]`).previousElementSibling.querySelector('.comment-input');
+    const commentText = commentInput.value.trim();
+
+    if (commentText === "") {
+        alert("Please write a comment before submitting!");
+        return;
+    }
+
+    let posts = JSON.parse(localStorage.getItem("posts")) || [];
+    posts[postIndex].comments.push(commentText); // Add the comment to the relevant post
+    localStorage.setItem("posts", JSON.stringify(posts));
+    commentInput.value = ""; // Clear the comment input
+    loadPosts(); // Reload posts to display the new comment
 }
 
 // Theme Toggle
