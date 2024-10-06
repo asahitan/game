@@ -1,129 +1,144 @@
+/* Basic Reset */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+/* Styling the container */
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f0f2f5;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #4267B2;
-  padding: 10px 20px;
-  color: white;
+.container {
+    width: 100%;
+    max-width: 600px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.navbar .logo {
-  font-size: 24px;
-  font-weight: bold;
+/* Theme Toggle Button */
+#theme-toggle {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
 }
 
-.navbar .search-bar input {
-  padding: 5px;
-  border-radius: 5px;
-  border: none;
-  outline: none;
+#theme-toggle:hover {
+    background-color: #45a049;
 }
 
-.navbar .nav-links a {
-  color: white;
-  margin-left: 20px;
-  text-decoration: none;
+/* Header Styling */
+header h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
 }
 
-.main-container {
-  display: flex;
-  padding: 20px;
+/* Styling the post box */
+.post-box {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
 }
 
-.sidebar {
-  width: 25%;
-  padding: 10px;
+#post-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+    font-size: 16px;
+    height: 100px;
 }
 
-.profile-info {
-  text-align: center;
-  margin-bottom: 20px;
+#image-input {
+    margin-top: 10px;
 }
 
-.profile-info img {
-  width: 100px;
-  border-radius: 50%;
+#post-btn {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
 }
 
-.friends-list ul {
-  list-style: none;
-  padding: 10px;
-  background-color: white;
-  border-radius: 5px;
+#post-btn:hover {
+    background-color: #45a049;
 }
 
-.feed {
-  width: 50%;
-  padding: 10px;
+/* Styling posts */
+#posts-section .post {
+    background-color: #e9f5e9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
-.status-update {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
+#posts-section .post p {
+    font-size: 16px;
+    margin-bottom: 10px;
 }
 
-.status-update textarea {
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  resize: none;
-  margin-bottom: 10px;
+#posts-section .post img {
+    max-width: 100%;
+    border-radius: 5px;
+    margin-top: 10px;
 }
 
-.status-update button {
-  padding: 10px;
-  background-color: #4267B2;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
+#posts-section .post small {
+    font-size: 12px;
+    color: #666;
+    display: block;
+    text-align: right;
 }
 
-.posts .post {
-  background-color: white;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 10px;
+#posts-section .post .delete-btn,
+#posts-section .post .edit-btn {
+    background-color: #f44336; /* Red */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 5px 10px;
+    margin-top: 5px;
+    border-radius: 4px;
 }
 
-.post-header {
-  display: flex;
-  align-items: center;
+#posts-section .post .edit-btn {
+    background-color: #2196F3; /* Blue */
 }
 
-.post-header img {
-  width: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
+#posts-section .post .delete-btn:hover,
+#posts-section .post .edit-btn:hover {
+    opacity: 0.8;
 }
 
-.post-actions button {
-  background-color: transparent;
-  border: none;
-  color: #4267B2;
-  cursor: pointer;
-  margin-right: 10px;
+/* Dark Theme Styles */
+body.dark {
+    background-color: #121212;
+    color: white;
 }
 
-.chatbox {
-  width: 25%;
-  padding: 10px;
-}
-
-.chatbox .chat {
-  background-color: white;
-  padding: 10px;
-  border-radius: 5px;
+.container.dark {
+    background-color: #1e1e1e;
 }
