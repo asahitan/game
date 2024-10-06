@@ -1,180 +1,111 @@
-// DOM Elements
-const postInput = document.getElementById("post-input");
-const imageInput = document.getElementById("image-input");
-const postBtn = document.getElementById("post-btn");
-const postsSection = document.getElementById("posts-section");
-const themeToggle = document.getElementById("theme-toggle");
+const postInput = document.getElementById('post-input');
+const imageInput = document.getElementById('image-input');
+const postBtn = document.getElementById('post-btn');
+const postsSection = document.getElementById('posts-section');
 
-// Load posts from localStorage on page load
-window.onload = function() {
-    loadPosts();
-};
+const API_URL = 'http://localhost:3000'; // Update this to your server URL
 
-// Event listener for the "Post" button
-postBtn.addEventListener("click", () => {
-    const postContent = postInput.value.trim();
-    const imageFile = imageInput.files[0];
+// Fetch posts from server
+async function fetchPosts() {
+    const res = await fetch(`${API_URL}/posts`);
+    const posts = await res.json();
+    postsSection.innerHTML = '';  // Clear previous posts
 
-    if (postContent === "" && !imageFile) {
-        alert("Please write something or upload an image before posting!");
-        return;
-    }
-
-    const post = {
-        content: postContent,
-        timestamp: new Date().toLocaleString(),
-        image: imageFile ? URL.createObjectURL(imageFile) : null,
-        comments: []
-    };
-
-    savePost(post);
-    postInput.value = "";
-    imageInput.value = ""; // Clear file input
-    loadPosts();  // Reload posts after adding a new one
-});
-
-// Function to save the post to localStorage
-function savePost(post) {
-    let posts = JSON.parse(localStorage.getItem("posts")) || [];
-    posts.push(post);
-    localStorage.setItem("posts", JSON.stringify(posts));
-}
-
-// Function to load posts from localStorage
-function loadPosts() {
-    postsSection.innerHTML = "";  // Clear previous posts
-    let posts = JSON.parse(localStorage.getItem("posts")) || [];
-
-    posts.forEach((post, index) => {
-        const postElement = document.createElement("div");
-        postElement.classList.add("post");
+    posts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.classList.add('post');
         postElement.innerHTML = `
             <p>${post.content}</p>
             ${post.image ? `<img src="${post.image}" alt="Post Image"/>` : ""}
             <small>${post.timestamp}</small>
-            <button class="delete-btn" data-index="${index}">Delete</button>
-            <button class="edit-btn" data-index="${index}">Edit</button>
-
-            <div class="comments-section" id="comments-${index}">
-                <textarea class="comment-input" id="comment-input-${index}" placeholder="Add a comment..."></textarea>
-                <button class="add-comment-btn" data-index="${index}">Add Comment</button>
+            <div class="comments-section" id="comments-${post.id}">
+                <textarea class="comment-input" id="comment-input-${post.id}" placeholder="Add a comment..."></textarea>
+                <button class="add-comment-btn" data-post-id="${post.id}">Add Comment</button>
             </div>
         `;
 
-        postElement.querySelector('.delete-btn').addEventListener('click', () => deletePost(index));
-        postElement.querySelector('.edit-btn').addEventListener('click', () => editPost(index, post.content));
-        postElement.querySelector('.add-comment-btn').addEventListener('click', () => addComment(index));
-
-        postsSection.prepend(postElement);  // Add new post at the top
-
-        loadComments(index, post.comments); // Load comments for each post
+        postElement.querySelector('.add-comment-btn').addEventListener('click', () => addComment(post.id));
+        postsSection.prepend(postElement);
+        fetchComments(post.id); // Load comments for this post
     });
 }
 
-// Function to delete a post
-function deletePost(index) {
-    let posts = JSON.parse(localStorage.getItem("posts")) || [];
-    posts.splice(index, 1); // Remove the post
-    localStorage.setItem("posts", JSON.stringify(posts));
-    loadPosts(); // Reload posts
-}
+// Fetch comments for a specific post
+async function fetchComments(postId) {
+    const res = await fetch(`${API_URL}/posts/${postId}/comments`);
+    const comments = await res.json();
+    const commentsSection = document.getElementById(`comments-${postId}`);
 
-// Function to edit a post
-function editPost(index, currentContent) {
-    postInput.value = currentContent;
-    deletePost(index); // Remove the current post to allow for editing
-}
-
-// Function to add a comment to a post
-function addComment(postIndex) {
-    let posts = JSON.parse(localStorage.getItem("posts")) || [];
-    const commentInput = document.getElementById(`comment-input-${postIndex}`);
-    const commentContent = commentInput.value.trim();
-
-    if (commentContent === "") {
-        alert("Please write a comment!");
-        return;
-    }
-
-    const comment = {
-        content: commentContent,
-        timestamp: new Date().toLocaleString(),
-        replies: []
-    };
-
-    posts[postIndex].comments.push(comment);
-    localStorage.setItem("posts", JSON.stringify(posts));
-    loadPosts();  // Reload posts after adding a comment
-}
-
-// Function to load comments
-function loadComments(postIndex, comments) {
-    const commentsSection = document.getElementById(`comments-${postIndex}`);
-
-    comments.forEach((comment, commentIndex) => {
-        const commentElement = document.createElement("div");
-        commentElement.classList.add("comment");
+    comments.forEach(comment => {
+        const commentElement = document.createElement('div');
+        commentElement.classList.add('comment');
         commentElement.innerHTML = `
             <p>${comment.content}</p>
             <small>${comment.timestamp}</small>
-            <button class="reply-btn" data-post-index="${postIndex}" data-comment-index="${commentIndex}">Reply</button>
-
-            <div class="replies-section" id="replies-${postIndex}-${commentIndex}"></div>
-
-            <textarea class="reply-input" id="reply-input-${postIndex}-${commentIndex}" placeholder="Add a reply..."></textarea>
-            <button class="add-reply-btn" data-post-index="${postIndex}" data-comment-index="${commentIndex}">Add Reply</button>
         `;
 
-        commentElement.querySelector('.add-reply-btn').addEventListener('click', () => addReply(postIndex, commentIndex));
         commentsSection.appendChild(commentElement);
-
-        loadReplies(postIndex, commentIndex, comment.replies); // Load replies for each comment
     });
 }
 
-// Function to add a reply to a comment
-function addReply(postIndex, commentIndex) {
-    let posts = JSON.parse(localStorage.getItem("posts")) || [];
-    const replyInput = document.getElementById(`reply-input-${postIndex}-${commentIndex}`);
-    const replyContent = replyInput.value.trim();
+// Add a new post
+postBtn.addEventListener('click', async () => {
+    const content = postInput.value.trim();
+    const imageFile = imageInput.files[0];
 
-    if (replyContent === "") {
-        alert("Please write a reply!");
+    if (!content && !imageFile) {
+        alert('Please write something or upload an image!');
         return;
     }
 
-    const reply = {
-        content: replyContent,
-        timestamp: new Date().toLocaleString()
-    };
+    const timestamp = new Date().toLocaleString();
+    const imageBase64 = imageFile ? await convertToBase64(imageFile) : null;
 
-    posts[postIndex].comments[commentIndex].replies.push(reply);
-    localStorage.setItem("posts", JSON.stringify(posts));
-    loadPosts();  // Reload posts after adding a reply
-}
+    const post = { content, image: imageBase64, timestamp };
 
-// Function to load replies
-function loadReplies(postIndex, commentIndex, replies) {
-    const repliesSection = document.getElementById(`replies-${postIndex}-${commentIndex}`);
+    await fetch(`${API_URL}/posts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(post)
+    });
 
-    replies.forEach(reply => {
-        const replyElement = document.createElement("div");
-        replyElement.classList.add("comment-reply");
-        replyElement.innerHTML = `
-            <p>${reply.content}</p>
-            <small>${reply.timestamp}</small>
-        `;
+    postInput.value = '';
+    imageInput.value = ''; // Clear the image input
 
-        repliesSection.appendChild(replyElement);
+    fetchPosts();  // Reload posts
+});
+
+// Convert image to Base64
+function convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
     });
 }
 
-// Theme Toggle
-themeToggle.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-    document.querySelector(".container").classList.toggle("dark");
+// Add a comment to a post
+async function addComment(postId) {
+    const commentInput = document.getElementById(`comment-input-${postId}`);
+    const content = commentInput.value.trim();
 
-    // Toggle button text
-    themeToggle.innerText = themeToggle.innerText === "Switch to Dark Mode" ? 
-                            "Switch to Light Mode" : "Switch to Dark Mode";
-});
+    if (!content) {
+        alert('Please write a comment!');
+        return;
+    }
+
+    const timestamp = new Date().toLocaleString();
+
+    await fetch(`${API_URL}/posts/${postId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content, timestamp })
+    });
+
+    commentInput.value = ''; // Clear the comment input
+    fetchComments(postId); // Reload comments
+}
+
+// Load posts when the page is loaded
+fetchPosts();
