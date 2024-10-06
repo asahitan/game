@@ -43,15 +43,15 @@ function savePost(post) {
 
 // Function to load posts from localStorage
 function loadPosts() {
-    const posts = JSON.parse(localStorage.getItem("posts")) || [];
-    postsSection.innerHTML = ""; // Clear the section
+    postsSection.innerHTML = "";  // Clear previous posts
+    let posts = JSON.parse(localStorage.getItem("posts")) || [];
 
-    posts.reverse().forEach((post, index) => {
+    posts.forEach((post, index) => {
         const postElement = document.createElement("div");
         postElement.classList.add("post");
         postElement.innerHTML = `
             <p>${post.content}</p>
-            ${post.image ? `<img src="${post.image}" alt="Post Image">` : ""}
+            ${post.image ? `<img src="${post.image}" alt="Post Image"/>` : ""}
             <small>${post.timestamp}</small>
             <button class="delete-btn" data-index="${index}">Delete</button>
             <button class="edit-btn" data-index="${index}">Edit</button>
@@ -59,15 +59,7 @@ function loadPosts() {
                 <input class="comment-input" type="text" placeholder="Add a comment" />
                 <button class="comment-btn" data-index="${index}">Comment</button>
                 <div class="comments-section" data-index="${index}">
-                    ${post.comments.map((comment, commentIndex) => `
-                        <div class="comment">
-                            ${comment.text}
-                            <button class="reply-btn" data-index="${index}" data-comment-index="${commentIndex}">Reply</button>
-                            <div class="reply-section">
-                                ${comment.replies.map(reply => `<div class="reply">${reply}</div>`).join("")}
-                            </div>
-                        </div>
-                    `).join("")}
+                    ${post.comments.map(comment => `<div class="comment">${comment}</div>`).join("")}
                 </div>
             </div>
         `;
@@ -75,7 +67,7 @@ function loadPosts() {
         postsSection.prepend(postElement);  // Add new post at the top
     });
 
-    // Add event listeners to delete, edit, comment, and reply buttons
+    // Add event listeners to delete, edit, and comment buttons
     document.querySelectorAll(".delete-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const index = e.target.dataset.index;
@@ -95,14 +87,6 @@ function loadPosts() {
         btn.addEventListener("click", (e) => {
             const postIndex = e.target.dataset.index;
             addComment(postIndex);
-        });
-    });
-
-    document.querySelectorAll(".reply-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            const postIndex = e.target.dataset.index;
-            const commentIndex = e.target.dataset.commentIndex;
-            addReply(postIndex, commentIndex);
         });
     });
 }
@@ -132,21 +116,10 @@ function addComment(postIndex) {
     }
 
     let posts = JSON.parse(localStorage.getItem("posts")) || [];
-    posts[postIndex].comments.push({ text: commentText, replies: [] }); // Add the comment with an empty replies array
+    posts[postIndex].comments.push(commentText); // Add the comment to the relevant post
     localStorage.setItem("posts", JSON.stringify(posts));
     commentInput.value = ""; // Clear the comment input
     loadPosts(); // Reload posts to display the new comment
-}
-
-// Function to add a reply to a comment
-function addReply(postIndex, commentIndex) {
-    const replyInput = prompt("Write your reply:");
-    if (!replyInput) return;
-
-    let posts = JSON.parse(localStorage.getItem("posts")) || [];
-    posts[postIndex].comments[commentIndex].replies.push(replyInput);
-    localStorage.setItem("posts", JSON.stringify(posts));
-    loadPosts(); // Reload posts to display the new reply
 }
 
 // Theme Toggle
