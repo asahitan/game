@@ -55,6 +55,12 @@ def logout():
     session.pop('user', None)
     return redirect(url_for('index'))
 
+@app.route('/game')
+def game():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    return render_template('game.html') 
+
 if __name__ == '__main__':
     db.create_all()
     app.run(debug=True)
