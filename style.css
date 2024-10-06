@@ -1,3 +1,4 @@
+/* styles.css */
 * {
     margin: 0;
     padding: 0;
@@ -6,108 +7,60 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: var(--bg-color);
+    background-color: #f0f2f5;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    flex-direction: column;
 }
 
-body.light-theme {
-    --bg-color: #f4f4f4;
-    --text-color: black;
-}
-
-body.dark-theme {
-    --bg-color: #333;
-    --text-color: white;
-}
-
-.container {
-    width: 50%;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-}
-
-h1 {
-    margin-bottom: 20px;
+header {
+    background-color: #1877f2;
+    color: white;
+    padding: 1em;
+    width: 100%;
     text-align: center;
-    font-size: 24px;
-    color: var(--text-color);
+}
+
+main {
+    background: white;
+    padding: 2em;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
 textarea {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    resize: none;
-    height: 100px;
-}
-
-input[type="file"] {
-    margin-bottom: 10px;
+    padding: 1em;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 1em;
 }
 
 button {
-    width: 100%;
-    padding: 10px;
     background-color: #1877f2;
     color: white;
     border: none;
-    border-radius: 5px;
+    padding: 0.5em 1em;
+    border-radius: 8px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #165eac;
+    background-color: #1557b0;
 }
 
-#posts {
-    margin-top: 20px;
+#feed {
+    margin-top: 2em;
 }
 
 .post {
-    background-color: #fafafa;
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
+    background-color: #fff;
     border: 1px solid #ddd;
-    position: relative;
-}
-
-.post img {
-    max-width: 100%;
-    margin-top: 10px;
-    border-radius: 5px;
-}
-
-.delete-btn, .edit-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-.edit-btn {
-    right: 70px;
-    background-color: #ffc107;
-}
-
-.theme-toggle {
-    margin-top: 20px;
-    text-align: center;
-    color: var(--text-color);
-}
-
-.theme-toggle input[type="checkbox"] {
-    margin-left: 10px;
+    padding: 1em;
+    margin-bottom: 1em;
+    border-radius: 8px;
 }
