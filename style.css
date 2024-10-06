@@ -186,34 +186,6 @@ header h1 {
     text-align: center;
 }
 
-/* Reply Section */
-.reply-btn {
-    background-color: #ff9800; /* Orange */
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 5px 10px;
-    border-radius: 4px;
-    margin-top: 5px;
-}
-
-.reply-btn:hover {
-    background-color: #e68900;
-}
-
-.reply-section {
-    margin-left: 20px;
-}
-
-.reply {
-    background-color: #d9edf7;
-    padding: 5px;
-    border-radius: 4px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
 /* Dark Theme Styles */
 body.dark {
     background-color: #121212;
