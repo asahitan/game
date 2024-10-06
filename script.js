@@ -8,7 +8,6 @@ const themeToggle = document.getElementById("theme-toggle");
 // Load posts from localStorage on page load
 window.onload = function() {
     loadPosts();
-    checkAuth(); // Check for user authentication
 };
 
 // Event listener for the "Post" button
@@ -25,7 +24,7 @@ postBtn.addEventListener("click", () => {
         content: postContent,
         timestamp: new Date().toLocaleString(),
         image: imageFile ? URL.createObjectURL(imageFile) : null,
-        comments: [] // Initialize comments as an empty array
+        comments: []
     };
 
     savePost(post);
@@ -55,39 +54,20 @@ function loadPosts() {
             <small>${post.timestamp}</small>
             <button class="delete-btn" data-index="${index}">Delete</button>
             <button class="edit-btn" data-index="${index}">Edit</button>
-            <div class="comment-box">
-                <input class="comment-input" type="text" placeholder="Add a comment" />
-                <button class="comment-btn" data-index="${index}">Comment</button>
-                <div class="comments-section" data-index="${index}">
-                    ${post.comments.map(comment => `<div class="comment">${comment}</div>`).join("")}
-                </div>
+
+            <div class="comments-section" id="comments-${index}">
+                <textarea class="comment-input" id="comment-input-${index}" placeholder="Add a comment..."></textarea>
+                <button class="add-comment-btn" data-index="${index}">Add Comment</button>
             </div>
         `;
 
+        postElement.querySelector('.delete-btn').addEventListener('click', () => deletePost(index));
+        postElement.querySelector('.edit-btn').addEventListener('click', () => editPost(index, post.content));
+        postElement.querySelector('.add-comment-btn').addEventListener('click', () => addComment(index));
+
         postsSection.prepend(postElement);  // Add new post at the top
-    });
 
-    // Add event listeners to delete, edit, and comment buttons
-    document.querySelectorAll(".delete-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            const index = e.target.dataset.index;
-            deletePost(index);
-        });
-    });
-
-    document.querySelectorAll(".edit-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            const index = e.target.dataset.index;
-            const postContent = posts[index].content;
-            editPost(index, postContent);
-        });
-    });
-
-    document.querySelectorAll(".comment-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            const postIndex = e.target.dataset.index;
-            addComment(postIndex);
-        });
+        loadComments(index, post.comments); // Load comments for each post
     });
 }
 
@@ -105,21 +85,88 @@ function editPost(index, currentContent) {
     deletePost(index); // Remove the current post to allow for editing
 }
 
-// Function to add a comment
+// Function to add a comment to a post
 function addComment(postIndex) {
-    const commentInput = document.querySelector(`.comments-section[data-index="${postIndex}"]`).previousElementSibling.querySelector('.comment-input');
-    const commentText = commentInput.value.trim();
+    let posts = JSON.parse(localStorage.getItem("posts")) || [];
+    const commentInput = document.getElementById(`comment-input-${postIndex}`);
+    const commentContent = commentInput.value.trim();
 
-    if (commentText === "") {
-        alert("Please write a comment before submitting!");
+    if (commentContent === "") {
+        alert("Please write a comment!");
         return;
     }
 
-    let posts = JSON.parse(localStorage.getItem("posts")) || [];
-    posts[postIndex].comments.push(commentText); // Add the comment to the relevant post
+    const comment = {
+        content: commentContent,
+        timestamp: new Date().toLocaleString(),
+        replies: []
+    };
+
+    posts[postIndex].comments.push(comment);
     localStorage.setItem("posts", JSON.stringify(posts));
-    commentInput.value = ""; // Clear the comment input
-    loadPosts(); // Reload posts to display the new comment
+    loadPosts();  // Reload posts after adding a comment
+}
+
+// Function to load comments
+function loadComments(postIndex, comments) {
+    const commentsSection = document.getElementById(`comments-${postIndex}`);
+
+    comments.forEach((comment, commentIndex) => {
+        const commentElement = document.createElement("div");
+        commentElement.classList.add("comment");
+        commentElement.innerHTML = `
+            <p>${comment.content}</p>
+            <small>${comment.timestamp}</small>
+            <button class="reply-btn" data-post-index="${postIndex}" data-comment-index="${commentIndex}">Reply</button>
+
+            <div class="replies-section" id="replies-${postIndex}-${commentIndex}"></div>
+
+            <textarea class="reply-input" id="reply-input-${postIndex}-${commentIndex}" placeholder="Add a reply..."></textarea>
+            <button class="add-reply-btn" data-post-index="${postIndex}" data-comment-index="${commentIndex}">Add Reply</button>
+        `;
+
+        commentElement.querySelector('.add-reply-btn').addEventListener('click', () => addReply(postIndex, commentIndex));
+        commentsSection.appendChild(commentElement);
+
+        loadReplies(postIndex, commentIndex, comment.replies); // Load replies for each comment
+    });
+}
+
+// Function to add a reply to a comment
+function addReply(postIndex, commentIndex) {
+    let posts = JSON.parse(localStorage.getItem("posts")) || [];
+    const replyInput = document.getElementById(`reply-input-${postIndex}-${commentIndex}`);
+    const replyContent = replyInput.value.trim();
+
+    if (replyContent === "") {
+        alert("Please write a reply!");
+        return;
+    }
+
+    const reply = {
+        content: replyContent,
+        timestamp: new Date().toLocaleString()
+    };
+
+    posts[postIndex].comments[commentIndex].replies.push(reply);
+    localStorage.setItem("posts", JSON.stringify(posts));
+    loadPosts();  // Reload posts after adding a reply
+}
+
+// Function to load replies
+function loadReplies(postIndex, commentIndex, replies) {
+    const repliesSection = document.getElementById(`replies-${postIndex}-${commentIndex}`);
+
+    replies.forEach(reply => {
+        const replyElement = document.createElement("div");
+        replyElement.classList.add("comment-reply");
+        replyElement.innerHTML = `
+            <p>${reply.content}</p>
+            <small>${reply.timestamp}</small>
+        `;
+
+        repliesSection.appendChild(replyElement);
+    });
 }
 
 // Theme Toggle
@@ -131,31 +178,3 @@ themeToggle.addEventListener("click", () => {
     themeToggle.innerText = themeToggle.innerText === "Switch to Dark Mode" ? 
                             "Switch to Light Mode" : "Switch to Dark Mode";
 });
-
-// Firebase Configuration (replace with your config)
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
-
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-
-// User Authentication
-function checkAuth() {
-    auth.onAuthStateChanged(user => {
-        if (user) {
-            console.log(`User is logged in: ${user.email}`);
-        } else {
-            console.log("No user is logged in.");
-            auth.signInAnonymously().catch((error) => {
-                console.error("Error signing in:", error);
-            });
-        }
-    });
-}
