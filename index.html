@@ -12,13 +12,16 @@
         <span id="flags">Flags: 40</span>
         <span id="timer">Time: 0</span>
     </div>
-    <div class="game-controls">
-        <button id="start-btn">Start Game</button>
-        <button id="resume-btn" style="display: none;">Resume Game</button>
-        <button id="restart-btn" style="display: none;">Restart Game</button>
-    </div>
-    <div id="game-board" style="display: none;"></div>
+    <div id="game-board"></div>
     <button id="flag-toggle" style="display: none;">🚩 Toggle Flag</button>
+
+    <!-- Restart Game Modal -->
+    <div id="restart-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Game Over!</h2>
+            <button id="restart-btn">Restart Game</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
