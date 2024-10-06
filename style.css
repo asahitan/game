@@ -1,104 +1,101 @@
-/* General Styles */
+/* General reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f4;
-}
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-    padding: 1rem;
-}
-.nav-links {
-    list-style: none;
-    display: flex;
-}
-.nav-links li {
-    margin-right: 20px;
-}
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.2rem;
-}
-.logo {
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-.theme-toggle {
-    background-color: white;
-    color: #333;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-}
-
-/* Hero Section */
-.hero {
-    background-image: url('https://example.com/hero-image.jpg');
-    height: 90vh;
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-}
-.cta-btn {
-    background-color: #333;
-    color: white;
-    padding: 1rem;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-
-/* Sections */
-section {
-    padding: 50px;
-    text-align: center;
-}
-.service-item {
-    background-color: white;
+    background-color: #f0f0f0;
     padding: 20px;
-    margin: 10px;
-    border-radius: 5px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Contact Form */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+/* Authentication Section */
+#error {
+    color: red;
 }
-form input, form textarea {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+
+.hidden {
+    display: none;
 }
-form button {
+
+#auth-forms input {
+    display: block;
+    width: 100%;
     padding: 10px;
-    background-color: #333;
+    margin-bottom: 10px;
+}
+
+#auth-forms button {
+    background-color: #4267B2;
     color: white;
+    padding: 10px 20px;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .nav-links {
-        flex-direction: column;
-    }
-    .services-container {
-        flex-direction: column;
-    }
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+textarea, input[type="file"] {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.post-box button {
+    background-color: #4267B2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#posts-section {
+    margin-top: 20px;
+}
+
+.post {
+    background-color: #e9ebee;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.post small {
+    color: #777;
+}
+
+.post img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 10px;
+}
+
+button.edit-btn, button.delete-btn {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #f39c12;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+button.delete-btn {
+    background-color: #e74c3c;
 }
