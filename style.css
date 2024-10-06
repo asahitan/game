@@ -5,7 +5,7 @@
     box-sizing: border-box;
 }
 
-/* Styling the body */
+/* Styling the container */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f4;
@@ -14,19 +14,19 @@ body {
     align-items: center;
     height: 100vh;
     transition: background-color 0.3s, color 0.3s;
-    overflow-y: auto;
+    overflow: hidden; /* Prevent body scroll */
 }
 
-/* Container styling */
 .container {
-    width: 90%;
+    width: 100%;
     max-width: 600px;
     background-color: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, color 0.3s;
-    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height for container */
 }
 
 /* Theme Toggle Button */
@@ -48,7 +48,7 @@ body {
 /* Header Styling */
 header h1 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-size: 24px;
     color: #333;
 }
@@ -57,7 +57,7 @@ header h1 {
 .post-box {
     display: flex;
     flex-direction: column;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 #post-input {
@@ -67,12 +67,10 @@ header h1 {
     resize: none;
     font-size: 16px;
     height: 100px;
-    width: 100%;
 }
 
 #image-input {
     margin-top: 10px;
-    padding: 5px;
 }
 
 #post-btn {
@@ -90,46 +88,44 @@ header h1 {
     background-color: #45a049;
 }
 
-/* Styling posts */
-#posts-section {
-    max-height: 60vh;
-    overflow-y: auto; /* Enable vertical scrolling */
-    margin-top: 20px;
+/* Scrollable posts section */
+.scrollable {
+    flex-grow: 1;
+    overflow-y: auto;
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
+    padding-top: 10px;
 }
 
-#posts-section .post {
+/* Styling posts */
+.post {
     background-color: #e9f5e9;
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 15px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
-#posts-section .post p {
+.post p {
     font-size: 16px;
     margin-bottom: 10px;
-    word-wrap: break-word;
-    text-align: center;
 }
 
-#posts-section .post img {
+.post img {
     max-width: 100%;
     border-radius: 5px;
     margin-top: 10px;
 }
 
-#posts-section .post small {
+.post small {
     font-size: 12px;
     color: #666;
     display: block;
     text-align: right;
 }
 
-#posts-section .post .delete-btn,
-#posts-section .post .edit-btn {
+.delete-btn,
+.edit-btn {
     background-color: #f44336; /* Red */
     color: white;
     border: none;
@@ -140,53 +136,49 @@ header h1 {
     border-radius: 4px;
 }
 
-#posts-section .post .edit-btn {
+.edit-btn {
     background-color: #2196F3; /* Blue */
 }
 
-#posts-section .post .delete-btn:hover,
-#posts-section .post .edit-btn:hover {
+.delete-btn:hover,
+.edit-btn:hover {
     opacity: 0.8;
 }
 
-/* Comment Section */
-.comment-box {
-    display: flex;
-    flex-direction: column;
+/* Comments section */
+.comments-section {
     margin-top: 10px;
-    width: 100%;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
 }
 
-.comment-input {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 5px;
-    width: 100%;
+.comment {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
 }
 
-.comment-btn {
-    padding: 5px;
+.comment-reply {
+    margin-left: 20px;
+}
+
+.reply-btn, .add-reply-btn {
     background-color: #4caf50;
     color: white;
     border: none;
     cursor: pointer;
-    border-radius: 4px;
-}
-
-.comment-btn:hover {
-    background-color: #45a049;
-}
-
-.comment {
-    background-color: #f1f1f1;
+    font-size: 12px;
     padding: 5px;
     border-radius: 4px;
     margin-top: 5px;
-    text-align: center;
 }
 
-/* Dark Theme Styles */
+.reply-btn:hover, .add-reply-btn:hover {
+    opacity: 0.8;
+}
+
+/* Dark Theme */
 body.dark {
     background-color: #121212;
     color: white;
@@ -194,30 +186,4 @@ body.dark {
 
 .container.dark {
     background-color: #1e1e1e;
-}
-
-/* Responsive Media Query */
-@media (max-width: 600px) {
-    .container {
-        width: 100%;
-        padding: 15px;
-    }
-
-    #posts-section {
-        max-height: 50vh;
-    }
-
-    #post-input {
-        font-size: 14px;
-        height: 80px;
-    }
-
-    #post-btn {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    .comment-input, .comment-btn {
-        font-size: 14px;
-    }
 }
