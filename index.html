@@ -4,22 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minesweeper</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Minesweeper</h1>
-    <div class="controls">
-        <span id="flags">Flags: 40</span>
-        <span id="timer">Time: 0</span>
+    <div class="info">
+        <div>Time: <span id="timer">0</span> s</div>
+        <div>Score: <span id="score">0</span></div>
     </div>
-    <div id="game-board"></div>
-    <button id="flag-toggle" style="display: none;">🚩 Toggle Flag</button>
+    <div id="board"></div>
 
-    <!-- Restart Game Modal -->
-    <div id="restart-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2>Game Over!</h2>
-            <button id="restart-btn">Restart Game</button>
+    <div id="popup" class="hidden">
+        <div id="popup-content">
+            <p>You lost! Try again?</p>
+            <button id="restart-button">Restart</button>
         </div>
     </div>
 
