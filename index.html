@@ -3,23 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Social Platform</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Social Network</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body class="light-theme">
-    <div class="container">
-        <h1>What's on your mind?</h1>
-        <div class="post-input">
-            <textarea id="status" placeholder="Write something..."></textarea>
-            <input type="file" id="imageUpload" accept="image/*">
-            <button onclick="addPost()">Post</button>
-        </div>
-        <div class="theme-toggle">
-            <label for="themeToggle">Toggle Dark Theme</label>
-            <input type="checkbox" id="themeToggle" onclick="toggleTheme()">
-        </div>
-        <div id="posts"></div>
-    </div>
+<body>
+    <header>
+        <h1>Welcome to Modern Social</h1>
+    </header>
+
+    <main>
+        <section id="post-section">
+            <h2>What's on your mind?</h2>
+            <textarea id="post-content" rows="4" placeholder="Write something..."></textarea>
+            <button id="post-btn">Post</button>
+        </section>
+
+        <section id="feed-section">
+            <h2>Your Feed</h2>
+            <div id="feed"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Modern Social</p>
+    </footer>
+
     <script src="app.js"></script>
 </body>
 </html>
