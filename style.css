@@ -4,135 +4,83 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: #4CAF50;
     margin: 0;
-    background-color: #8bc34a;
+    height: 100vh;
 }
 
 h1 {
-    margin-bottom: 20px;
-    font-size: 2rem;
-    color: #333;
-    text-align: center;
-}
-
-.controls {
-    display: flex;
-    justify-content: space-between;
-    width: 90%;
-    max-width: 400px;
-    margin-bottom: 20px;
-}
-
-button {
-    padding: 10px 15px;
-    font-size: 1rem;
-    background-color: #2196f3;
     color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
 }
 
-button:hover {
-    background-color: #1976d2;
+.info {
+    display: flex;
+    gap: 20px;
+    color: white;
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
-#game-board {
+#board {
     display: grid;
-    width: 100%;
-    max-width: 400px;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(10, 40px);
+    grid-template-rows: repeat(10, 40px);
     gap: 2px;
 }
 
-.cell {
-    width: 100%;
-    padding-top: 100%; /* Makes the cells square */
-    position: relative;
-    background-color: #ddd;
+.tile {
+    width: 40px;
+    height: 40px;
+    background-color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-    border: 1px solid #999;
+    font-size: 18px;
     cursor: pointer;
 }
 
-.cell.revealed {
-    background-color: #bbb;
+.tile.revealed {
+    background-color: #90EE90;
     cursor: default;
 }
 
-.cell.flagged {
+.tile.bomb {
     background-color: red;
-    color: white;
 }
 
-.cell span {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#flag-toggle {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 1.5rem;
-    background-color: #ff5722;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-@media (min-width: 600px) {
-    #game-board {
-        grid-template-columns: repeat(10, 40px);
-    }
-    .cell {
-        width: 40px;
-        padding-top: 0;
-        height: 40px;
-    }
-}
-
-/* Modal styling */
-.modal {
+#popup {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 10;
 }
 
-.modal-content {
-    background: white;
+#popup.hidden {
+    display: none;
+}
+
+#popup-content {
+    background-color: white;
     padding: 20px;
+    border-radius: 8px;
     text-align: center;
-    border-radius: 5px;
 }
 
-.modal-content h2 {
-    margin-bottom: 20px;
-}
-
-.modal-content button {
-    background-color: #2196f3;
-    color: white;
+button {
     padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
     border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
 }
