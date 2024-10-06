@@ -4,46 +4,22 @@ let flagCount = 40;
 let gameOver = false;
 let timer = 0;
 let interval;
-let longPressTimer;
 let flagMode = false; // Used for the flag toggle mode on mobile
-let isGamePaused = false;
 
 const board = [];
 const gameBoard = document.getElementById('game-board');
 const flagsDisplay = document.getElementById('flags');
 const timerDisplay = document.getElementById('timer');
-const startBtn = document.getElementById('start-btn');
-const resumeBtn = document.getElementById('resume-btn');
+const restartModal = document.getElementById('restart-modal');
 const restartBtn = document.getElementById('restart-btn');
 const flagToggleBtn = document.getElementById('flag-toggle');
 
-// Start the game
-startBtn.addEventListener('click', () => {
-    startBtn.style.display = 'none';
-    resumeBtn.style.display = 'none';
-    restartBtn.style.display = 'block';
-    gameBoard.style.display = 'grid';
-    flagToggleBtn.style.display = 'block';
-    isGamePaused = false;
-    initGame();
-});
-
-// Resume the game (if paused)
-resumeBtn.addEventListener('click', () => {
-    resumeBtn.style.display = 'none';
-    restartBtn.style.display = 'block';
-    gameBoard.style.display = 'grid';
-    flagToggleBtn.style.display = 'block';
-    isGamePaused = false;
-});
-
-// Restart the game
+// Restart the game (after losing)
 restartBtn.addEventListener('click', () => {
+    restartModal.style.display = 'none';
     initGame();
-    gameOver = false;
 });
 
-// Toggle flag mode for mobile
 flagToggleBtn.addEventListener('click', () => {
     flagMode = !flagMode;
     flagToggleBtn.style.backgroundColor = flagMode ? '#ff3d00' : '#ff5722';
@@ -58,7 +34,7 @@ function initGame() {
     timer = 0;
     timerDisplay.textContent = `Time: ${timer}`;
     interval = setInterval(() => {
-        if (!isGamePaused) {
+        if (!gameOver) {
             timer++;
             timerDisplay.textContent = `Time: ${timer}`;
         }
@@ -164,6 +140,7 @@ function revealCell(row, col) {
         alert('Game over!');
         gameOver = true;
         clearInterval(interval);
+        restartModal.style.display = 'block'; // Show restart modal when the game is lost
         return;
     }
 
@@ -183,3 +160,6 @@ function revealCell(row, col) {
         }
     }
 }
+
+// Start the game initially
+initGame();
