@@ -3,68 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Website</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Simple Social App</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <!-- Navigation Bar -->
-    <nav>
-        <div class="logo">MySite</div>
-        <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-        <button class="theme-toggle">Dark Mode</button>
-    </nav>
-
-    <!-- Main Content -->
-    <section id="home">
-        <div class="hero">
-            <h1>Welcome to My Advanced Website</h1>
-            <p>Building a responsive and interactive site with HTML, CSS, and JavaScript!</p>
-            <button class="cta-btn">Get Started</button>
+    <div class="container">
+        <!-- User Authentication -->
+        <div id="auth-section">
+            <h1>Login or Register</h1>
+            <div id="auth-forms">
+                <div id="login-form">
+                    <input type="text" id="login-username" placeholder="Username">
+                    <input type="password" id="login-password" placeholder="Password">
+                    <button onclick="login()">Login</button>
+                </div>
+                <div id="register-form">
+                    <input type="text" id="register-username" placeholder="Username">
+                    <input type="password" id="register-password" placeholder="Password">
+                    <button onclick="register()">Register</button>
+                </div>
+            </div>
+            <p id="auth-error" class="error"></p>
         </div>
-    </section>
 
-    <!-- About Section -->
-    <section id="about">
-        <h2>About Us</h2>
-        <p>We are a team of developers creating modern web applications.</p>
-    </section>
+        <!-- Post Input Section -->
+        <div id="post-section" class="hidden">
+            <header>
+                <h1>What's on your mind?</h1>
+            </header>
 
-    <!-- Services Section -->
-    <section id="services">
-        <h2>Our Services</h2>
-        <div class="services-container">
-            <div class="service-item">
-                <h3>Web Development</h3>
-                <p>Creating responsive and scalable web apps.</p>
+            <div class="post-box">
+                <textarea id="post-input" placeholder="Type your thoughts here..."></textarea>
+                <input type="file" id="image-upload" accept="image/*">
+                <button onclick="submitPost()">Post</button>
             </div>
-            <div class="service-item">
-                <h3>Design</h3>
-                <p>Designing beautiful and user-friendly interfaces.</p>
-            </div>
-            <div class="service-item">
-                <h3>SEO Optimization</h3>
-                <p>Improving your website's search engine rankings.</p>
-            </div>
+
+            <button onclick="logout()">Logout</button>
         </div>
-    </section>
 
-    <!-- Contact Form -->
-    <section id="contact">
-        <h2>Contact Us</h2>
-        <form id="contactForm">
-            <input type="text" id="name" placeholder="Your Name" required>
-            <input type="email" id="email" placeholder="Your Email" required>
-            <textarea id="message" placeholder="Your Message"></textarea>
-            <button type="submit">Send Message</button>
-        </form>
-    </section>
+        <!-- Posts Section -->
+        <div id="posts-section" class="hidden"></div>
+    </div>
 
-    <script src="script.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
