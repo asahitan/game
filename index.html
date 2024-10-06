@@ -1,73 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Social Media Mockup</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social App</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="navbar">
-    <div class="logo">MySocial</div>
-    <div class="search-bar">
-      <input type="text" placeholder="Search...">
-    </div>
-    <div class="nav-links">
-      <a href="#">Home</a>
-      <a href="#">Profile</a>
-      <a href="#">Messages</a>
-      <a href="#">Notifications</a>
-    </div>
-  </nav>
+    <div class="container">
+        <header>
+            <h1>What's on your mind?</h1>
+            <button id="theme-toggle">Switch to Dark Mode</button>
+        </header>
 
-  <div class="main-container">
-    <aside class="sidebar">
-      <div class="profile-info">
-        <img src="profile-pic.jpg" alt="Profile Pic">
-        <h3>John Doe</h3>
-      </div>
-      <div class="friends-list">
-        <h4>Friends</h4>
-        <ul>
-          <li>Friend 1</li>
-          <li>Friend 2</li>
-          <li>Friend 3</li>
-        </ul>
-      </div>
-    </aside>
-
-    <section class="feed">
-      <div class="status-update">
-        <textarea placeholder="What's on your mind?"></textarea>
-        <button>Post</button>
-      </div>
-      <div class="posts">
-        <div class="post">
-          <div class="post-header">
-            <img src="profile-pic.jpg" alt="User">
-            <h4>User Name</h4>
-          </div>
-          <p>Post content goes here...</p>
-          <div class="post-actions">
-            <button>Like</button>
-            <button>Comment</button>
-            <button>Share</button>
-          </div>
+        <div class="post-box">
+            <textarea id="post-input" placeholder="Share what's on your mind..."></textarea>
+            <input type="file" id="image-input" accept="image/*" />
+            <button id="post-btn">Post</button>
         </div>
-        <!-- Repeat for more posts -->
-      </div>
-    </section>
 
-    <aside class="chatbox">
-      <h4>Chats</h4>
-      <div class="chat">
-        <p>Friend 1</p>
-        <p>Friend 2</p>
-        <p>Friend 3</p>
-      </div>
-    </aside>
-  </div>
+        <div id="posts-section">
+            <!-- Posts will be dynamically loaded here -->
+        </div>
+    </div>
 
-  <script src="scripts.js"></script>
+    <!-- Firebase Authentication SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
