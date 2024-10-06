@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f0f2f5;
     display: flex;
     justify-content: center;
@@ -16,9 +16,9 @@ body {
 }
 
 header {
-    background-color: #1877f2;
+    background-color: #007bff;
     color: white;
-    padding: 1em;
+    padding: 1.5em;
     width: 100%;
     text-align: center;
 }
@@ -26,31 +26,38 @@ header {
 main {
     background: white;
     padding: 2em;
-    border-radius: 8px;
+    border-radius: 10px;
     width: 90%;
     max-width: 600px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-textarea {
+input, textarea {
     width: 100%;
-    padding: 1em;
-    border-radius: 8px;
+    padding: 0.75em;
+    border-radius: 6px;
     border: 1px solid #ccc;
     margin-bottom: 1em;
 }
 
 button {
-    background-color: #1877f2;
+    background-color: #007bff;
     color: white;
     border: none;
-    padding: 0.5em 1em;
-    border-radius: 8px;
+    padding: 0.75em 1.25em;
+    border-radius: 6px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #1557b0;
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: -0.75em;
+    margin-bottom: 1em;
 }
 
 #feed {
@@ -61,6 +68,15 @@ button:hover {
     background-color: #fff;
     border: 1px solid #ddd;
     padding: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 1.5em;
     border-radius: 8px;
+}
+
+#logout-btn {
+    margin-top: 2em;
+    background-color: #dc3545;
+}
+
+#logout-btn:hover {
+    background-color: #c82333;
 }
