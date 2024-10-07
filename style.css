@@ -1,86 +1,13 @@
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #4CAF50;
     margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
+    background-color: #222;
 }
 
-h1 {
-    color: white;
-}
-
-.info {
-    display: flex;
-    gap: 20px;
-    color: white;
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-#board {
-    display: grid;
-    grid-template-columns: repeat(10, 40px);
-    grid-template-rows: repeat(10, 40px);
-    gap: 2px;
-}
-
-.tile {
-    width: 40px;
-    height: 40px;
-    background-color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-.tile.revealed {
-    background-color: #90EE90;
-    cursor: default;
-}
-
-.tile.bomb {
-    background-color: red;
-}
-
-#popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-}
-
-#popup.hidden {
-    display: none;
-}
-
-#popup-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-}
-
-button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
+canvas {
+    border: 1px solid white;
 }
