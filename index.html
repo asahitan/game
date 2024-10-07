@@ -3,24 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minesweeper</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>2D Adventure Game</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Minesweeper</h1>
-    <div class="info">
-        <div>Time: <span id="timer">0</span> s</div>
-        <div>Score: <span id="score">0</span></div>
-    </div>
-    <div id="board"></div>
-
-    <div id="popup" class="hidden">
-        <div id="popup-content">
-            <p>You lost! Try again?</p>
-            <button id="restart-button">Restart</button>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script src="game.js"></script>
 </body>
 </html>
