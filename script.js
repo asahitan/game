@@ -1,98 +1,48 @@
-const board = document.getElementById('board');
-const timerElement = document.getElementById('timer');
-const scoreElement = document.getElementById('score');
-const popup = document.getElementById('popup');
-const restartButton = document.getElementById('restart-button');
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-let gridSize = 10;
-let bombCount = 10;
-let tiles = [];
-let timer = 0;
-let interval = null;
-let score = 0;
-let gameEnded = false;
+// Player settings
+let player = {
+    x: 50,
+    y: 50,
+    width: 40,
+    height: 40,
+    speed: 5,
+    color: 'white'
+};
 
-function startTimer() {
-    interval = setInterval(() => {
-        timer++;
-        timerElement.innerText = timer;
-    }, 1000);
-}
+// Listen for keypress events
+window.addEventListener('keydown', movePlayer);
 
-function stopTimer() {
-    clearInterval(interval);
-}
-
-function createBoard() {
-    board.innerHTML = '';
-    tiles = [];
-    score = 0;
-    timer = 0;
-    gameEnded = false;
-    timerElement.innerText = timer;
-    scoreElement.innerText = score;
-    popup.classList.add('hidden');
-    stopTimer();
-    
-    // Generate random bombs
-    let bombPositions = new Set();
-    while (bombPositions.size < bombCount) {
-        bombPositions.add(Math.floor(Math.random() * gridSize * gridSize));
-    }
-
-    // Create tiles
-    for (let i = 0; i < gridSize * gridSize; i++) {
-        const tile = document.createElement('div');
-        tile.classList.add('tile');
-        tile.dataset.index = i;
-        if (bombPositions.has(i)) {
-            tile.dataset.bomb = 'true';
-        }
-        tile.addEventListener('click', () => revealTile(tile));
-        tiles.push(tile);
-        board.appendChild(tile);
+function movePlayer(event) {
+    switch(event.key) {
+        case 'ArrowUp':
+            player.y -= player.speed;
+            break;
+        case 'ArrowDown':
+            player.y += player.speed;
+            break;
+        case 'ArrowLeft':
+            player.x -= player.speed;
+            break;
+        case 'ArrowRight':
+            player.x += player.speed;
+            break;
     }
 }
 
-function revealTile(tile) {
-    if (gameEnded || tile.classList.contains('revealed')) return;
-
-    if (!interval) {
-        startTimer();
-    }
-
-    tile.classList.add('revealed');
-
-    if (tile.dataset.bomb === 'true') {
-        tile.classList.add('bomb');
-        endGame(false);
-    } else {
-        score++;
-        scoreElement.innerText = score;
-
-        if (score === gridSize * gridSize - bombCount) {
-            endGame(true);
-        }
-    }
+// Game loop to continuously update the game
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawPlayer();
+    requestAnimationFrame(gameLoop);
 }
 
-function endGame(won) {
-    gameEnded = true;
-    stopTimer();
-    
-    if (!won) {
-        tiles.forEach(tile => {
-            if (tile.dataset.bomb === 'true') {
-                tile.classList.add('bomb');
-            }
-        });
-        popup.classList.remove('hidden');
-    } else {
-        alert('Congratulations! You won!');
-        createBoard();
-    }
+// Draw player character
+function drawPlayer() {
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, player.width, player.height);
 }
 
-restartButton.addEventListener('click', createBoard);
-
-createBoard();
+// Start the game
+gameLoop();
