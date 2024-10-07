@@ -1,13 +1,38 @@
 body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #222;
+  font-family: Arial, sans-serif;
+  text-align: center;
 }
 
-canvas {
-    border: 1px solid white;
+#game-board {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  grid-template-rows: repeat(10, 40px);
+  gap: 2px;
+  justify-content: center;
+  margin: 20px auto;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  background-color: #bdbdbd;
+  border: 2px solid #7a7a7a;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 40px;
+  font-size: 18px;
+}
+
+#restart-btn {
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#restart-btn:hover {
+  background-color: #0056b3;
 }
