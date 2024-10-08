@@ -2,7 +2,7 @@ const grid = document.getElementById("minesweeper-grid");
 const restartBtn = document.getElementById("restartBtn");
 const timerDisplay = document.getElementById("timer");
 const scoreDisplay = document.getElementById("score");
-const difficultySelect = document.getElementById("difficulty-select");
+const difficultySelect = document.getElementById("difficulty");
 
 let rows, cols, mineCount;
 let tiles = [];
@@ -12,20 +12,13 @@ let time = 0;
 let score = 0;
 let gameActive = true;
 
-const difficultySettings = {
-    easy: { rows: 8, cols: 8, mines: 10 },
-    medium: { rows: 12, cols: 12, mines: 20 },
-    hard: { rows: 16, cols: 16, mines: 40 }
+const difficulties = {
+    easy: { rows: 10, cols: 10, mines: 15 },
+    medium: { rows: 15, cols: 15, mines: 40 },
+    hard: { rows: 20, cols: 20, mines: 70 }
 };
 
-// Initialize game based on the selected difficulty
 const initializeGame = () => {
-    const difficulty = difficultySelect.value;
-    rows = difficultySettings[difficulty].rows;
-    cols = difficultySettings[difficulty].cols;
-    mineCount = difficultySettings[difficulty].mines;
-
-    grid.className = `grid ${difficulty}`;
     grid.innerHTML = "";
     tiles = [];
     mines = [];
@@ -35,6 +28,15 @@ const initializeGame = () => {
     timerDisplay.innerText = time;
     scoreDisplay.innerText = score;
     clearInterval(timer);
+
+    // Get selected difficulty
+    const difficulty = difficultySelect.value;
+    rows = difficulties[difficulty].rows;
+    cols = difficulties[difficulty].cols;
+    mineCount = difficulties[difficulty].mines;
+
+    // Adjust grid size class
+    grid.className = `grid ${difficulty}`;
 
     // Generate grid
     for (let row = 0; row < rows; row++) {
