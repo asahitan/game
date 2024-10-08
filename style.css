@@ -11,6 +11,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
 }
 
 .container {
@@ -19,7 +20,8 @@ body {
     padding: 30px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 400px;
+    width: 100%;
+    max-width: 400px;
 }
 
 h1 {
@@ -34,23 +36,14 @@ h1 {
     margin-bottom: 20px;
 }
 
-#mode-buttons {
+#mode-selection {
     margin-bottom: 20px;
 }
 
-.mode-btn {
-    margin: 0 10px;
-    padding: 10px 15px;
+#mode-select {
+    padding: 5px 10px;
     font-size: 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
     border-radius: 5px;
-    cursor: pointer;
-}
-
-.mode-btn.active {
-    background-color: #28a745;
 }
 
 #word-display {
@@ -91,4 +84,24 @@ h1 {
     margin-top: 20px;
     font-size: 18px;
     color: #007bff;
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 20px;
+    }
+    
+    #word-display {
+        font-size: 18px;
+        height: 40px;
+        line-height: 40px;
+    }
+    
+    .word-input {
+        font-size: 16px;
+    }
 }
