@@ -3,12 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minesweeper</title>
+  <title>Advanced Minesweeper</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Minesweeper</h1>
-  <button id="restart-btn">Restart</button>
+  <h1>Advanced Minesweeper</h1>
+  
+  <div class="controls">
+    <label for="difficulty">Difficulty:</label>
+    <select id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+
+    <button id="restart-btn">Restart</button>
+  </div>
+
   <div id="game-board"></div>
 
   <script src="script.js"></script>
