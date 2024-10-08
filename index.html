@@ -11,19 +11,16 @@
         <div class="header">
             <div class="timer">Time: <span id="timer">0</span></div>
             <div class="score">Score: <span id="score">0</span></div>
+            <div>
+                <label for="difficulty">Difficulty:</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
             <button id="restartBtn">Restart Game</button>
         </div>
-
-        <!-- Difficulty Selection Dropdown -->
-        <div class="difficulty">
-            <label for="difficulty-select">Difficulty: </label>
-            <select id="difficulty-select">
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-            </select>
-        </div>
-
         <div id="minesweeper-grid" class="grid"></div>
     </div>
     
