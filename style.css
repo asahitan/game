@@ -3,11 +3,12 @@ body {
   text-align: center;
 }
 
+.controls {
+  margin: 20px;
+}
+
 #game-board {
   display: grid;
-  grid-template-columns: repeat(10, 40px);
-  grid-template-rows: repeat(10, 40px);
-  gap: 2px;
   justify-content: center;
   margin: 20px auto;
 }
@@ -21,6 +22,21 @@ body {
   vertical-align: middle;
   line-height: 40px;
   font-size: 18px;
+  cursor: pointer;
+  position: relative;
+}
+
+.cell.flagged {
+  background-color: #ffc107;
+}
+
+.flag {
+  width: 16px;
+  height: 16px;
+  background-color: red;
+  position: absolute;
+  top: 12px;
+  left: 12px;
 }
 
 #restart-btn {
