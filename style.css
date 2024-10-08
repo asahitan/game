@@ -146,10 +146,22 @@ body.dark-mode .start-btn {
 }
 
 /* Same as before with this added: */
+#game-info {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    font-size: 18px;
+}
+
 #lives {
     margin-top: 10px;
     font-size: 18px;
     color: #dc3545; /* Red color for life indicator */
+}
+
+/* Hidden class for hiding elements */
+.hidden {
+    display: none;
 }
 
 /* Dark Mode Styling for Lives */
