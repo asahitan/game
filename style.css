@@ -1,19 +1,51 @@
-.grid {
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    margin: 0;
+}
+
+.game-container {
+    text-align: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#game-board {
     display: grid;
     gap: 2px;
+    justify-content: center;
 }
 
-.grid.easy {
-    grid-template-columns: repeat(10, 40px);
-    grid-template-rows: repeat(10, 40px);
+.tile {
+    width: 30px;
+    height: 30px;
+    background-color: #ccc;
+    border: 1px solid #888;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.grid.medium {
-    grid-template-columns: repeat(15, 40px);
-    grid-template-rows: repeat(15, 40px);
+.tile.revealed {
+    background-color: #eee;
 }
 
-.grid.hard {
-    grid-template-columns: repeat(20, 40px);
-    grid-template-rows: repeat(20, 40px);
+#timer, #score {
+    margin-left: 20px;
+}
+
+#difficulty {
+    margin-left: 20px;
 }
