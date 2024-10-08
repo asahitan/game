@@ -8,25 +8,48 @@ let board = [];
 let mines = [];
 let flagged = [];
 let gameOver = false;
+let timeElapsed = 0;
+let timerInterval = null;
+let moveCount = 0;
 
 const gameBoard = document.getElementById("game-board");
 const restartBtn = document.getElementById("restart-btn");
 const difficultySelect = document.getElementById("difficulty");
+const timeDisplay = document.getElementById("time-display");
+const scoreDisplay = document.getElementById("score-display");
 
 function initializeGame() {
   const difficulty = difficultySelect.value;
   const { size, mines: mineCount } = difficulties[difficulty];
-  
+
   gameBoard.innerHTML = '';
   board = [];
   mines = [];
   flagged = [];
   gameOver = false;
+  timeElapsed = 0;
+  moveCount = 0;
+  timeDisplay.textContent = '0';
+  scoreDisplay.textContent = '0';
+
+  clearInterval(timerInterval);
+  startTimer();
 
   gameBoard.style.gridTemplateColumns = `repeat(${size}, 40px)`;
   createBoard(size);
   placeMines(size, mineCount);
   addEventListeners(size);
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timeElapsed++;
+    timeDisplay.textContent = timeElapsed;
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
 }
 
 function createBoard(size) {
@@ -72,15 +95,19 @@ function addEventListeners(size) {
 }
 
 function handleClick(cell) {
+  if (gameOver || cell.classList.contains("revealed") || cell.classList.contains("flagged")) return;
+
   const row = parseInt(cell.dataset.row);
   const col = parseInt(cell.dataset.col);
 
-  if (gameOver || cell.classList.contains("revealed") || cell.classList.contains("flagged")) return;
+  moveCount++; // Increment move count on each left-click
+  updateScore();
 
   if (isMine(row, col)) {
     revealAllMines();
     cell.style.backgroundColor = "red";
     alert("Game Over! You hit a mine.");
+    stopTimer();
     gameOver = true;
   } else {
     revealCell(cell, row, col);
@@ -116,7 +143,6 @@ function revealCell(cell, row, col) {
   if (mineCount > 0) {
     cell.textContent = mineCount;
   } else {
-    // Recursive reveal of neighboring cells
     revealNeighbors(row, col);
   }
 }
@@ -167,8 +193,21 @@ function revealAllMines() {
 function checkWin() {
   if (flagged.length === mines.length && flagged.every(f => isMine(f.row, f.col))) {
     alert("Congratulations! You've flagged all the mines and won.");
+    stopTimer();
+    updateScore(true); // Pass "true" to indicate a win
     gameOver = true;
   }
+}
+
+function updateScore(isWin = false) {
+  let baseScore = isWin ? 1000 : 0; // Base score for winning
+  let timePenalty = timeElapsed * 2; // Higher time results in lower score
+  let movePenalty = moveCount * 5;   // More moves result in lower score
+
+  let finalScore = baseScore - timePenalty - movePenalty;
+  finalScore = Math.max(finalScore, 0); // Ensure score doesn't go negative
+
+  scoreDisplay.textContent = finalScore;
 }
 
 // Initialize game on page load
