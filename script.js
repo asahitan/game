@@ -5,9 +5,7 @@ const tpsDisplay = document.getElementById("tps-value");
 const timeDisplay = document.getElementById("time-left");
 const startButton = document.getElementById("start-btn");
 const resultMessage = document.getElementById("result-message");
-const modeButtons = document.querySelectorAll(".mode-btn");
-const mode60sButton = document.getElementById("60s-mode");
-const mode10sButton = document.getElementById("10s-mode");
+const modeSelect = document.getElementById("mode-select");
 
 let words = [
     "javascript", "advanced", "developer", "keyboard", "function", "variable",
@@ -39,6 +37,7 @@ function startGame() {
     startButton.disabled = true;
     startButton.textContent = "Playing...";
 
+    gameMode = modeSelect.value;
     if (gameMode === "60s") {
         timeLeft = 60;
     } else if (gameMode === "10s") {
@@ -99,22 +98,24 @@ wordInput.addEventListener("input", () => {
 
 startButton.addEventListener("click", startGame);
 
-modeButtons.forEach(button => {
-    button.addEventListener("click", (e) => {
-        modeButtons.forEach(btn => btn.classList.remove("active"));
-        e.target.classList.add("active");
+modeSelect.addEventListener("change", (e) => {
+    gameMode = e.target.value;
 
-        gameMode = e.target.id === "60s-mode" ? "60s" : "10s";
+    if (isPlaying) {
+        clearInterval(gameInterval);
+        endGame(); // Stop current game if switching modes
+    }
 
-        if (isPlaying) {
-            clearInterval(gameInterval);
-            endGame(); // Stop current game if switching modes
-        }
-
-        if (gameMode === "60s") {
-            timeDisplay.textContent = 60;
-        } else if (gameMode === "10s") {
-            timeDisplay.textContent = 10;
-        }
-    });
+    if (gameMode === "60s") {
+        timeDisplay.textContent = 60;
+    } else if (gameMode === "10s") {
+        timeDisplay.textContent = 10;
+    }
 });
+
+// Disable copy-paste on word input to prevent cheating
+wordInput.addEventListener('paste', (e) => e.preventDefault());
+wordInput.addEventListener('copy', (e) => e.preventDefault());
+
+// Disable long-press menu for copy-paste on mobile devices
+wordInput.addEventListener('contextmenu', (e) => e.preventDefault());
