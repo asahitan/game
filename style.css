@@ -150,12 +150,12 @@ body.dark-mode .start-btn {
     display: flex;
     justify-content: center;
     gap: 10px;
-    font-size: 18px;
+    font-size: 14px;
 }
 
 #lives {
     margin-top: 10px;
-    font-size: 18px;
+    font-size: 16px;
     color: #dc3545; /* Red color for life indicator */
 }
 
