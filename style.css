@@ -1,7 +1,8 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
 body {
@@ -9,67 +10,61 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background-color: #f4f4f4;
 }
 
-.container {
-    text-align: center;
-}
-
-.header {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 200px;
-}
-
-.score-timer {
+.game-container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-#restartBtn {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
 }
 
-#restartBtn:hover {
-    background-color: #45a049;
+.timer, .score {
+    font-size: 18px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(10, 40px);
     grid-template-rows: repeat(10, 40px);
-    gap: 5px;
+    gap: 2px;
 }
 
-.cell {
+.grid div {
     width: 40px;
     height: 40px;
-    background-color: #ddd;
-    border: 1px solid #ccc;
+    background-color: #ccc;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 20px;
     cursor: pointer;
-    user-select: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
 }
 
-.cell.revealed {
-    background-color: #bbb;
-    cursor: default;
+.grid div.revealed {
+    background-color: #fff;
 }
 
-.cell.flagged {
-    background-color: #ffcc00;
+.grid div.mine {
+    background-color: red;
+}
+
+.grid div.flagged {
+    background-color: yellow;
 }
