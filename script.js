@@ -1,216 +1,120 @@
-const difficulties = {
-  easy: { size: 8, mines: 10 },
-  medium: { size: 16, mines: 40 },
-  hard: { size: 24, mines: 99 },
-};
-
 let board = [];
-let mines = [];
-let flagged = [];
-let gameOver = false;
-let timeElapsed = 0;
-let timerInterval = null;
-let moveCount = 0;
+let mineCount = 10;
+let gameBoard = document.getElementById('game-board');
+let score = 0;
+let time = 0;
+let highScore = localStorage.getItem('highScore') || 0;
+let timerInterval;
 
-const gameBoard = document.getElementById("game-board");
-const restartBtn = document.getElementById("restart-btn");
-const difficultySelect = document.getElementById("difficulty");
-const timeDisplay = document.getElementById("time-display");
-const scoreDisplay = document.getElementById("score-display");
-
-function initializeGame() {
-  const difficulty = difficultySelect.value;
-  const { size, mines: mineCount } = difficulties[difficulty];
-
-  gameBoard.innerHTML = '';
-  board = [];
-  mines = [];
-  flagged = [];
-  gameOver = false;
-  timeElapsed = 0;
-  moveCount = 0;
-  timeDisplay.textContent = '0';
-  scoreDisplay.textContent = '0';
-
-  clearInterval(timerInterval);
-  startTimer();
-
-  gameBoard.style.gridTemplateColumns = `repeat(${size}, 40px)`;
-  createBoard(size);
-  placeMines(size, mineCount);
-  addEventListeners(size);
+// Initialize the game
+function initGame() {
+    board = createBoard(10, 10, mineCount);
+    displayBoard(board);
+    resetTimer();
+    score = 0;
+    document.getElementById('score').textContent = score;
+    document.getElementById('highScore').textContent = highScore;
 }
 
-function startTimer() {
-  timerInterval = setInterval(() => {
-    timeElapsed++;
-    timeDisplay.textContent = timeElapsed;
-  }, 1000);
-}
-
-function stopTimer() {
-  clearInterval(timerInterval);
-}
-
-function createBoard(size) {
-  for (let i = 0; i < size; i++) {
-    const row = [];
-    for (let j = 0; j < size; j++) {
-      const cell = document.createElement("div");
-      cell.classList.add("cell");
-      cell.dataset.row = i;
-      cell.dataset.col = j;
-      gameBoard.appendChild(cell);
-      row.push(cell);
+// Create the board with mines
+function createBoard(rows, cols, mineCount) {
+    let board = Array(rows).fill().map(() => Array(cols).fill(0));
+    // Add mines
+    for (let i = 0; i < mineCount; i++) {
+        let row, col;
+        do {
+            row = Math.floor(Math.random() * rows);
+            col = Math.floor(Math.random() * cols);
+        } while (board[row][col] === 'M');
+        board[row][col] = 'M';
     }
-    board.push(row);
-  }
-}
-
-function placeMines(size, mineCount) {
-  let placedMines = 0;
-  while (placedMines < mineCount) {
-    const row = Math.floor(Math.random() * size);
-    const col = Math.floor(Math.random() * size);
-
-    if (!mines.some(mine => mine.row === row && mine.col === col)) {
-      mines.push({ row, col });
-      placedMines++;
-    }
-  }
-}
-
-function addEventListeners(size) {
-  board.forEach(row => {
-    row.forEach(cell => {
-      cell.addEventListener("click", () => handleClick(cell));
-      cell.addEventListener("contextmenu", (e) => {
-        e.preventDefault();
-        handleRightClick(cell);
-      });
-    });
-  });
-
-  restartBtn.addEventListener("click", initializeGame);
-}
-
-function handleClick(cell) {
-  if (gameOver || cell.classList.contains("revealed") || cell.classList.contains("flagged")) return;
-
-  const row = parseInt(cell.dataset.row);
-  const col = parseInt(cell.dataset.col);
-
-  moveCount++; // Increment move count on each left-click
-  updateScore();
-
-  if (isMine(row, col)) {
-    revealAllMines();
-    cell.style.backgroundColor = "red";
-    alert("Game Over! You hit a mine.");
-    stopTimer();
-    gameOver = true;
-  } else {
-    revealCell(cell, row, col);
-  }
-
-  checkWin();
-}
-
-function handleRightClick(cell) {
-  if (gameOver || cell.classList.contains("revealed")) return;
-
-  const row = parseInt(cell.dataset.row);
-  const col = parseInt(cell.dataset.col);
-
-  if (cell.classList.contains("flagged")) {
-    cell.classList.remove("flagged");
-    cell.innerHTML = '';
-    flagged = flagged.filter(f => f.row !== row || f.col !== col);
-  } else {
-    cell.classList.add("flagged");
-    const flag = document.createElement("div");
-    flag.classList.add("flag");
-    cell.appendChild(flag);
-    flagged.push({ row, col });
-  }
-
-  checkWin();
-}
-
-function revealCell(cell, row, col) {
-  cell.classList.add("revealed");
-  const mineCount = countMines(row, col);
-  if (mineCount > 0) {
-    cell.textContent = mineCount;
-  } else {
-    revealNeighbors(row, col);
-  }
-}
-
-function isMine(row, col) {
-  return mines.some(mine => mine.row === row && mine.col === col);
-}
-
-function countMines(row, col) {
-  let count = 0;
-  for (let i = -1; i <= 1; i++) {
-    for (let j = -1; j <= 1; j++) {
-      const newRow = row + i;
-      const newCol = col + j;
-      if (newRow >= 0 && newRow < board.length && newCol >= 0 && newCol < board.length) {
-        if (isMine(newRow, newCol)) {
-          count++;
+    // Calculate numbers
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            if (board[r][c] === 'M') continue;
+            board[r][c] = calculateMines(board, r, c);
         }
-      }
     }
-  }
-  return count;
+    return board;
 }
 
-function revealNeighbors(row, col) {
-  for (let i = -1; i <= 1; i++) {
-    for (let j = -1; j <= 1; j++) {
-      const newRow = row + i;
-      const newCol = col + j;
-      if (newRow >= 0 && newRow < board.length && newCol >= 0 && newCol < board.length) {
-        const neighbor = board[newRow][newCol];
-        if (!neighbor.classList.contains("revealed")) {
-          revealCell(neighbor, newRow, newCol);
+// Calculate the number of mines around a tile
+function calculateMines(board, row, col) {
+    let mines = 0;
+    for (let r = row - 1; r <= row + 1; r++) {
+        for (let c = col - 1; c <= col + 1; c++) {
+            if (r >= 0 && r < board.length && c >= 0 && c < board[0].length && board[r][c] === 'M') {
+                mines++;
+            }
         }
-      }
     }
-  }
+    return mines;
 }
 
-function revealAllMines() {
-  mines.forEach(mine => {
-    const mineCell = board[mine.row][mine.col];
-    mineCell.classList.add("revealed");
-    mineCell.style.backgroundColor = "red";
-  });
+// Display the board on the screen
+function displayBoard(board) {
+    gameBoard.innerHTML = '';
+    for (let r = 0; r < board.length; r++) {
+        for (let c = 0; c < board[0].length; c++) {
+            let cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.dataset.row = r;
+            cell.dataset.col = c;
+            cell.addEventListener('click', handleCellClick);
+            gameBoard.appendChild(cell);
+        }
+    }
 }
 
+// Handle a click on a cell
+function handleCellClick(event) {
+    let row = parseInt(event.target.dataset.row);
+    let col = parseInt(event.target.dataset.col);
+    if (board[row][col] === 'M') {
+        event.target.classList.add('mine');
+        alert('Game Over!');
+        clearInterval(timerInterval);
+    } else {
+        event.target.textContent = board[row][col];
+        event.target.classList.add('open');
+        score++;
+        document.getElementById('score').textContent = score;
+        checkWin();
+    }
+}
+
+// Check if the player has won
 function checkWin() {
-  if (flagged.length === mines.length && flagged.every(f => isMine(f.row, f.col))) {
-    alert("Congratulations! You've flagged all the mines and won.");
-    stopTimer();
-    updateScore(true); // Pass "true" to indicate a win
-    gameOver = true;
-  }
+    let openCells = document.querySelectorAll('.cell.open').length;
+    if (openCells === (board.length * board[0].length) - mineCount) {
+        alert('You win!');
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('highScore', highScore);
+        }
+        clearInterval(timerInterval);
+    }
 }
 
-function updateScore(isWin = false) {
-  let baseScore = isWin ? 1000 : 0; // Base score for winning
-  let timePenalty = timeElapsed * 2; // Higher time results in lower score
-  let movePenalty = moveCount * 5;   // More moves result in lower score
-
-  let finalScore = baseScore - timePenalty - movePenalty;
-  finalScore = Math.max(finalScore, 0); // Ensure score doesn't go negative
-
-  scoreDisplay.textContent = finalScore;
+// Timer logic
+function startTimer() {
+    let startTime = Date.now();
+    timerInterval = setInterval(() => {
+        let elapsed = Date.now() - startTime;
+        let minutes = Math.floor(elapsed / 60000);
+        let seconds = Math.floor((elapsed % 60000) / 1000);
+        document.getElementById('time').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }, 1000);
 }
 
-// Initialize game on page load
-initializeGame();
+function resetTimer() {
+    clearInterval(timerInterval);
+    document.getElementById('time').textContent = '00:00';
+    startTimer();
+}
 
-difficultySelect.addEventListener("change", initializeGame);
+// Restart the game
+document.getElementById('restartBtn').addEventListener('click', initGame);
+
+// Initialize the game on page load
+initGame();
