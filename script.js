@@ -1,164 +1,151 @@
-let gridSize = 10;
+const grid = document.getElementById("minesweeper-grid");
+const restartBtn = document.getElementById("restartBtn");
+const timerDisplay = document.getElementById("timer");
+const scoreDisplay = document.getElementById("score");
+
+let rows = 10;
+let cols = 10;
 let mineCount = 15;
-let grid = [];
-let revealedCount = 0;
+let tiles = [];
+let mines = [];
 let timer;
-let timeElapsed = 0;
+let time = 0;
 let score = 0;
 let gameActive = true;
 
-document.addEventListener('DOMContentLoaded', () => {
-    createGrid();
-    document.getElementById('restartBtn').addEventListener('click', restartGame);
-    startTimer();
-});
-
-function createGrid() {
-    let minesweeperGrid = document.getElementById('minesweeperGrid');
-    minesweeperGrid.innerHTML = '';
-    grid = [];
-    revealedCount = 0;
+const initializeGame = () => {
+    grid.innerHTML = "";
+    tiles = [];
+    mines = [];
+    time = 0;
     score = 0;
     gameActive = true;
+    timerDisplay.innerText = time;
+    scoreDisplay.innerText = score;
+    clearInterval(timer);
 
-    for (let i = 0; i < gridSize; i++) {
-        let row = [];
-        for (let j = 0; j < gridSize; j++) {
-            let cell = document.createElement('div');
-            cell.classList.add('cell');
-            cell.setAttribute('data-row', i);
-            cell.setAttribute('data-col', j);
-            cell.addEventListener('click', () => revealCell(i, j));
-            cell.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                flagCell(i, j);
-            });
-            minesweeperGrid.appendChild(cell);
-            row.push({
-                mine: false,
-                revealed: false,
-                flagged: false,
-                element: cell
-            });
+    // Generate grid
+    for (let row = 0; row < rows; row++) {
+        let rowArr = [];
+        for (let col = 0; col < cols; col++) {
+            const tile = document.createElement("div");
+            tile.dataset.row = row;
+            tile.dataset.col = col;
+            tile.addEventListener("click", handleTileClick);
+            tile.addEventListener("contextmenu", handleRightClick);
+            grid.appendChild(tile);
+            rowArr.push(tile);
         }
-        grid.push(row);
+        tiles.push(rowArr);
     }
 
-    placeMines();
-    updateScore();
-}
-
-function placeMines() {
-    let minesPlaced = 0;
-    while (minesPlaced < mineCount) {
-        let row = Math.floor(Math.random() * gridSize);
-        let col = Math.floor(Math.random() * gridSize);
-        if (!grid[row][col].mine) {
-            grid[row][col].mine = true;
-            minesPlaced++;
-        }
-    }
-}
-
-function revealCell(row, col) {
-    if (!gameActive || grid[row][col].revealed || grid[row][col].flagged) return;
-    
-    grid[row][col].revealed = true;
-    revealedCount++;
-    grid[row][col].element.classList.add('revealed');
-
-    if (grid[row][col].mine) {
-        gameOver(false);
-        return;
+    // Place mines
+    for (let i = 0; i < mineCount; i++) {
+        let row, col;
+        do {
+            row = Math.floor(Math.random() * rows);
+            col = Math.floor(Math.random() * cols);
+        } while (mines.some(mine => mine.row === row && mine.col === col));
+        mines.push({ row, col });
+        tiles[row][col].dataset.mine = "true";
     }
 
-    let mineCount = countMinesAround(row, col);
-    if (mineCount > 0) {
-        grid[row][col].element.textContent = mineCount;
+    startTimer();
+};
+
+const startTimer = () => {
+    timer = setInterval(() => {
+        if (!gameActive) return;
+        time++;
+        timerDisplay.innerText = time;
+    }, 1000);
+};
+
+const handleTileClick = (e) => {
+    if (!gameActive) return;
+
+    const tile = e.target;
+    const row = parseInt(tile.dataset.row);
+    const col = parseInt(tile.dataset.col);
+
+    if (tile.classList.contains("revealed") || tile.classList.contains("flagged")) return;
+
+    if (tile.dataset.mine) {
+        // Game over
+        tile.classList.add("mine");
+        endGame(false);
     } else {
-        revealSurroundingCells(row, col);
+        revealTile(row, col);
+        score += 10;
+        scoreDisplay.innerText = score;
     }
+};
 
-    if (revealedCount === gridSize * gridSize - mineCount) {
-        gameOver(true);
+const revealTile = (row, col) => {
+    const tile = tiles[row][col];
+    if (tile.classList.contains("revealed")) return;
+
+    tile.classList.add("revealed");
+
+    const minesAround = countMinesAround(row, col);
+    if (minesAround > 0) {
+        tile.innerText = minesAround;
+    } else {
+        revealSurroundingTiles(row, col);
     }
-}
+};
 
-function revealSurroundingCells(row, col) {
-    for (let i = -1; i <= 1; i++) {
-        for (let j = -1; j <= 1; j++) {
-            let newRow = row + i;
-            let newCol = col + j;
-            if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
-                revealCell(newRow, newCol);
+const countMinesAround = (row, col) => {
+    let mineCount = 0;
+    for (let r = row - 1; r <= row + 1; r++) {
+        for (let c = col - 1; c <= col + 1; c++) {
+            if (r >= 0 && r < rows && c >= 0 && c < cols) {
+                if (tiles[r][c].dataset.mine) mineCount++;
             }
         }
     }
-}
+    return mineCount;
+};
 
-function countMinesAround(row, col) {
-    let count = 0;
-    for (let i = -1; i <= 1; i++) {
-        for (let j = -1; j <= 1; j++) {
-            let newRow = row + i;
-            let newCol = col + j;
-            if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize && grid[newRow][newCol].mine) {
-                count++;
+const revealSurroundingTiles = (row, col) => {
+    for (let r = row - 1; r <= row + 1; r++) {
+        for (let c = col - 1; c <= col + 1; c++) {
+            if (r >= 0 && r < rows && c >= 0 && c < cols) {
+                revealTile(r, c);
             }
         }
     }
-    return count;
-}
+};
 
-function flagCell(row, col) {
-    if (!gameActive || grid[row][col].revealed) return;
+const handleRightClick = (e) => {
+    e.preventDefault();
+    if (!gameActive) return;
 
-    if (!grid[row][col].flagged) {
-        grid[row][col].flagged = true;
-        grid[row][col].element.classList.add('flagged');
-    } else {
-        grid[row][col].flagged = false;
-        grid[row][col].element.classList.remove('flagged');
-    }
-}
+    const tile = e.target;
+    if (tile.classList.contains("revealed")) return;
 
-function gameOver(won) {
+    tile.classList.toggle("flagged");
+};
+
+const endGame = (win) => {
     gameActive = false;
     clearInterval(timer);
-    if (won) {
-        alert('Congratulations, you won!');
+    if (win) {
+        alert("Congratulations! You won!");
     } else {
-        alert('Game Over! You clicked on a mine.');
+        alert("Game Over! You hit a mine.");
         revealAllMines();
     }
-}
+};
 
-function revealAllMines() {
-    for (let i = 0; i < gridSize; i++) {
-        for (let j = 0; j < gridSize; j++) {
-            if (grid[i][j].mine) {
-                grid[i][j].element.textContent = '💣';
-                grid[i][j].element.classList.add('revealed');
-            }
-        }
-    }
-}
+const revealAllMines = () => {
+    mines.forEach(mine => {
+        const mineTile = tiles[mine.row][mine.col];
+        mineTile.classList.add("mine");
+    });
+};
 
-function restartGame() {
-    clearInterval(timer);
-    timeElapsed = 0;
-    document.getElementById('timer').textContent = 'Time: 0';
-    createGrid();
-    startTimer();
-}
+restartBtn.addEventListener("click", initializeGame);
 
-function startTimer() {
-    timer = setInterval(() => {
-        timeElapsed++;
-        document.getElementById('timer').textContent = 'Time: ' + timeElapsed;
-    }, 1000);
-}
-
-function updateScore() {
-    document.getElementById('score').textContent = 'Score: ' + score;
-}
+// Initialize the game when the page loads
+window.onload = initializeGame;
