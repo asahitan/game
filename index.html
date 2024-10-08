@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minesweeper</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Modern Minesweeper</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
-        <div class="score">Score: <span id="score">0</span></div>
-        <div class="time">Time: <span id="time">00:00</span></div>
-        <div class="high-score">High Score: <span id="highScore">0</span></div>
-        <button id="restartBtn">Restart</button>
+    <div class="container">
+        <div class="header">
+            <div class="score-timer">
+                <div id="timer">Time: 0</div>
+                <div id="score">Score: 0</div>
+            </div>
+            <button id="restartBtn">Restart</button>
+        </div>
+        <div id="minesweeperGrid" class="grid"></div>
     </div>
-    <div class="game-container">
-        <div id="game-board"></div>
-    </div>
-    <script src="minesweeper.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
