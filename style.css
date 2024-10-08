@@ -1,36 +1,19 @@
-/* Same as before, but modifying for variable grid size */
 .grid {
     display: grid;
     gap: 2px;
 }
 
-/* Different grid sizes based on the difficulty */
 .grid.easy {
-    grid-template-columns: repeat(8, 40px);
-    grid-template-rows: repeat(8, 40px);
+    grid-template-columns: repeat(10, 40px);
+    grid-template-rows: repeat(10, 40px);
 }
 
 .grid.medium {
-    grid-template-columns: repeat(12, 40px);
-    grid-template-rows: repeat(12, 40px);
+    grid-template-columns: repeat(15, 40px);
+    grid-template-rows: repeat(15, 40px);
 }
 
 .grid.hard {
-    grid-template-columns: repeat(16, 40px);
-    grid-template-rows: repeat(16, 40px);
+    grid-template-columns: repeat(20, 40px);
+    grid-template-rows: repeat(20, 40px);
 }
-
-.grid div {
-    width: 40px;
-    height: 40px;
-    background-color: #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
-}
-
-/* Same styles as before for tiles */
