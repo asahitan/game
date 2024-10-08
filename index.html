@@ -14,9 +14,12 @@
             <div id="score">Score: <span id="score-value">0</span></div>
             <div id="tps">TPS: <span id="tps-value">0.00</span></div>
         </div>
-        <div id="mode-buttons">
-            <button id="60s-mode" class="mode-btn">60-Second Mode</button>
-            <button id="10s-mode" class="mode-btn">10-Second Challenge Mode</button>
+        <div id="mode-selection">
+            <label for="mode-select">Select Mode: </label>
+            <select id="mode-select" class="mode-select">
+                <option value="60s">60-Second Mode</option>
+                <option value="10s">10-Second Challenge Mode</option>
+            </select>
         </div>
         <div id="word-display" class="word-display"></div>
         <input type="text" id="word-input" class="word-input" placeholder="Type here..." autofocus>
