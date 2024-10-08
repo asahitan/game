@@ -1,58 +1,54 @@
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
 }
 
-.controls {
-  margin: 20px;
+.header {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+    margin-bottom: 20px;
 }
 
-.game-info {
-  margin: 10px;
+.game-container {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    grid-gap: 2px;
 }
 
 #game-board {
-  display: grid;
-  justify-content: center;
-  margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    grid-template-rows: repeat(10, 30px);
+    gap: 2px;
 }
 
 .cell {
-  width: 40px;
-  height: 40px;
-  background-color: #bdbdbd;
-  border: 2px solid #7a7a7a;
-  text-align: center;
-  vertical-align: middle;
-  line-height: 40px;
-  font-size: 18px;
-  cursor: pointer;
-  position: relative;
+    width: 30px;
+    height: 30px;
+    background-color: lightgray;
+    border: 1px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
 
-.cell.flagged {
-  background-color: #ffc107;
+.cell.open {
+    background-color: white;
 }
 
-.flag {
-  width: 16px;
-  height: 16px;
-  background-color: red;
-  position: absolute;
-  top: 12px;
-  left: 12px;
+.cell.mine {
+    background-color: red;
 }
 
-#restart-btn {
-  padding: 10px 20px;
-  margin-bottom: 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.cell.flag {
+    background-color: yellow;
 }
 
-#restart-btn:hover {
-  background-color: #0056b3;
+#restartBtn {
+    padding: 5px 10px;
 }
