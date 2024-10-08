@@ -34,6 +34,25 @@ h1 {
     margin-bottom: 20px;
 }
 
+#mode-buttons {
+    margin-bottom: 20px;
+}
+
+.mode-btn {
+    margin: 0 10px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.mode-btn.active {
+    background-color: #28a745;
+}
+
 #word-display {
     font-size: 22px;
     margin: 20px 0;
