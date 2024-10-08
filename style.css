@@ -1,54 +1,75 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 50px;
-}
-
-.header {
-    display: flex;
-    justify-content: space-around;
-    width: 80%;
-    margin-bottom: 20px;
-}
-
-.game-container {
-    display: grid;
-    grid-template-columns: repeat(10, 30px);
-    grid-gap: 2px;
-}
-
-#game-board {
-    display: grid;
-    grid-template-columns: repeat(10, 30px);
-    grid-template-rows: repeat(10, 30px);
-    gap: 2px;
-}
-
-.cell {
-    width: 30px;
-    height: 30px;
-    background-color: lightgray;
-    border: 1px solid #000;
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
 }
 
-.cell.open {
-    background-color: white;
+.container {
+    text-align: center;
 }
 
-.cell.mine {
-    background-color: red;
+.header {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 200px;
 }
 
-.cell.flag {
-    background-color: yellow;
+.score-timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #restartBtn {
-    padding: 5px 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+#restartBtn:hover {
+    background-color: #45a049;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    grid-template-rows: repeat(10, 40px);
+    gap: 5px;
+}
+
+.cell {
+    width: 40px;
+    height: 40px;
+    background-color: #ddd;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cell.revealed {
+    background-color: #bbb;
+    cursor: default;
+}
+
+.cell.flagged {
+    background-color: #ffcc00;
 }
