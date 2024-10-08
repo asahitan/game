@@ -7,6 +7,10 @@ body {
   margin: 20px;
 }
 
+.game-info {
+  margin: 10px;
+}
+
 #game-board {
   display: grid;
   justify-content: center;
