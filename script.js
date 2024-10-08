@@ -1,120 +1,164 @@
-let board = [];
-let mineCount = 10;
-let gameBoard = document.getElementById('game-board');
+let gridSize = 10;
+let mineCount = 15;
+let grid = [];
+let revealedCount = 0;
+let timer;
+let timeElapsed = 0;
 let score = 0;
-let time = 0;
-let highScore = localStorage.getItem('highScore') || 0;
-let timerInterval;
+let gameActive = true;
 
-// Initialize the game
-function initGame() {
-    board = createBoard(10, 10, mineCount);
-    displayBoard(board);
-    resetTimer();
+document.addEventListener('DOMContentLoaded', () => {
+    createGrid();
+    document.getElementById('restartBtn').addEventListener('click', restartGame);
+    startTimer();
+});
+
+function createGrid() {
+    let minesweeperGrid = document.getElementById('minesweeperGrid');
+    minesweeperGrid.innerHTML = '';
+    grid = [];
+    revealedCount = 0;
     score = 0;
-    document.getElementById('score').textContent = score;
-    document.getElementById('highScore').textContent = highScore;
+    gameActive = true;
+
+    for (let i = 0; i < gridSize; i++) {
+        let row = [];
+        for (let j = 0; j < gridSize; j++) {
+            let cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.setAttribute('data-row', i);
+            cell.setAttribute('data-col', j);
+            cell.addEventListener('click', () => revealCell(i, j));
+            cell.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                flagCell(i, j);
+            });
+            minesweeperGrid.appendChild(cell);
+            row.push({
+                mine: false,
+                revealed: false,
+                flagged: false,
+                element: cell
+            });
+        }
+        grid.push(row);
+    }
+
+    placeMines();
+    updateScore();
 }
 
-// Create the board with mines
-function createBoard(rows, cols, mineCount) {
-    let board = Array(rows).fill().map(() => Array(cols).fill(0));
-    // Add mines
-    for (let i = 0; i < mineCount; i++) {
-        let row, col;
-        do {
-            row = Math.floor(Math.random() * rows);
-            col = Math.floor(Math.random() * cols);
-        } while (board[row][col] === 'M');
-        board[row][col] = 'M';
-    }
-    // Calculate numbers
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-            if (board[r][c] === 'M') continue;
-            board[r][c] = calculateMines(board, r, c);
+function placeMines() {
+    let minesPlaced = 0;
+    while (minesPlaced < mineCount) {
+        let row = Math.floor(Math.random() * gridSize);
+        let col = Math.floor(Math.random() * gridSize);
+        if (!grid[row][col].mine) {
+            grid[row][col].mine = true;
+            minesPlaced++;
         }
     }
-    return board;
 }
 
-// Calculate the number of mines around a tile
-function calculateMines(board, row, col) {
-    let mines = 0;
-    for (let r = row - 1; r <= row + 1; r++) {
-        for (let c = col - 1; c <= col + 1; c++) {
-            if (r >= 0 && r < board.length && c >= 0 && c < board[0].length && board[r][c] === 'M') {
-                mines++;
+function revealCell(row, col) {
+    if (!gameActive || grid[row][col].revealed || grid[row][col].flagged) return;
+    
+    grid[row][col].revealed = true;
+    revealedCount++;
+    grid[row][col].element.classList.add('revealed');
+
+    if (grid[row][col].mine) {
+        gameOver(false);
+        return;
+    }
+
+    let mineCount = countMinesAround(row, col);
+    if (mineCount > 0) {
+        grid[row][col].element.textContent = mineCount;
+    } else {
+        revealSurroundingCells(row, col);
+    }
+
+    if (revealedCount === gridSize * gridSize - mineCount) {
+        gameOver(true);
+    }
+}
+
+function revealSurroundingCells(row, col) {
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            let newRow = row + i;
+            let newCol = col + j;
+            if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
+                revealCell(newRow, newCol);
             }
         }
     }
-    return mines;
 }
 
-// Display the board on the screen
-function displayBoard(board) {
-    gameBoard.innerHTML = '';
-    for (let r = 0; r < board.length; r++) {
-        for (let c = 0; c < board[0].length; c++) {
-            let cell = document.createElement('div');
-            cell.classList.add('cell');
-            cell.dataset.row = r;
-            cell.dataset.col = c;
-            cell.addEventListener('click', handleCellClick);
-            gameBoard.appendChild(cell);
+function countMinesAround(row, col) {
+    let count = 0;
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            let newRow = row + i;
+            let newCol = col + j;
+            if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize && grid[newRow][newCol].mine) {
+                count++;
+            }
         }
     }
+    return count;
 }
 
-// Handle a click on a cell
-function handleCellClick(event) {
-    let row = parseInt(event.target.dataset.row);
-    let col = parseInt(event.target.dataset.col);
-    if (board[row][col] === 'M') {
-        event.target.classList.add('mine');
-        alert('Game Over!');
-        clearInterval(timerInterval);
+function flagCell(row, col) {
+    if (!gameActive || grid[row][col].revealed) return;
+
+    if (!grid[row][col].flagged) {
+        grid[row][col].flagged = true;
+        grid[row][col].element.classList.add('flagged');
     } else {
-        event.target.textContent = board[row][col];
-        event.target.classList.add('open');
-        score++;
-        document.getElementById('score').textContent = score;
-        checkWin();
+        grid[row][col].flagged = false;
+        grid[row][col].element.classList.remove('flagged');
     }
 }
 
-// Check if the player has won
-function checkWin() {
-    let openCells = document.querySelectorAll('.cell.open').length;
-    if (openCells === (board.length * board[0].length) - mineCount) {
-        alert('You win!');
-        if (score > highScore) {
-            highScore = score;
-            localStorage.setItem('highScore', highScore);
+function gameOver(won) {
+    gameActive = false;
+    clearInterval(timer);
+    if (won) {
+        alert('Congratulations, you won!');
+    } else {
+        alert('Game Over! You clicked on a mine.');
+        revealAllMines();
+    }
+}
+
+function revealAllMines() {
+    for (let i = 0; i < gridSize; i++) {
+        for (let j = 0; j < gridSize; j++) {
+            if (grid[i][j].mine) {
+                grid[i][j].element.textContent = '💣';
+                grid[i][j].element.classList.add('revealed');
+            }
         }
-        clearInterval(timerInterval);
     }
 }
 
-// Timer logic
-function startTimer() {
-    let startTime = Date.now();
-    timerInterval = setInterval(() => {
-        let elapsed = Date.now() - startTime;
-        let minutes = Math.floor(elapsed / 60000);
-        let seconds = Math.floor((elapsed % 60000) / 1000);
-        document.getElementById('time').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    }, 1000);
-}
-
-function resetTimer() {
-    clearInterval(timerInterval);
-    document.getElementById('time').textContent = '00:00';
+function restartGame() {
+    clearInterval(timer);
+    timeElapsed = 0;
+    document.getElementById('timer').textContent = 'Time: 0';
+    createGrid();
     startTimer();
 }
 
-// Restart the game
-document.getElementById('restartBtn').addEventListener('click', initGame);
+function startTimer() {
+    timer = setInterval(() => {
+        timeElapsed++;
+        document.getElementById('timer').textContent = 'Time: ' + timeElapsed;
+    }, 1000);
+}
 
-// Initialize the game on page load
-initGame();
+function updateScore() {
+    document.getElementById('score').textContent = 'Score: ' + score;
+}
