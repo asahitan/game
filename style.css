@@ -1,70 +1,23 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
-
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f4f4f4;
-}
-
-.game-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 20px;
-}
-
-.timer, .score {
-    font-size: 18px;
-}
-
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
 .grid {
     display: grid;
+    gap: 2px;
+    justify-content: center;
+    /* The grid will resize dynamically based on difficulty */
+}
+
+.grid.easy {
     grid-template-columns: repeat(10, 40px);
     grid-template-rows: repeat(10, 40px);
-    gap: 2px;
 }
 
-.grid div {
-    width: 40px;
-    height: 40px;
-    background-color: #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
+.grid.medium {
+    grid-template-columns: repeat(16, 30px);
+    grid-template-rows: repeat(16, 30px);
 }
 
-.grid div.revealed {
-    background-color: #fff;
+.grid.hard {
+    grid-template-columns: repeat(24, 25px);
+    grid-template-rows: repeat(24, 25px);
 }
 
-.grid div.mine {
-    background-color: red;
-}
-
-.grid div.flagged {
-    background-color: yellow;
-}
+/* Other existing CSS... */
