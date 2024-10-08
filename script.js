@@ -1,11 +1,10 @@
 const grid = document.getElementById("minesweeper-grid");
 const restartBtn = document.getElementById("restartBtn");
+const difficultySelect = document.getElementById("difficulty");
 const timerDisplay = document.getElementById("timer");
 const scoreDisplay = document.getElementById("score");
 
-let rows = 10;
-let cols = 10;
-let mineCount = 15;
+let rows, cols, mineCount;
 let tiles = [];
 let mines = [];
 let timer;
@@ -13,7 +12,22 @@ let time = 0;
 let score = 0;
 let gameActive = true;
 
+const difficulties = {
+    easy: { rows: 10, cols: 10, mines: 10 },
+    medium: { rows: 16, cols: 16, mines: 40 },
+    hard: { rows: 24, cols: 24, mines: 99 },
+};
+
 const initializeGame = () => {
+    // Get selected difficulty
+    const difficulty = difficultySelect.value;
+
+    // Set game parameters based on difficulty
+    rows = difficulties[difficulty].rows;
+    cols = difficulties[difficulty].cols;
+    mineCount = difficulties[difficulty].mines;
+
+    grid.className = `grid ${difficulty}`;  // Set grid class for CSS sizing
     grid.innerHTML = "";
     tiles = [];
     mines = [];
@@ -71,7 +85,6 @@ const handleTileClick = (e) => {
     if (tile.classList.contains("revealed") || tile.classList.contains("flagged")) return;
 
     if (tile.dataset.mine) {
-        // Game over
         tile.classList.add("mine");
         endGame(false);
     } else {
@@ -145,7 +158,9 @@ const revealAllMines = () => {
     });
 };
 
+// Event listeners
 restartBtn.addEventListener("click", initializeGame);
+difficultySelect.addEventListener("change", initializeGame);
 
 // Initialize the game when the page loads
 window.onload = initializeGame;
