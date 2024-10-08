@@ -6,6 +6,10 @@ const timeDisplay = document.getElementById("time-left");
 const startButton = document.getElementById("start-btn");
 const resultMessage = document.getElementById("result-message");
 const modeSelect = document.getElementById("mode-select");
+const menuToggle = document.getElementById("menu-toggle");
+const sideMenu = document.getElementById("side-menu");
+const closeMenuButton = document.getElementById("close-menu");
+const darkModeToggle = document.getElementById("dark-mode-toggle");
 
 let words = [
     "javascript", "advanced", "developer", "keyboard", "function", "variable",
@@ -42,6 +46,8 @@ function startGame() {
         timeLeft = 60;
     } else if (gameMode === "10s") {
         timeLeft = 10;
+    } else if (gameMode === "5s") {
+        timeLeft = 5;
     }
     timeDisplay.textContent = timeLeft;
     
@@ -75,8 +81,8 @@ function nextWord() {
 function updateTPS() {
     if (gameMode === "60s") {
         tps = totalWordsTyped / (60 - timeLeft);
-    } else if (gameMode === "10s") {
-        tps = totalWordsTyped / (10 - timeLeft + totalWordsTyped * 10); // Adjust TPS calculation for 10-second mode
+    } else if (gameMode === "10s" || gameMode === "5s") {
+        tps = totalWordsTyped / ((10 - timeLeft) + totalWordsTyped * (gameMode === "10s" ? 10 : 5));
     }
     tpsDisplay.textContent = tps.toFixed(2);
 }
@@ -90,6 +96,8 @@ wordInput.addEventListener("input", () => {
 
         if (gameMode === "10s") {
             timeLeft = 10; // Reset time for 10-second mode
+        } else if (gameMode === "5s") {
+            timeLeft = 5; // Reset time for 5-second mode
         }
         
         nextWord();
@@ -110,7 +118,22 @@ modeSelect.addEventListener("change", (e) => {
         timeDisplay.textContent = 60;
     } else if (gameMode === "10s") {
         timeDisplay.textContent = 10;
+    } else if (gameMode === "5s") {
+        timeDisplay.textContent = 5;
     }
+});
+
+// Toggle Side Menu
+menuToggle.addEventListener("click", () => {
+    sideMenu.style.width = "250px";
+});
+closeMenuButton.addEventListener("click", () => {
+    sideMenu.style.width = "0";
+});
+
+// Toggle Dark Mode
+darkModeToggle.addEventListener("change", (e) => {
+    document.body.classList.toggle("dark-mode", e.target.checked);
 });
 
 // Disable copy-paste on word input to prevent cheating
