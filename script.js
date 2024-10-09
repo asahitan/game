@@ -37,9 +37,30 @@ const modeDescriptions = {
     "3s-lives": "3-Second Challenge Mode with Lives"
 };
 
-// Function to update the mode display
-function updateModeDisplay() {
+// Function to update the mode display and sync the timer
+function updateModeDisplayAndTimer() {
     currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
+
+    // Sync the time display according to the selected mode
+    if (gameMode === "60s") {
+        timeLeft = 60;
+        timeDisplay.textContent = timeLeft; // Sync time to 60
+        livesContainer.style.display = "none"; // Hide lives for 60-second mode
+    } else if (gameMode === "10s") {
+        timeLeft = 10;
+        timeDisplay.textContent = timeLeft; // Sync time to 10
+        livesContainer.style.display = "none"; // Hide lives for 10-second mode
+    } else if (gameMode === "5s-lives") {
+        timeLeft = 5;
+        timeDisplay.textContent = timeLeft; // Sync time to 5
+        livesContainer.style.display = "block"; // Show lives for 5-second mode with lives
+        livesDisplay.textContent = 3; // Reset lives to 3
+    } else if (gameMode === "3s-lives") {
+        timeLeft = 3;
+        timeDisplay.textContent = timeLeft; // Sync time to 3
+        livesContainer.style.display = "block"; // Show lives for 3-second mode with lives
+        livesDisplay.textContent = 3; // Reset lives to 3
+    }
 }
 
 function getRandomWord() {
@@ -61,23 +82,8 @@ function startGame() {
     livesDisplay.textContent = lives; // Update lives display
 
     gameMode = modeSelect.value;
-    updateModeDisplay(); // Update mode display when game starts
+    updateModeDisplayAndTimer(); // Sync mode and timer when starting the game
 
-    if (gameMode === "60s") {
-        timeLeft = 60;
-        livesContainer.style.display = "none"; // Hide lives for 60-second mode
-    } else if (gameMode === "10s") {
-        timeLeft = 10;
-        livesContainer.style.display = "none"; // Hide lives for 10-second mode
-    } else if (gameMode === "5s-lives") {
-        timeLeft = 5;
-        livesContainer.style.display = "block"; // Show lives for 5-second mode with lives
-    } else if (gameMode === "3s-lives") {
-        timeLeft = 3;
-        livesContainer.style.display = "block"; // Show lives for 3-second mode with lives
-    }
-    timeDisplay.textContent = timeLeft;
-    
     nextWord();
 
     gameInterval = setInterval(() => {
@@ -161,7 +167,7 @@ startButton.addEventListener("click", startGame);
 // Change mode event listener
 modeSelect.addEventListener("change", () => {
     gameMode = modeSelect.value;
-    updateModeDisplay(); // Update the mode display when the mode is changed
+    updateModeDisplayAndTimer(); // Sync mode and time when the mode is changed
     if (gameMode === "5s-lives" || gameMode === "3s-lives") {
         livesContainer.style.display = "block"; // Show lives when selecting modes with lives
         livesDisplay.textContent = 3; // Reset lives to 3
