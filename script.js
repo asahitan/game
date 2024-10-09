@@ -11,7 +11,7 @@ const sideMenu = document.getElementById("side-menu");
 const closeMenuButton = document.getElementById("close-menu");
 const darkModeToggle = document.getElementById("dark-mode-toggle");
 const livesDisplay = document.getElementById("lives-value");
-const livesContainer = document.getElementById("lives"); // Lives container for showing/hiding
+const livesContainer = document.getElementById("lives"); // Container for lives
 
 let words = [
     "javascript", "advanced", "developer", "keyboard", "function", "variable",
@@ -26,7 +26,7 @@ let isPlaying = false;
 let tps = 0;
 let gameMode = "60s"; // Default mode is 60-second mode
 let gameInterval;
-let lives = 3; // Lives for 5-Second mode with lives
+let lives = 3; // Lives for challenge modes
 
 function getRandomWord() {
     return words[Math.floor(Math.random() * words.length)];
@@ -49,13 +49,16 @@ function startGame() {
     gameMode = modeSelect.value;
     if (gameMode === "60s") {
         timeLeft = 60;
-        livesContainer.classList.add("hidden"); // Hide lives for 60-second mode
+        livesContainer.style.display = "none"; // Hide lives for 60-second mode
     } else if (gameMode === "10s") {
         timeLeft = 10;
-        livesContainer.classList.add("hidden"); // Hide lives for 10-second mode
+        livesContainer.style.display = "none"; // Hide lives for 10-second mode
     } else if (gameMode === "5s-lives") {
         timeLeft = 5;
-        livesContainer.classList.remove("hidden"); // Show lives for 5-second mode with lives
+        livesContainer.style.display = "block"; // Show lives for 5-second mode with lives
+    } else if (gameMode === "3s-lives") {
+        timeLeft = 3;
+        livesContainer.style.display = "block"; // Show lives for 3-second mode with lives
     }
     timeDisplay.textContent = timeLeft;
     
@@ -67,8 +70,8 @@ function startGame() {
             timeDisplay.textContent = timeLeft;
             updateTPS();
 
-            if (gameMode === "5s-lives" && timeLeft === 0) {
-                handleLifeLoss(); // Handle life loss in 5-second challenge mode with lives
+            if ((gameMode === "5s-lives" || gameMode === "3s-lives") && timeLeft === 0) {
+                handleLifeLoss(); // Handle life loss in 5s or 3s challenge mode
             }
 
         } else if (timeLeft === 0) {
@@ -86,7 +89,11 @@ function handleLifeLoss() {
         clearInterval(gameInterval);
         endGame();
     } else {
-        timeLeft = 5; // Reset time for next word in 5-second mode with lives
+        if (gameMode === "5s-lives") {
+            timeLeft = 5; // Reset time for next word in 5-second mode
+        } else if (gameMode === "3s-lives") {
+            timeLeft = 3; // Reset time for next word in 3-second mode
+        }
         nextWord();
     }
 }
@@ -107,8 +114,8 @@ function nextWord() {
 function updateTPS() {
     if (gameMode === "60s") {
         tps = totalWordsTyped / (60 - timeLeft);
-    } else if (gameMode === "10s" || gameMode === "5s-lives") {
-        tps = totalWordsTyped / ((10 - timeLeft) + totalWordsTyped * (gameMode === "10s" ? 10 : 5));
+    } else if (gameMode === "10s" || gameMode === "5s-lives" || gameMode === "3s-lives") {
+        tps = totalWordsTyped / ((gameMode === "10s" ? 10 : (gameMode === "5s-lives" ? 5 : 3)) - timeLeft + totalWordsTyped);
     }
     tpsDisplay.textContent = tps.toFixed(2);
 }
@@ -124,6 +131,8 @@ wordInput.addEventListener("input", () => {
             timeLeft = 10; // Reset time for 10-second mode
         } else if (gameMode === "5s-lives") {
             timeLeft = 5; // Reset time for 5-second mode with lives
+        } else if (gameMode === "3s-lives") {
+            timeLeft = 3; // Reset time for 3-second mode with lives
         }
 
         nextWord();
@@ -142,18 +151,30 @@ modeSelect.addEventListener("change", (e) => {
 
     if (gameMode === "60s") {
         timeDisplay.textContent = 60;
-        livesContainer.classList.add("hidden"); // Hide lives for 60-second mode
+        livesContainer.style.display = "none"; // Hide lives in 60-second mode
     } else if (gameMode === "10s") {
         timeDisplay.textContent = 10;
-        livesContainer.classList.add("hidden"); // Hide lives for 10-second mode
+        livesContainer.style.display = "none"; // Hide lives in 10-second mode
     } else if (gameMode === "5s-lives") {
         timeDisplay.textContent = 5;
-        livesContainer.classList.remove("hidden"); // Show lives for 5-second mode with lives
-        livesDisplay.textContent = 3; // Reset lives to 3
+        livesDisplay.textContent = 3; // Reset lives for 5s-lives mode
+        livesContainer.style.display = "block"; // Show lives for 5-second mode
+    } else if (gameMode === "3s-lives") {
+        timeDisplay.textContent = 3;
+        livesDisplay.textContent = 3; // Reset lives for 3s-lives mode
+        livesContainer.style.display = "block"; // Show lives for 3-second mode
     }
 });
 
-// Toggle dark mode
+// Toggle Side Menu
+menuToggle.addEventListener("click", () => {
+    sideMenu.style.width = "250px";
+});
+closeMenuButton.addEventListener("click", () => {
+    sideMenu.style.width = "0";
+});
+
+// Toggle Dark Mode
 darkModeToggle.addEventListener("change", (e) => {
     document.body.classList.toggle("dark-mode", e.target.checked);
 });
@@ -164,12 +185,3 @@ wordInput.addEventListener('copy', (e) => e.preventDefault());
 
 // Disable long-press menu for copy-paste on mobile devices
 wordInput.addEventListener('contextmenu', (e) => e.preventDefault());
-
-// Side menu toggle
-menuToggle.addEventListener("click", () => {
-    sideMenu.classList.toggle("open");
-});
-
-closeMenuButton.addEventListener("click", () => {
-    sideMenu.classList.remove("open");
-});
