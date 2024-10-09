@@ -169,27 +169,6 @@ body.dark-mode #lives {
     color: #f77; /* Lighter red in dark mode */
 }
 
-#stats-container {
-    font-family: monospace;
-    font-size: 1.2em;
-}
-
-#time-display {
-    color: #00ff00; /* Green for Time */
-}
-
-#score-display {
-    color: #ff0000; /* Red for Score */
-}
-
-#tps-display {
-    color: #ff00ff; /* Magenta for TPS */
-}
-
-span {
-    margin: 0 10px;
-}
-
 @media screen and (max-width: 480px) {
     .container {
         padding: 20px;
