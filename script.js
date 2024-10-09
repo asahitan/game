@@ -12,6 +12,7 @@ const closeMenuButton = document.getElementById("close-menu");
 const darkModeToggle = document.getElementById("dark-mode-toggle");
 const livesDisplay = document.getElementById("lives-value");
 const livesContainer = document.getElementById("lives"); // Container for lives
+const currentModeDisplay = document.getElementById("current-mode-display"); // Mode display element
 
 let words = [
     "javascript", "advanced", "developer", "keyboard", "function", "variable",
@@ -27,6 +28,19 @@ let tps = 0;
 let gameMode = "60s"; // Default mode is 60-second mode
 let gameInterval;
 let lives = 3; // Lives for challenge modes
+
+// Map modes to descriptions
+const modeDescriptions = {
+    "60s": "60-Second Mode",
+    "10s": "10-Second Challenge Mode",
+    "5s-lives": "5-Second Challenge Mode with Lives",
+    "3s-lives": "3-Second Challenge Mode with Lives"
+};
+
+// Function to update the mode display
+function updateModeDisplay() {
+    currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
+}
 
 function getRandomWord() {
     return words[Math.floor(Math.random() * words.length)];
@@ -47,6 +61,8 @@ function startGame() {
     livesDisplay.textContent = lives; // Update lives display
 
     gameMode = modeSelect.value;
+    updateModeDisplay(); // Update mode display when game starts
+
     if (gameMode === "60s") {
         timeLeft = 60;
         livesContainer.style.display = "none"; // Hide lives for 60-second mode
@@ -136,33 +152,21 @@ wordInput.addEventListener("input", () => {
         }
 
         nextWord();
+        updateTPS();
     }
 });
 
 startButton.addEventListener("click", startGame);
 
-modeSelect.addEventListener("change", (e) => {
-    gameMode = e.target.value;
-
-    if (isPlaying) {
-        clearInterval(gameInterval);
-        endGame(); // Stop current game if switching modes
-    }
-
-    if (gameMode === "60s") {
-        timeDisplay.textContent = 60;
-        livesContainer.style.display = "none"; // Hide lives in 60-second mode
-    } else if (gameMode === "10s") {
-        timeDisplay.textContent = 10;
-        livesContainer.style.display = "none"; // Hide lives in 10-second mode
-    } else if (gameMode === "5s-lives") {
-        timeDisplay.textContent = 5;
-        livesDisplay.textContent = 3; // Reset lives for 5s-lives mode
-        livesContainer.style.display = "block"; // Show lives for 5-second mode
-    } else if (gameMode === "3s-lives") {
-        timeDisplay.textContent = 3;
-        livesDisplay.textContent = 3; // Reset lives for 3s-lives mode
-        livesContainer.style.display = "block"; // Show lives for 3-second mode
+// Change mode event listener
+modeSelect.addEventListener("change", () => {
+    gameMode = modeSelect.value;
+    updateModeDisplay(); // Update the mode display when the mode is changed
+    if (gameMode === "5s-lives" || gameMode === "3s-lives") {
+        livesContainer.style.display = "block"; // Show lives when selecting modes with lives
+        livesDisplay.textContent = 3; // Reset lives to 3
+    } else {
+        livesContainer.style.display = "none"; // Hide lives for other modes
     }
 });
 
