@@ -68,7 +68,7 @@ function startGame() {
             updateTPS();
 
             if (gameMode === "5s-lives" && timeLeft === 0) {
-                handleLifeLoss(); // Handle life loss in 5-second challenge mode
+                handleLifeLoss(); // Handle life loss in 5-second challenge mode with lives
             }
 
         } else if (timeLeft === 0) {
@@ -86,7 +86,7 @@ function handleLifeLoss() {
         clearInterval(gameInterval);
         endGame();
     } else {
-        timeLeft = 5; // Reset time for next word in 5-second mode
+        timeLeft = 5; // Reset time for next word in 5-second mode with lives
         nextWord();
     }
 }
@@ -149,19 +149,11 @@ modeSelect.addEventListener("change", (e) => {
     } else if (gameMode === "5s-lives") {
         timeDisplay.textContent = 5;
         livesContainer.classList.remove("hidden"); // Show lives for 5-second mode with lives
-        livesDisplay.textContent = 3; // Reset lives display
+        livesDisplay.textContent = 3; // Reset lives to 3
     }
 });
 
-// Toggle Side Menu
-menuToggle.addEventListener("click", () => {
-    sideMenu.style.width = "250px";
-});
-closeMenuButton.addEventListener("click", () => {
-    sideMenu.style.width = "0";
-});
-
-// Toggle Dark Mode
+// Toggle dark mode
 darkModeToggle.addEventListener("change", (e) => {
     document.body.classList.toggle("dark-mode", e.target.checked);
 });
@@ -172,3 +164,12 @@ wordInput.addEventListener('copy', (e) => e.preventDefault());
 
 // Disable long-press menu for copy-paste on mobile devices
 wordInput.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// Side menu toggle
+menuToggle.addEventListener("click", () => {
+    sideMenu.classList.toggle("open");
+});
+
+closeMenuButton.addEventListener("click", () => {
+    sideMenu.classList.remove("open");
+});
