@@ -85,15 +85,76 @@ h1 {
     background-color: #dc3545; /* Different color for Restart button */
 }
 
-body.dark-mode .restart-btn {
-    background-color: #ff4d4d; /* Different color for Restart in dark mode */
-}
-
 .button-container {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
     gap: 20px; /* Ensures space between buttons */
+}
+
+#result-message {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #007bff;
+}
+
+/* Side Menu */
+.side-menu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    color: white;
+}
+
+.side-menu h2 {
+    color: white;
+    margin-left: 30px;
+}
+
+.side-menu label, .side-menu select {
+    color: white;
+    display: block;
+    margin: 20px 30px;
+}
+
+.side-menu input[type="checkbox"] {
+    margin-left: 30px;
+    transform: scale(1.5);
+}
+
+.close-menu {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 36px;
+    cursor: pointer;
+}
+
+/* Dark Mode Styling */
+body.dark-mode {
+    background-color: #333;
+    color: white;
+}
+
+body.dark-mode .container {
+    background-color: #222;
+    color: white;
+}
+
+body.dark-mode .word-input {
+    background-color: #555;
+    color: white;
+}
+
+body.dark-mode .start-btn {
+    background-color: #007bff;
 }
 
 /* Popup styling */
@@ -120,55 +181,7 @@ body.dark-mode .restart-btn {
     color: white;
     border: none;
     border-radius: 3px;
-}
-
-/* Dark Mode Styling */
-body.dark-mode {
-    background-color: #333;
-    color: white;
-}
-
-body.dark-mode .container {
-    background-color: #222;
-    color: white;
-}
-
-body.dark-mode .word-input {
-    background-color: #555;
-    color: white;
-}
-
-body.dark-mode .start-btn {
-    background-color: #007bff;
-}
-
-#lives {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #dc3545; /* Red color for life indicator */
-}
-
-/* Hidden class for hiding elements */
-.hidden {
-    display: none;
-}
-
-/* Dark Mode Styling for Lives */
-body.dark-mode #lives {
-    color: #f77; /* Lighter red in dark mode */
-}
-
-/* Add styles for custom time input */
-#custom-time, #custom-time-label {
-    margin-left: 30px;
-    color: white;
-}
-
-#custom-time {
-    width: 80%;
-    margin: 20px 30px;
-    padding: 5px;
-    font-size: 16px;
+    cursor: pointer;
 }
 
 @media screen and (max-width: 480px) {
