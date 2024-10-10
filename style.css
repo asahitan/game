@@ -41,16 +41,8 @@ h1 {
 
 #game-info {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    font-size: 14px;
+    justify-content: space-between;
     margin-bottom: 20px;
-}
-
-#lives {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #dc3545;
 }
 
 #word-display {
@@ -61,10 +53,6 @@ h1 {
     border-radius: 5px;
     height: 50px;
     line-height: 50px;
-    text-align: center;
-    display: flex;
-    justify-content: center; /* Horizontal centering */
-    align-items: center; /* Vertical centering */
 }
 
 .word-input {
@@ -97,6 +85,12 @@ h1 {
     color: #007bff;
 }
 
+#multiplier {
+    font-size: 18px;
+    color: #28a745;
+    margin-top: 10px;
+}
+
 /* Side Menu */
 .side-menu {
     height: 100%;
@@ -117,8 +111,7 @@ h1 {
     margin-left: 30px;
 }
 
-.side-menu label,
-.side-menu select {
+.side-menu label, .side-menu select {
     color: white;
     display: block;
     margin: 20px 30px;
@@ -157,25 +150,21 @@ body.dark-mode .start-btn {
     background-color: #007bff;
 }
 
-body.dark-mode #lives {
-    color: #f77;
-}
-
 @media screen and (max-width: 480px) {
     .container {
         padding: 20px;
     }
-
+    
     h1 {
         font-size: 20px;
     }
-
+    
     #word-display {
         font-size: 18px;
         height: 40px;
         line-height: 40px;
     }
-
+    
     .word-input {
         font-size: 16px;
     }
