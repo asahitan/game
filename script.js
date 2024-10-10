@@ -1,178 +1,189 @@
-const wordDisplay = document.getElementById("word-display");
-const wordInput = document.getElementById("word-input");
-const scoreDisplay = document.getElementById("score-value");
-const tpsDisplay = document.getElementById("tps-value");
-const timeDisplay = document.getElementById("time-left");
-const startButton = document.getElementById("start-btn");
-const resultMessage = document.getElementById("result-message");
-const modeSelect = document.getElementById("mode-select");
-const menuToggle = document.getElementById("menu-toggle");
-const sideMenu = document.getElementById("side-menu");
-const closeMenuButton = document.getElementById("close-menu");
-const darkModeToggle = document.getElementById("dark-mode-toggle");
-const livesDisplay = document.getElementById("lives-value");
-const livesContainer = document.getElementById("lives");
-const currentModeDisplay = document.getElementById("current-mode-display");
+document.addEventListener("DOMContentLoaded", function() {
+    let currentWord = "";
+    let score = 0;
+    let timeLeft = 60;
+    let tps = 0;
+    let lives = 3;
+    let gameActive = false;
+    let timer;
+    const words = ["test", "game", "speed", "typing", "javascript", "html", "css"];
+    const wordDisplay = document.getElementById("word-display");
+    const wordInput = document.getElementById("word-input");
+    const startBtn = document.getElementById("start-btn");
+    const scoreValue = document.getElementById("score-value");
+    const timeLeftDisplay = document.getElementById("time-left");
+    const tpsValue = document.getElementById("tps-value");
+    const livesDisplay = document.getElementById("lives");
+    const livesValue = document.getElementById("lives-value");
+    const resultMessage = document.getElementById("result-message");
+    const currentModeDisplay = document.getElementById("current-mode-display");
+    const modeSelect = document.getElementById("mode-select");
 
-let words = ["javascript", "developer", "framework", "performance", "syntax", "debugging", "algorithm", "data"];
-let currentWord = "";
-let score = 0;
-let timeLeft = 60;
-let totalWordsTyped = 0;
-let isPlaying = false;
-let tps = 0;
-let gameMode = "60s"; // Default mode
-let gameInterval;
-let lives = 3; // Default lives for challenge modes
+    // Initialize mode settings
+    let selectedMode = "60s";
 
-// Map modes to descriptions
-const modeDescriptions = {
-    "60s": "60-Second Mode",
-    "10s": "10-Second Challenge Mode",
-    "5s-lives": "5-Second Challenge Mode with Lives",
-    "3s-lives": "3-Second Challenge Mode with Lives",
-    "7s-lives": "7-Second Challenge Mode with Lives",
-    "2s-lives": "2-Second Challenge Mode with Lives",
-    "1s-lives": "1-Second Challenge Mode with Lives",
-    "15s": "15-Second Challenge Mode",
-    "30s-lives": "30-Second Mode with Lives"
-};
+    // Handle mode selection change
+    modeSelect.addEventListener("change", function() {
+        selectedMode = modeSelect.value;
+        resetGame();
+        updateModeDisplay();
+    });
 
-// Function to update the mode display and sync the timer
-function updateModeDisplayAndTimer() {
-    currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
-    
-    switch (gameMode) {
-        case "60s":
-            timeLeft = 60;
-            livesContainer.style.display = "none";
-            break;
-        case "10s":
-            timeLeft = 10;
-            livesContainer.style.display = "none";
-            break;
-        case "15s":
-            timeLeft = 15;
-            livesContainer.style.display = "none";
-            break;
-        case "30s-lives":
-            timeLeft = 30;
-            livesContainer.style.display = "block";
-            livesDisplay.textContent = 3;
-            break;
-        case "5s-lives":
-        case "3s-lives":
-        case "7s-lives":
-        case "2s-lives":
-        case "1s-lives":
-            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Sync time to the first number in the mode name
-            livesContainer.style.display = "block";
-            livesDisplay.textContent = 3;
-            break;
-    }
-    timeDisplay.textContent = timeLeft;
-}
-
-function startGame() {
-    score = 0;
-    totalWordsTyped = 0;
-    tps = 0;
-    isPlaying = true;
-    wordInput.value = "";
-    resultMessage.textContent = "";
-    wordInput.disabled = false;
-    wordInput.focus();
-    startButton.disabled = true;
-    startButton.textContent = "Playing...";
-    lives = 3;
-    livesDisplay.textContent = lives;
-    
-    gameMode = modeSelect.value;
-    updateModeDisplayAndTimer();
-    
-    nextWord();
-
-    gameInterval = setInterval(() => {
-        if (timeLeft > 0 && isPlaying) {
-            timeLeft--;
-            timeDisplay.textContent = timeLeft;
-            updateTPS();
-
-            if (gameMode.includes("lives") && timeLeft === 0) {
-                handleLifeLoss();
-            }
-        } else if (timeLeft === 0) {
-            clearInterval(gameInterval);
-            endGame();
+    // Function to update the mode display
+    function updateModeDisplay() {
+        let modeText = "";
+        switch (selectedMode) {
+            case "60s":
+                modeText = "60-Second Mode";
+                timeLeft = 60;
+                livesDisplay.style.display = "none";
+                break;
+            case "10s":
+                modeText = "10-Second Challenge Mode";
+                timeLeft = 10;
+                livesDisplay.style.display = "none";
+                break;
+            case "5s-lives":
+                modeText = "5-Second Challenge Mode with Lives";
+                timeLeft = 5;
+                lives = 3;
+                livesDisplay.style.display = "block";
+                break;
+            case "3s-lives":
+                modeText = "3-Second Challenge Mode with Lives";
+                timeLeft = 3;
+                lives = 3;
+                livesDisplay.style.display = "block";
+                break;
+            case "7s-lives":
+                modeText = "7-Second Challenge Mode with Lives";
+                timeLeft = 7;
+                lives = 3;
+                livesDisplay.style.display = "block";
+                break;
+            case "2s-lives":
+                modeText = "2-Second Challenge Mode with Lives";
+                timeLeft = 2;
+                lives = 3;
+                livesDisplay.style.display = "block";
+                break;
         }
-    }, 1000);
-}
-
-function handleLifeLoss() {
-    lives--;
-    livesDisplay.textContent = lives;
-
-    if (lives === 0) {
-        clearInterval(gameInterval);
-        endGame();
-    } else {
-        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time for challenge modes with lives
-        nextWord();
+        currentModeDisplay.textContent = "Mode: " + modeText;
+        timeLeftDisplay.textContent = timeLeft;
+        livesValue.textContent = lives;
     }
-}
 
-function endGame() {
-    isPlaying = false;
-    wordInput.disabled = true;
-    startButton.disabled = false;
-    startButton.textContent = "Start Game";
-    resultMessage.textContent = `Game Over! Final Score: ${score} | TPS: ${tps.toFixed(2)}`;
-}
+    // Start Game logic
+    startBtn.addEventListener("click", startGame);
 
-function nextWord() {
-    currentWord = words[Math.floor(Math.random() * words.length)];
-    wordDisplay.textContent = currentWord;
-}
-
-function updateTPS() {
-    tps = totalWordsTyped / (60 - timeLeft);
-    tpsDisplay.textContent = tps.toFixed(2);
-}
-
-wordInput.addEventListener("input", () => {
-    if (wordInput.value.trim() === currentWord) {
-        score++;
-        totalWordsTyped++;
-        scoreDisplay.textContent = score;
+    function startGame() {
+        if (gameActive) return;
+        gameActive = true;
         wordInput.value = "";
-        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time for challenge modes
-        nextWord();
-        updateTPS();
+        score = 0;
+        tps = 0;
+        scoreValue.textContent = score;
+        tpsValue.textContent = tps.toFixed(2);
+        startTimer();
+        generateWord();
+        wordInput.focus();
     }
-});
 
-startButton.addEventListener("click", startGame);
+    function startTimer() {
+        timer = setInterval(function() {
+            timeLeft--;
+            timeLeftDisplay.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                if (selectedMode.includes("lives")) {
+                    lives--;
+                    livesValue.textContent = lives;
+                    if (lives <= 0) {
+                        endGame("Game Over! You ran out of lives.");
+                        return;
+                    } else {
+                        resetTime();
+                    }
+                } else {
+                    endGame("Time's up!");
+                }
+            }
+        }, 1000);
+    }
 
-// Change mode event listener
-modeSelect.addEventListener("change", () => {
-    gameMode = modeSelect.value;
-    updateModeDisplayAndTimer();
-});
+    function resetTime() {
+        switch (selectedMode) {
+            case "5s-lives":
+                timeLeft = 5;
+                break;
+            case "3s-lives":
+                timeLeft = 3;
+                break;
+            case "7s-lives":
+                timeLeft = 7;
+                break;
+            case "2s-lives":
+                timeLeft = 2;
+                break;
+        }
+        timeLeftDisplay.textContent = timeLeft;
+    }
 
-// Toggle Side Menu
-menuToggle.addEventListener("click", () => {
-    sideMenu.style.width = "250px";
-});
-closeMenuButton.addEventListener("click", () => {
-    sideMenu.style.width = "0";
-});
+    function endGame(message) {
+        clearInterval(timer);
+        gameActive = false;
+        resultMessage.textContent = message;
+    }
 
-// Toggle Dark Mode
-darkModeToggle.addEventListener("change", (e) => {
-    document.body.classList.toggle("dark-mode", e.target.checked);
-});
+    function generateWord() {
+        currentWord = words[Math.floor(Math.random() * words.length)];
+        wordDisplay.textContent = currentWord;
+    }
 
-// Disable copy-paste to prevent cheating
-wordInput.addEventListener('paste', (e) => e.preventDefault());
-wordInput.addEventListener('copy', (e) => e.preventDefault());
-wordInput.addEventListener('contextmenu', (e) => e.preventDefault());
+    wordInput.addEventListener("input", function() {
+        if (wordInput.value === currentWord && gameActive) {
+            score++;
+            scoreValue.textContent = score;
+            tps = score / (60 - timeLeft);
+            tpsValue.textContent = tps.toFixed(2);
+            wordInput.value = "";
+            generateWord();
+            if (selectedMode !== "60s" && selectedMode !== "10s") {
+                resetTime();
+            }
+        }
+    });
+
+    function resetGame() {
+        clearInterval(timer);
+        timeLeft = selectedMode === "60s" ? 60 : selectedMode === "10s" ? 10 : 5;
+        score = 0;
+        lives = 3;
+        scoreValue.textContent = score;
+        tpsValue.textContent = "0.00";
+        livesValue.textContent = lives;
+        timeLeftDisplay.textContent = timeLeft;
+        wordDisplay.textContent = "";
+        wordInput.value = "";
+        resultMessage.textContent = "";
+        gameActive = false;
+    }
+
+    // Toggle dark mode
+    const darkModeToggle = document.getElementById("dark-mode-toggle");
+    darkModeToggle.addEventListener("change", function() {
+        document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+    });
+
+    // Menu toggle functionality
+    const menuToggle = document.getElementById("menu-toggle");
+    const sideMenu = document.getElementById("side-menu");
+    const closeMenu = document.getElementById("close-menu");
+
+    menuToggle.addEventListener("click", function() {
+        sideMenu.style.width = "250px";
+    });
+
+    closeMenu.addEventListener("click", function() {
+        sideMenu.style.width = "0";
+    });
+});
