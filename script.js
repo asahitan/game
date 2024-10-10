@@ -26,6 +26,7 @@ let tps = 0;
 let gameMode = "60s"; // Default mode
 let gameInterval;
 let lives = 3; // Default lives for challenge modes
+let customTime = 60; // Default custom time
 
 // Map modes to descriptions
 const modeDescriptions = {
@@ -58,7 +59,8 @@ function updateModeDisplayAndTimer() {
         case "custom":
             customTimeInput.style.display = "block";
             customTimeLabel.style.display = "block";
-            timeLeft = parseInt(customTimeInput.value) || 60;
+            customTime = parseInt(customTimeInput.value) || 60;
+            timeLeft = customTime;
             livesContainer.style.display = "none";
             break;
         default:
@@ -73,8 +75,6 @@ function updateModeDisplayAndTimer() {
 }
 
 function startGame() {
-    if (isPlaying) return; // Prevent starting if already playing
-
     score = 0;
     totalWordsTyped = 0;
     tps = 0;
@@ -87,17 +87,17 @@ function startGame() {
     startButton.textContent = "Playing...";
     lives = 3;
     livesDisplay.textContent = lives;
-
-    // Set the game mode
+    
     gameMode = modeSelect.value;
     
     // For custom mode, get the custom time value only once at the start of the game
     if (gameMode === "custom") {
-        timeLeft = parseInt(customTimeInput.value) || 60; // Set to custom time or default to 60
-    } else {
-        updateModeDisplayAndTimer(); // Update timer based on selected mode
+        customTime = parseInt(customTimeInput.value) || 60;
+        timeLeft = customTime;
     }
-
+    
+    updateModeDisplayAndTimer();
+    
     nextWord();
 
     gameInterval = setInterval(() => {
@@ -143,7 +143,7 @@ function nextWord() {
 }
 
 function updateTPS() {
-    tps = totalWordsTyped / (60 - timeLeft);
+    tps = totalWordsTyped / (customTime || 60 - timeLeft);
     tpsDisplay.textContent = tps.toFixed(2);
 }
 
@@ -153,7 +153,7 @@ wordInput.addEventListener("input", () => {
         totalWordsTyped++;
         scoreDisplay.textContent = score;
         wordInput.value = "";
-
+        
         // For custom mode, don't reset time when typing a word
         if (!gameMode.includes("lives") && gameMode !== "custom") {
             timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time in challenge modes
@@ -164,16 +164,10 @@ wordInput.addEventListener("input", () => {
     }
 });
 
-// Mode change event listener - stops the game if mode is changed
+startButton.addEventListener("click", startGame);
+
+// Change mode event listener
 modeSelect.addEventListener("change", () => {
-    if (isPlaying) {
-        clearInterval(gameInterval); // Stop the current game
-        isPlaying = false;
-        wordInput.disabled = true;
-        startButton.disabled = false;
-        startButton.textContent = "Start Game";
-        resultMessage.textContent = `Mode changed to ${modeDescriptions[modeSelect.value]}. Please start the game again.`;
-    }
     gameMode = modeSelect.value;
     updateModeDisplayAndTimer();
 });
