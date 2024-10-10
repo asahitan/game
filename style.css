@@ -65,8 +65,7 @@ h1 {
     outline: none;
 }
 
-.start-btn {
-    margin-top: 20px;
+.start-btn, .restart-btn {
     padding: 10px 20px;
     font-size: 18px;
     background-color: #28a745;
@@ -74,55 +73,53 @@ h1 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    width: 150px; /* Ensures both buttons have the same width */
+    text-align: center;
 }
 
-.start-btn:disabled {
+.start-btn:disabled, .restart-btn:disabled {
     background-color: #6c757d;
 }
 
-#result-message {
+.restart-btn {
+    background-color: #dc3545; /* Different color for Restart button */
+}
+
+body.dark-mode .restart-btn {
+    background-color: #ff4d4d; /* Different color for Restart in dark mode */
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
     margin-top: 20px;
-    font-size: 18px;
-    color: #007bff;
+    gap: 20px; /* Ensures space between buttons */
 }
 
-/* Side Menu */
-.side-menu {
-    height: 100%;
-    width: 0;
+/* Popup styling */
+.popup {
     position: fixed;
-    z-index: 1;
-    top: 0;
-    right: 0;
-    background-color: #111;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-    color: white;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    z-index: 10;
+    display: none; /* Hidden by default */
 }
 
-.side-menu h2 {
-    color: white;
-    margin-left: 30px;
-}
-
-.side-menu label, .side-menu select {
-    color: white;
+.popup.show {
     display: block;
-    margin: 20px 30px;
 }
 
-.side-menu input[type="checkbox"] {
-    margin-left: 30px;
-    transform: scale(1.5);
-}
-
-.close-menu {
-    position: absolute;
-    top: 10px;
-    right: 25px;
-    font-size: 36px;
-    cursor: pointer;
+.popup button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
 }
 
 /* Dark Mode Styling */
@@ -143,14 +140,6 @@ body.dark-mode .word-input {
 
 body.dark-mode .start-btn {
     background-color: #007bff;
-}
-
-/* Same as before with this added: */
-#game-info {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    font-size: 14px;
 }
 
 #lives {
@@ -182,75 +171,6 @@ body.dark-mode #lives {
     font-size: 16px;
 }
 
-/* Additional CSS for Restart Button */
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.start-btn, .restart-btn {
-    padding: 10px 20px;
-    font-size: 18px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.start-btn:disabled, .restart-btn:disabled {
-    background-color: #6c757d;
-}
-
-.restart-btn {
-    background-color: #dc3545;
-}
-
-body.dark-mode .restart-btn {
-    background-color: #ff4d4d;
-}
-
-.restart-btn:disabled {
-    background-color: #6c757d;
-}
-/* Button Container */
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-/* Start and Restart Button Styles */
-.start-btn, .restart-btn {
-    padding: 10px 20px;
-    font-size: 18px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 150px;  /* Ensures both buttons are the same width */
-    text-align: center;
-}
-
-.start-btn:disabled, .restart-btn:disabled {
-    background-color: #6c757d;
-}
-
-/* Restart Button Specific Styles */
-.restart-btn {
-    background-color: #dc3545;
-}
-
-body.dark-mode .restart-btn {
-    background-color: #ff4d4d;
-}
-
-.restart-btn:disabled {
-    background-color: #6c757d;
-}
-/* Other existing styles remain unchanged */
 @media screen and (max-width: 480px) {
     .container {
         padding: 20px;
