@@ -1,3 +1,30 @@
+const words = ["javascript", "developer", "framework", "performance", "syntax", "debugging", "algorithm", "data"];
+const wordDisplay = document.getElementById("word-display");
+const wordInput = document.getElementById("word-input");
+const scoreDisplay = document.getElementById("score-value");
+const tpsDisplay = document.getElementById("tps-value");
+const timeDisplay = document.getElementById("time-left");
+const startButton = document.getElementById("start-btn");
+const resultMessage = document.getElementById("result-message");
+const modeSelect = document.getElementById("mode-select");
+const menuToggle = document.getElementById("menu-toggle");
+const sideMenu = document.getElementById("side-menu");
+const closeMenuButton = document.getElementById("close-menu");
+const darkModeToggle = document.getElementById("dark-mode-toggle");
+const livesDisplay = document.getElementById("lives-value");
+const livesContainer = document.getElementById("lives");
+const currentModeDisplay = document.getElementById("current-mode-display");
+
+let currentWord = "";
+let score = 0;
+let timeLeft = 60;
+let totalWordsTyped = 0;
+let isPlaying = false;
+let tps = 0;
+let gameMode = "60s"; // Default mode
+let gameInterval;
+let lives = 3; // Default lives for challenge modes
+
 // Existing mode descriptions extended with new modes
 const modeDescriptions = {
     "60s": "60-Second Mode",
