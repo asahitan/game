@@ -43,8 +43,7 @@ const modeDescriptions = {
 function updateModeDisplayAndTimer() {
     currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
     
-    // Sync the time display according to the selected mode
-    switch(gameMode) {
+    switch (gameMode) {
         case "60s":
             timeLeft = 60;
             livesContainer.style.display = "none";
@@ -60,7 +59,7 @@ function updateModeDisplayAndTimer() {
         case "custom":
             customTimeInput.style.display = "block";
             customTimeLabel.style.display = "block";
-            customTime = customTimeInput.value || 60;
+            customTime = parseInt(customTimeInput.value) || 60;
             timeLeft = customTime;
             livesContainer.style.display = "none";
             break;
@@ -90,10 +89,13 @@ function startGame() {
     livesDisplay.textContent = lives;
     
     gameMode = modeSelect.value;
+    
+    // For custom mode, get the custom time value only once at the start of the game
     if (gameMode === "custom") {
         customTime = parseInt(customTimeInput.value) || 60;
         timeLeft = customTime;
     }
+    
     updateModeDisplayAndTimer();
     
     nextWord();
@@ -151,7 +153,12 @@ wordInput.addEventListener("input", () => {
         totalWordsTyped++;
         scoreDisplay.textContent = score;
         wordInput.value = "";
-        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time in challenge modes, not in custom mode
+        
+        // For custom mode, don't reset time when typing a word
+        if (!gameMode.includes("lives") && gameMode !== "custom") {
+            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time in challenge modes
+        }
+        
         nextWord();
         updateTPS();
     }
