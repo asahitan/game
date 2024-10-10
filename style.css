@@ -31,7 +31,6 @@ h1 {
     color: #333;
 }
 
-/* Hamburger Menu Style */
 #menu-toggle {
     position: absolute;
     top: 10px;
@@ -42,8 +41,16 @@ h1 {
 
 #game-info {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
     margin-bottom: 20px;
+}
+
+#lives {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #dc3545;
 }
 
 #word-display {
@@ -54,10 +61,10 @@ h1 {
     border-radius: 5px;
     height: 50px;
     line-height: 50px;
-    text-align: center; /* Center text horizontally */
+    text-align: center;
     display: flex;
-    justify-content: center; /* Ensure horizontal centering */
-    align-items: center; /* Ensure vertical centering */
+    justify-content: center; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
 }
 
 .word-input {
@@ -110,7 +117,8 @@ h1 {
     margin-left: 30px;
 }
 
-.side-menu label, .side-menu select {
+.side-menu label,
+.side-menu select {
     color: white;
     display: block;
     margin: 20px 30px;
@@ -149,45 +157,25 @@ body.dark-mode .start-btn {
     background-color: #007bff;
 }
 
-/* Same as before with this added: */
-#game-info {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    font-size: 14px;
-}
-
-#lives {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #dc3545; /* Red color for life indicator */
-}
-
-/* Hidden class for hiding elements */
-.hidden {
-    display: none;
-}
-
-/* Dark Mode Styling for Lives */
 body.dark-mode #lives {
-    color: #f77; /* Lighter red in dark mode */
+    color: #f77;
 }
 
 @media screen and (max-width: 480px) {
     .container {
         padding: 20px;
     }
-    
+
     h1 {
         font-size: 20px;
     }
-    
+
     #word-display {
         font-size: 18px;
         height: 40px;
         line-height: 40px;
     }
-    
+
     .word-input {
         font-size: 16px;
     }
