@@ -32,7 +32,10 @@ const modeDescriptions = {
     "5s-lives": "5-Second Challenge Mode with Lives",
     "3s-lives": "3-Second Challenge Mode with Lives",
     "7s-lives": "7-Second Challenge Mode with Lives",
-    "2s-lives": "2-Second Challenge Mode with Lives"
+    "2s-lives": "2-Second Challenge Mode with Lives",
+    "hard": "Hard Mode",
+    "extreme": "Extreme Mode",
+    "zen": "Zen Mode"
 };
 
 // Function to update the mode display and sync the timer
@@ -57,6 +60,19 @@ function updateModeDisplayAndTimer() {
             livesContainer.style.display = "block";
             livesDisplay.textContent = 3;
             break;
+        case "hard":
+            timeLeft = 2;
+            livesContainer.style.display = "block";
+            livesDisplay.textContent = 1;
+            break;
+        case "extreme":
+            timeLeft = 1.5;
+            livesContainer.style.display = "none";
+            break;
+        case "zen":
+            timeLeft = Infinity;
+            livesContainer.style.display = "none";
+            break;
     }
     timeDisplay.textContent = timeLeft;
 }
@@ -72,7 +88,7 @@ function startGame() {
     wordInput.focus();
     startButton.disabled = true;
     startButton.textContent = "Playing...";
-    lives = 3;
+    lives = gameMode.includes("lives") ? 3 : 0;
     livesDisplay.textContent = lives;
     
     gameMode = modeSelect.value;
@@ -133,7 +149,9 @@ wordInput.addEventListener("input", () => {
         totalWordsTyped++;
         scoreDisplay.textContent = score;
         wordInput.value = "";
-        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time in challenge modes
+        if (gameMode.includes("lives")) {
+            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time in challenge modes
+        }
         nextWord();
         updateTPS();
     }
