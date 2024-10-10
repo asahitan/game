@@ -214,6 +214,42 @@ body.dark-mode .restart-btn {
 .restart-btn:disabled {
     background-color: #6c757d;
 }
+/* Button Container */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Start and Restart Button Styles */
+.start-btn, .restart-btn {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 150px;  /* Ensures both buttons are the same width */
+    text-align: center;
+}
+
+.start-btn:disabled, .restart-btn:disabled {
+    background-color: #6c757d;
+}
+
+/* Restart Button Specific Styles */
+.restart-btn {
+    background-color: #dc3545;
+}
+
+body.dark-mode .restart-btn {
+    background-color: #ff4d4d;
+}
+
+.restart-btn:disabled {
+    background-color: #6c757d;
+}
 
 /* Other existing styles remain unchanged */
 
