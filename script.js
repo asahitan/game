@@ -34,13 +34,16 @@ const modeDescriptions = {
     "5s-lives": "5-Second Challenge Mode with Lives",
     "3s-lives": "3-Second Challenge Mode with Lives",
     "7s-lives": "7-Second Challenge Mode with Lives",
-    "2s-lives": "2-Second Challenge Mode with Lives"
+    "2s-lives": "2-Second Challenge Mode with Lives",
+    "hard": "Hard Mode (3 words per second)",
+    "extreme": "Extreme Mode (1 second to type one word)",
+    "zen": "Zen Mode (No time limit)",
+    "sudden-death": "Sudden Death Mode (1 life, 5 seconds)"
 };
 
 function updateModeDisplayAndTimer() {
     currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
-    
-    switch(gameMode) {
+    switch (gameMode) {
         case "60s":
             timeLeft = 60;
             livesContainer.style.display = "none";
@@ -50,12 +53,42 @@ function updateModeDisplayAndTimer() {
             livesContainer.style.display = "none";
             break;
         case "5s-lives":
-        case "3s-lives":
-        case "7s-lives":
-        case "2s-lives":
-            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Extract the number for the time limit
+            timeLeft = 5;
             livesContainer.style.display = "block";
-            livesDisplay.textContent = 3;
+            livesDisplay.textContent = lives;
+            break;
+        case "3s-lives":
+            timeLeft = 3;
+            livesContainer.style.display = "block";
+            livesDisplay.textContent = lives;
+            break;
+        case "7s-lives":
+            timeLeft = 7;
+            livesContainer.style.display = "block";
+            livesDisplay.textContent = lives;
+            break;
+        case "2s-lives":
+            timeLeft = 2;
+            livesContainer.style.display = "block";
+            livesDisplay.textContent = lives;
+            break;
+        case "hard":
+            timeLeft = 20; // 20 seconds
+            livesContainer.style.display = "none"; // No lives
+            break;
+        case "extreme":
+            timeLeft = 1; // 1 second
+            livesContainer.style.display = "none"; // No lives
+            break;
+        case "zen":
+            timeLeft = 99999; // No limit
+            livesContainer.style.display = "none"; // No lives
+            break;
+        case "sudden-death":
+            timeLeft = 5; // 5 seconds
+            lives = 1; // Only 1 life
+            livesContainer.style.display = "block";
+            livesDisplay.textContent = lives;
             break;
     }
     timeDisplay.textContent = timeLeft;
@@ -72,7 +105,7 @@ function startGame() {
     wordInput.focus();
     startButton.disabled = true;
     startButton.textContent = "Playing...";
-    lives = 3;
+    lives = (gameMode.includes("lives") || gameMode === "sudden-death") ? 3 : 0; // Reset lives for applicable modes
     livesDisplay.textContent = lives;
 
     multiplier = 1; // Reset multiplier
@@ -91,6 +124,9 @@ function startGame() {
 
             if (gameMode.includes("lives") && timeLeft === 0) {
                 handleLifeLoss();
+            } else if (gameMode === "sudden-death" && timeLeft === 0) {
+                clearInterval(gameInterval);
+                endGame();
             }
         } else if (timeLeft === 0) {
             clearInterval(gameInterval);
@@ -140,7 +176,7 @@ wordInput.addEventListener("input", () => {
         multiplierDisplay.textContent = `Multiplier: x${multiplier}`;
 
         wordInput.value = "";
-        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time in challenge modes
+        timeLeft = (gameMode.includes("lives") || gameMode === "sudden-death") ? parseInt(gameMode.split('-')[0].slice(0, 1)) : timeLeft; // Reset time in challenge modes
         nextWord();
         updateTPS();
     }
