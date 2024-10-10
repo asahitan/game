@@ -169,6 +169,19 @@ body.dark-mode #lives {
     color: #f77; /* Lighter red in dark mode */
 }
 
+/* Add styles for custom time input */
+#custom-time, #custom-time-label {
+    margin-left: 30px;
+    color: white;
+}
+
+#custom-time {
+    width: 80%;
+    margin: 20px 30px;
+    padding: 5px;
+    font-size: 16px;
+}
+
 @media screen and (max-width: 480px) {
     .container {
         padding: 20px;
