@@ -1,11 +1,11 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Typing Speed Game</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
             <div id="lives" style="display:none;">Lives: <span id="lives-value">3</span></div> <!-- Life display, hidden by default -->
         </div>
 
-        <div id="word-display" class="word-display"></div>
+        <div id="word-display" class="word-display">framework</div> <!-- Centered word -->
         <input type="text" id="word-input" class="word-input" placeholder="Type here..." autofocus>
         <button id="start-btn" class="start-btn">Start Game</button>
         <div id="result-message"></div>
@@ -42,6 +42,9 @@
                 <option value="3s-lives">3-Second Challenge Mode with Lives</option>
                 <option value="7s-lives">7-Second Challenge Mode with Lives</option>
                 <option value="2s-lives">2-Second Challenge Mode with Lives</option>
+                <option value="hard">Hard Mode</option>
+                <option value="extreme">Extreme Mode</option>
+                <option value="zen">Zen Mode</option>
             </select>
 
             <label for="dark-mode-toggle">Dark Mode:</label>
@@ -50,6 +53,7 @@
     </div>
 
     <script src="script.js"></script>
+
 </body>
 
 </html>
