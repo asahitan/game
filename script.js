@@ -13,7 +13,6 @@ const darkModeToggle = document.getElementById("dark-mode-toggle");
 const livesDisplay = document.getElementById("lives-value");
 const livesContainer = document.getElementById("lives");
 const currentModeDisplay = document.getElementById("current-mode-display");
-const multiplierDisplay = document.getElementById("multiplier-display"); // Multiplier display
 
 let words = ["javascript", "developer", "framework", "performance", "syntax", "debugging", "algorithm", "data"];
 let currentWord = "";
@@ -25,9 +24,6 @@ let tps = 0;
 let gameMode = "60s"; // Default mode
 let gameInterval;
 let lives = 3; // Default lives for challenge modes
-let multiplier = 1; // Multiplier starts at x1
-let currentStreak = 0; // Tracks user's streak
-let nextStreakTarget = 3; // Streak target to increase multiplier
 
 // Map modes to descriptions
 const modeDescriptions = {
@@ -36,14 +32,17 @@ const modeDescriptions = {
     "5s-lives": "5-Second Challenge Mode with Lives",
     "3s-lives": "3-Second Challenge Mode with Lives",
     "7s-lives": "7-Second Challenge Mode with Lives",
-    "2s-lives": "2-Second Challenge Mode with Lives"
+    "2s-lives": "2-Second Challenge Mode with Lives",
+    "1s-lives": "1-Second Challenge Mode with Lives",
+    "15s": "15-Second Challenge Mode",
+    "30s-lives": "30-Second Mode with Lives"
 };
 
 // Function to update the mode display and sync the timer
 function updateModeDisplayAndTimer() {
     currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
     
-    switch(gameMode) {
+    switch (gameMode) {
         case "60s":
             timeLeft = 60;
             livesContainer.style.display = "none";
@@ -52,36 +51,26 @@ function updateModeDisplayAndTimer() {
             timeLeft = 10;
             livesContainer.style.display = "none";
             break;
+        case "15s":
+            timeLeft = 15;
+            livesContainer.style.display = "none";
+            break;
+        case "30s-lives":
+            timeLeft = 30;
+            livesContainer.style.display = "block";
+            livesDisplay.textContent = 3;
+            break;
         case "5s-lives":
         case "3s-lives":
         case "7s-lives":
         case "2s-lives":
+        case "1s-lives":
             timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Sync time to the first number in the mode name
             livesContainer.style.display = "block";
             livesDisplay.textContent = 3;
             break;
     }
     timeDisplay.textContent = timeLeft;
-}
-
-// Function to update the multiplier display
-function updateMultiplierDisplay() {
-    multiplierDisplay.textContent = `Multiplier: x${multiplier}`;
-}
-
-function updateMultiplier() {
-    if (currentStreak >= nextStreakTarget) {
-        multiplier++;
-        nextStreakTarget += 3; // Increase the streak target by 3 for the next multiplier
-        updateMultiplierDisplay(); // Update the multiplier display when it increases
-    }
-}
-
-function resetMultiplierAndStreak() {
-    multiplier = 1; // Reset multiplier back to x1
-    currentStreak = 0; // Reset streak
-    nextStreakTarget = 3; // Reset streak target back to 3
-    updateMultiplierDisplay(); // Update the multiplier display when reset
 }
 
 function startGame() {
@@ -100,8 +89,7 @@ function startGame() {
     
     gameMode = modeSelect.value;
     updateModeDisplayAndTimer();
-    resetMultiplierAndStreak(); // Reset multiplier and streak when the game starts
-
+    
     nextWord();
 
     gameInterval = setInterval(() => {
@@ -128,7 +116,7 @@ function handleLifeLoss() {
         clearInterval(gameInterval);
         endGame();
     } else {
-        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1));
+        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time for challenge modes with lives
         nextWord();
     }
 }
@@ -153,14 +141,9 @@ function updateTPS() {
 
 wordInput.addEventListener("input", () => {
     if (wordInput.value.trim() === currentWord) {
-        currentStreak++; // Increase the streak count
-        updateMultiplier(); // Check if the user hit the streak target for a new multiplier
-
-        // Update score based on multiplier
-        score += (1 * multiplier); 
+        score++;
         totalWordsTyped++;
         scoreDisplay.textContent = score;
-
         wordInput.value = "";
         timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time for challenge modes
         nextWord();
@@ -168,21 +151,28 @@ wordInput.addEventListener("input", () => {
     }
 });
 
-startButton.addEventListener("click", () => {
-    updateMultiplierDisplay(); // Ensure the multiplier display is set to `x1` when the game starts
-    startGame();
+startButton.addEventListener("click", startGame);
+
+// Change mode event listener
+modeSelect.addEventListener("change", () => {
+    gameMode = modeSelect.value;
+    updateModeDisplayAndTimer();
 });
 
-// Dark mode toggle logic
-darkModeToggle.addEventListener("change", () => {
-    document.body.classList.toggle("dark-mode", darkModeToggle.checked);
-});
-
-// Menu toggle logic
+// Toggle Side Menu
 menuToggle.addEventListener("click", () => {
-    sideMenu.classList.toggle("open");
+    sideMenu.style.width = "250px";
+});
+closeMenuButton.addEventListener("click", () => {
+    sideMenu.style.width = "0";
 });
 
-closeMenuButton.addEventListener("click", () => {
-    sideMenu.classList.remove("open");
+// Toggle Dark Mode
+darkModeToggle.addEventListener("change", (e) => {
+    document.body.classList.toggle("dark-mode", e.target.checked);
 });
+
+// Disable copy-paste to prevent cheating
+wordInput.addEventListener('paste', (e) => e.preventDefault());
+wordInput.addEventListener('copy', (e) => e.preventDefault());
+wordInput.addEventListener('contextmenu', (e) => e.preventDefault());
