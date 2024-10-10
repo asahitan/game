@@ -31,6 +31,7 @@ h1 {
     color: #333;
 }
 
+/* Hamburger Menu Style */
 #menu-toggle {
     position: absolute;
     top: 10px;
@@ -83,12 +84,6 @@ h1 {
     margin-top: 20px;
     font-size: 18px;
     color: #007bff;
-}
-
-#multiplier {
-    font-size: 18px;
-    color: #28a745;
-    margin-top: 10px;
 }
 
 /* Side Menu */
@@ -173,14 +168,6 @@ body.dark-mode .start-btn {
 body.dark-mode #lives {
     color: #f77; /* Lighter red in dark mode */
 }
-
-#multiplier-display {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #007bff;
-}
-
 
 @media screen and (max-width: 480px) {
     .container {
