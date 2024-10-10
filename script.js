@@ -164,10 +164,16 @@ wordInput.addEventListener("input", () => {
     }
 });
 
-startButton.addEventListener("click", startGame);
-
-// Change mode event listener
+// Mode change event listener - stops the game if mode is changed
 modeSelect.addEventListener("change", () => {
+    if (isPlaying) {
+        clearInterval(gameInterval); // Stop the current game
+        isPlaying = false;
+        wordInput.disabled = true;
+        startButton.disabled = false;
+        startButton.textContent = "Start Game";
+        resultMessage.textContent = `Mode changed to ${modeDescriptions[gameMode]}. Please start the game again.`;
+    }
     gameMode = modeSelect.value;
     updateModeDisplayAndTimer();
 });
