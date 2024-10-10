@@ -1,189 +1,195 @@
-document.addEventListener("DOMContentLoaded", function() {
-    let currentWord = "";
-    let score = 0;
-    let timeLeft = 60;
-    let tps = 0;
-    let lives = 3;
-    let gameActive = false;
-    let timer;
-    const words = ["test", "game", "speed", "typing", "javascript", "html", "css"];
-    const wordDisplay = document.getElementById("word-display");
-    const wordInput = document.getElementById("word-input");
-    const startBtn = document.getElementById("start-btn");
-    const scoreValue = document.getElementById("score-value");
-    const timeLeftDisplay = document.getElementById("time-left");
-    const tpsValue = document.getElementById("tps-value");
-    const livesDisplay = document.getElementById("lives");
-    const livesValue = document.getElementById("lives-value");
-    const resultMessage = document.getElementById("result-message");
-    const currentModeDisplay = document.getElementById("current-mode-display");
-    const modeSelect = document.getElementById("mode-select");
+const wordDisplay = document.getElementById("word-display");
+const wordInput = document.getElementById("word-input");
+const scoreDisplay = document.getElementById("score-value");
+const tpsDisplay = document.getElementById("tps-value");
+const timeDisplay = document.getElementById("time-left");
+const startButton = document.getElementById("start-btn");
+const resultMessage = document.getElementById("result-message");
+const modeSelect = document.getElementById("mode-select");
+const menuToggle = document.getElementById("menu-toggle");
+const sideMenu = document.getElementById("side-menu");
+const closeMenuButton = document.getElementById("close-menu");
+const darkModeToggle = document.getElementById("dark-mode-toggle");
+const livesDisplay = document.getElementById("lives-value");
+const livesContainer = document.getElementById("lives");
+const currentModeDisplay = document.getElementById("current-mode-display");
 
-    // Initialize mode settings
-    let selectedMode = "60s";
+let words = ["javascript", "developer", "framework", "performance", "syntax", "debugging", "algorithm", "data"];
+let currentWord = "";
+let score = 0;
+let timeLeft = 60;
+let totalWordsTyped = 0;
+let isPlaying = false;
+let tps = 0;
+let gameMode = "60s"; // Default mode
+let gameInterval;
+let lives = 3; // Default lives for challenge modes
 
-    // Handle mode selection change
-    modeSelect.addEventListener("change", function() {
-        selectedMode = modeSelect.value;
-        resetGame();
-        updateModeDisplay();
-    });
+// Mode Descriptions
+const modeDescriptions = {
+    "60s": "60-Second Mode",
+    "90s": "90-Second Mode",
+    "120s": "120-Second Mode",
+    "10s": "10-Second Challenge Mode",
+    "15s": "15-Second Challenge Mode",
+    "5s-lives": "5-Second Challenge Mode with Lives",
+    "3s-lives": "3-Second Challenge Mode with Lives",
+    "7s-lives": "7-Second Challenge Mode with Lives",
+    "2s-lives": "2-Second Challenge Mode with Lives",
+    "30s-lives": "30-Second Challenge Mode with Lives",
+    "random": "Random Time Mode",
+    "sudden-death": "Sudden Death Mode (1 life only)"
+};
 
-    // Function to update the mode display
-    function updateModeDisplay() {
-        let modeText = "";
-        switch (selectedMode) {
-            case "60s":
-                modeText = "60-Second Mode";
-                timeLeft = 60;
-                livesDisplay.style.display = "none";
-                break;
-            case "10s":
-                modeText = "10-Second Challenge Mode";
-                timeLeft = 10;
-                livesDisplay.style.display = "none";
-                break;
-            case "5s-lives":
-                modeText = "5-Second Challenge Mode with Lives";
-                timeLeft = 5;
-                lives = 3;
-                livesDisplay.style.display = "block";
-                break;
-            case "3s-lives":
-                modeText = "3-Second Challenge Mode with Lives";
-                timeLeft = 3;
-                lives = 3;
-                livesDisplay.style.display = "block";
-                break;
-            case "7s-lives":
-                modeText = "7-Second Challenge Mode with Lives";
-                timeLeft = 7;
-                lives = 3;
-                livesDisplay.style.display = "block";
-                break;
-            case "2s-lives":
-                modeText = "2-Second Challenge Mode with Lives";
-                timeLeft = 2;
-                lives = 3;
-                livesDisplay.style.display = "block";
-                break;
-        }
-        currentModeDisplay.textContent = "Mode: " + modeText;
-        timeLeftDisplay.textContent = timeLeft;
-        livesValue.textContent = lives;
+// Function to update the mode display and sync the timer
+function updateModeDisplayAndTimer() {
+    currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
+    
+    // Sync the time display according to the selected mode
+    switch(gameMode) {
+        case "60s":
+            timeLeft = 60;
+            livesContainer.style.display = "none";
+            break;
+        case "90s":
+            timeLeft = 90;
+            livesContainer.style.display = "none";
+            break;
+        case "120s":
+            timeLeft = 120;
+            livesContainer.style.display = "none";
+            break;
+        case "10s":
+            timeLeft = 10;
+            livesContainer.style.display = "none";
+            break;
+        case "15s":
+            timeLeft = 15;
+            livesContainer.style.display = "none";
+            break;
+        case "5s-lives":
+        case "3s-lives":
+        case "7s-lives":
+        case "2s-lives":
+        case "30s-lives":
+            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 2)); // Sync time to the first number in the mode name
+            livesContainer.style.display = "block";
+            livesDisplay.textContent = 3;
+            break;
+        case "random":
+            timeLeft = Math.floor(Math.random() * (100 - 10 + 1) + 10); // Random time between 10 and 100 seconds
+            livesContainer.style.display = "none";
+            break;
+        case "sudden-death":
+            timeLeft = 30;
+            lives = 1;
+            livesDisplay.textContent = lives;
+            livesContainer.style.display = "block";
+            break;
     }
+    timeDisplay.textContent = timeLeft;
+}
 
-    // Start Game logic
-    startBtn.addEventListener("click", startGame);
+function startGame() {
+    score = 0;
+    totalWordsTyped = 0;
+    tps = 0;
+    isPlaying = true;
+    wordInput.value = "";
+    resultMessage.textContent = "";
+    wordInput.disabled = false;
+    wordInput.focus();
+    startButton.disabled = true;
+    startButton.textContent = "Playing...";
+    lives = gameMode === "sudden-death" ? 1 : 3; // Sudden death starts with 1 life
+    livesDisplay.textContent = lives;
+    
+    gameMode = modeSelect.value;
+    updateModeDisplayAndTimer();
+    
+    nextWord();
 
-    function startGame() {
-        if (gameActive) return;
-        gameActive = true;
-        wordInput.value = "";
-        score = 0;
-        tps = 0;
-        scoreValue.textContent = score;
-        tpsValue.textContent = tps.toFixed(2);
-        startTimer();
-        generateWord();
-        wordInput.focus();
-    }
-
-    function startTimer() {
-        timer = setInterval(function() {
+    gameInterval = setInterval(() => {
+        if (timeLeft > 0 && isPlaying) {
             timeLeft--;
-            timeLeftDisplay.textContent = timeLeft;
-            if (timeLeft <= 0) {
-                if (selectedMode.includes("lives")) {
-                    lives--;
-                    livesValue.textContent = lives;
-                    if (lives <= 0) {
-                        endGame("Game Over! You ran out of lives.");
-                        return;
-                    } else {
-                        resetTime();
-                    }
-                } else {
-                    endGame("Time's up!");
-                }
+            timeDisplay.textContent = timeLeft;
+            updateTPS();
+
+            if (gameMode.includes("lives") && timeLeft === 0) {
+                handleLifeLoss();
             }
-        }, 1000);
-    }
-
-    function resetTime() {
-        switch (selectedMode) {
-            case "5s-lives":
-                timeLeft = 5;
-                break;
-            case "3s-lives":
-                timeLeft = 3;
-                break;
-            case "7s-lives":
-                timeLeft = 7;
-                break;
-            case "2s-lives":
-                timeLeft = 2;
-                break;
+        } else if (timeLeft === 0) {
+            clearInterval(gameInterval);
+            endGame();
         }
-        timeLeftDisplay.textContent = timeLeft;
+    }, 1000);
+}
+
+function handleLifeLoss() {
+    lives--;
+    livesDisplay.textContent = lives;
+
+    if (lives === 0) {
+        clearInterval(gameInterval);
+        endGame();
+    } else {
+        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 2)); // Reset time in challenge modes
+        nextWord();
     }
+}
 
-    function endGame(message) {
-        clearInterval(timer);
-        gameActive = false;
-        resultMessage.textContent = message;
-    }
+function endGame() {
+    isPlaying = false;
+    wordInput.disabled = true;
+    startButton.disabled = false;
+    startButton.textContent = "Start Game";
+    resultMessage.textContent = `Game Over! Final Score: ${score} | TPS: ${tps.toFixed(2)}`;
+}
 
-    function generateWord() {
-        currentWord = words[Math.floor(Math.random() * words.length)];
-        wordDisplay.textContent = currentWord;
-    }
+function nextWord() {
+    currentWord = words[Math.floor(Math.random() * words.length)];
+    wordDisplay.textContent = currentWord;
+}
 
-    wordInput.addEventListener("input", function() {
-        if (wordInput.value === currentWord && gameActive) {
-            score++;
-            scoreValue.textContent = score;
-            tps = score / (60 - timeLeft);
-            tpsValue.textContent = tps.toFixed(2);
-            wordInput.value = "";
-            generateWord();
-            if (selectedMode !== "60s" && selectedMode !== "10s") {
-                resetTime();
-            }
-        }
-    });
+function updateTPS() {
+    tps = totalWordsTyped / (60 - timeLeft);
+    tpsDisplay.textContent = tps.toFixed(2);
+}
 
-    function resetGame() {
-        clearInterval(timer);
-        timeLeft = selectedMode === "60s" ? 60 : selectedMode === "10s" ? 10 : 5;
-        score = 0;
-        lives = 3;
-        scoreValue.textContent = score;
-        tpsValue.textContent = "0.00";
-        livesValue.textContent = lives;
-        timeLeftDisplay.textContent = timeLeft;
-        wordDisplay.textContent = "";
+wordInput.addEventListener("input", () => {
+    if (wordInput.value.trim() === currentWord) {
+        score++;
+        totalWordsTyped++;
+        scoreDisplay.textContent = score;
         wordInput.value = "";
-        resultMessage.textContent = "";
-        gameActive = false;
+        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 2)); // Reset time in challenge modes
+        nextWord();
+        updateTPS();
     }
-
-    // Toggle dark mode
-    const darkModeToggle = document.getElementById("dark-mode-toggle");
-    darkModeToggle.addEventListener("change", function() {
-        document.body.classList.toggle("dark-mode", darkModeToggle.checked);
-    });
-
-    // Menu toggle functionality
-    const menuToggle = document.getElementById("menu-toggle");
-    const sideMenu = document.getElementById("side-menu");
-    const closeMenu = document.getElementById("close-menu");
-
-    menuToggle.addEventListener("click", function() {
-        sideMenu.style.width = "250px";
-    });
-
-    closeMenu.addEventListener("click", function() {
-        sideMenu.style.width = "0";
-    });
 });
+
+startButton.addEventListener("click", startGame);
+
+// Change mode event listener
+modeSelect.addEventListener("change", () => {
+    gameMode = modeSelect.value;
+    updateModeDisplayAndTimer();
+});
+
+// Toggle Side Menu
+menuToggle.addEventListener("click", () => {
+    sideMenu.style.width = "250px";
+});
+closeMenuButton.addEventListener("click", () => {
+    sideMenu.style.width = "0";
+});
+
+// Toggle Dark Mode
+darkModeToggle.addEventListener("change", (e) => {
+    document.body.classList.toggle("dark-mode", e.target.checked);
+});
+
+// Disable copy-paste to prevent cheating
+wordInput.addEventListener('paste', (e) => e.preventDefault());
+wordInput.addEventListener('copy', (e) => e.preventDefault());
+wordInput.addEventListener('contextmenu', (e) => e.preventDefault());
