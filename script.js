@@ -49,32 +49,30 @@ function updateModeDisplayAndTimer() {
     switch(gameMode) {
         case "60s":
             timeLeft = 60;
-            livesContainer.style.display = "none";
+            livesContainer.style.display = "none";  // No lives in standard modes
             break;
         case "30s":
             timeLeft = 30;
-            livesContainer.style.display = "none";
+            livesContainer.style.display = "none";  // No lives in standard modes
             break;
         case "10s":
             timeLeft = 10;
-            livesContainer.style.display = "none";
+            livesContainer.style.display = "none";  // No lives in standard modes
             break;
         case "5s-lives":
         case "3s-lives":
         case "7s-lives":
         case "2s-lives":
         case "1s-lives":
-            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1));
-            livesContainer.style.display = "block";
-            livesDisplay.textContent = 3;
+            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1));  // Set time based on mode
+            livesContainer.style.display = "block";  // Lives are visible in these challenge modes
+            livesDisplay.textContent = 3;  // Reset lives to 3
             break;
         case "custom":
-            // Show custom settings for custom mode
+            // For custom mode, only set the custom time, and hide lives
             customSettings.style.display = "block";
-            timeLeft = parseInt(customTimeInput.value);
-            lives = parseInt(customLivesInput.value);
-            livesDisplay.textContent = lives;
-            livesContainer.style.display = "block";
+            timeLeft = parseInt(customTimeInput.value);  // Use custom time
+            livesContainer.style.display = "none";  // No lives in custom mode
             break;
     }
     timeDisplay.textContent = timeLeft;
@@ -91,7 +89,7 @@ function startGame() {
     wordInput.focus();
     startButton.disabled = true;
     startButton.textContent = "Playing...";
-    lives = 3;
+    lives = 3;  // Reset lives in case of challenge modes
     livesDisplay.textContent = lives;
     
     gameMode = modeSelect.value;
@@ -105,6 +103,7 @@ function startGame() {
             timeDisplay.textContent = timeLeft;
             updateTPS();
 
+            // Handle life loss in challenge modes with lives
             if (gameMode.includes("lives") && timeLeft === 0) {
                 handleLifeLoss();
             }
@@ -116,6 +115,7 @@ function startGame() {
 }
 
 function handleLifeLoss() {
+    // Handle lives reduction only in modes with lives
     lives--;
     livesDisplay.textContent = lives;
 
@@ -123,7 +123,7 @@ function handleLifeLoss() {
         clearInterval(gameInterval);
         endGame();
     } else {
-        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1));
+        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1));  // Reset time in challenge modes
         nextWord();
     }
 }
