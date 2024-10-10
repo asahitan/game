@@ -16,78 +16,164 @@ const livesContainer = document.getElementById("lives");
 const customTimeInput = document.getElementById("custom-time");
 const customTimeLabel = document.getElementById("custom-time-label");
 const currentModeDisplay = document.getElementById("current-mode-display");
-const popup = document.getElementById("restart-popup");
 
-let words = ["javascript", "html", "css", "react", "node", "express", "mongodb", "typescript", "bootstrap"];
+let words = [];
 let score = 0;
 let totalWordsTyped = 0;
 let tps = 0;
-let lives = 3;
 let timeLeft = 60;
+let lives = 3;
 let isPlaying = false;
 let gameInterval;
-let customTime;
+let customTime = null;
 
-// Display random word to type
-function displayRandomWord() {
-    const randomIndex = Math.floor(Math.random() * words.length);
-    wordDisplay.textContent = words[randomIndex];
-}
+// Function to start the game
+startButton.addEventListener("click", startGame);
 
-// Start the game
-startButton.addEventListener("click", () => {
-    if (isPlaying) return;
-    isPlaying = true;
+function startGame() {
     score = 0;
     totalWordsTyped = 0;
-    timeLeft = customTime || 60;
-    lives = modeSelect.value.includes("lives") ? 3 : null;
+    timeLeft = customTime || 60; // use custom time or default 60 seconds
+    isPlaying = true;
     wordInput.disabled = false;
     wordInput.value = "";
-    wordDisplay.textContent = "";
-    scoreDisplay.textContent = "0";
-    tpsDisplay.textContent = "0.00";
-    livesDisplay.textContent = lives ? lives : "N/A";
-    livesContainer.style.display = lives ? "block" : "none";
-    timeDisplay.textContent = timeLeft;
-    startButton.disabled = true;
-    restartButton.disabled = false;
+    wordInput.focus();
+    generateWords();
+    startButton.disabled = true; // Disable start button
+    restartButton.disabled = false; // Enable restart button
+    resultMessage.textContent = "";
 
-    displayRandomWord();
     gameInterval = setInterval(() => {
-        if (timeLeft > 0) {
-            timeLeft--;
-            timeDisplay.textContent = timeLeft;
-        } else {
-            clearInterval(gameInterval);
+        timeLeft--;
+        timeDisplay.textContent = timeLeft;
+        if (timeLeft <= 0) {
             endGame();
         }
     }, 1000);
-});
+}
 
-// Event listener for word input
+// Function to generate random words
+function generateWords() {
+    const wordList = ["apple", "banana", "orange", "grape", "watermelon", "strawberry", "blueberry"];
+    words = [];
+    for (let i = 0; i < 10; i++) {
+        words.push(wordList[Math.floor(Math.random() * wordList.length)]);
+    }
+    wordDisplay.textContent = words.join(" ");
+}
+
+// Function to handle input
 wordInput.addEventListener("input", () => {
-    const typedWord = wordInput.value.trim();
-    if (typedWord === wordDisplay.textContent) {
+    if (!isPlaying) return;
+    const inputText = wordInput.value;
+    const currentWord = words[totalWordsTyped];
+    if (inputText === currentWord) {
         score++;
         totalWordsTyped++;
-        tps = (score / totalWordsTyped) * 60; // Calculate TPS
         scoreDisplay.textContent = score;
+        tps = (score / (60 - timeLeft)) || 0; // Calculate TPS
         tpsDisplay.textContent = tps.toFixed(2);
-        displayRandomWord();
         wordInput.value = "";
+        if (totalWordsTyped === words.length) {
+            generateWords();
+        }
     }
 });
 
-// End the game
+// Function to end the game
 function endGame() {
     isPlaying = false;
-    wordInput.disabled = true;
-    resultMessage.textContent = `Game Over! Your score: ${score}. Press Start Game to play again.`;
-    startButton.disabled = false;
-    restartButton.disabled = true;
     clearInterval(gameInterval);
+    wordInput.disabled = true; // Disable input after game ends
+    resultMessage.textContent = `Game Over! Your Score: ${score}`;
+    startButton.disabled = false; // Enable start button for next round
+    restartButton.disabled = true; // Disable restart until the game starts again
 }
+
+// Event listeners for mode changes
+modeSelect.addEventListener("change", () => {
+    const selectedMode = modeSelect.value;
+    switch (selectedMode) {
+        case "60s":
+            timeLeft = 60;
+            currentModeDisplay.textContent = "Mode: 60-Second Mode";
+            customTimeInput.style.display = "none";
+            customTimeLabel.style.display = "none";
+            break;
+        case "10s":
+            timeLeft = 10;
+            currentModeDisplay.textContent = "Mode: 10-Second Challenge Mode";
+            customTimeInput.style.display = "none";
+            customTimeLabel.style.display = "none";
+            break;
+        case "5s-lives":
+            timeLeft = 5;
+            currentModeDisplay.textContent = "Mode: 5-Second Challenge Mode with Lives";
+            customTimeInput.style.display = "none";
+            customTimeLabel.style.display = "none";
+            break;
+        case "3s-lives":
+            timeLeft = 3;
+            currentModeDisplay.textContent = "Mode: 3-Second Challenge Mode with Lives";
+            customTimeInput.style.display = "none";
+            customTimeLabel.style.display = "none";
+            break;
+        case "7s-lives":
+            timeLeft = 7;
+            currentModeDisplay.textContent = "Mode: 7-Second Challenge Mode with Lives";
+            customTimeInput.style.display = "none";
+            customTimeLabel.style.display = "none";
+            break;
+        case "2s-lives":
+            timeLeft = 2;
+            currentModeDisplay.textContent = "Mode: 2-Second Challenge Mode with Lives";
+            customTimeInput.style.display = "none";
+            customTimeLabel.style.display = "none";
+            break;
+        case "custom":
+            currentModeDisplay.textContent = "Mode: Custom Mode";
+            customTimeInput.style.display = "block";
+            customTimeLabel.style.display = "block";
+            break;
+        default:
+            timeLeft = 60;
+            currentModeDisplay.textContent = "Mode: 60-Second Mode";
+    }
+    timeDisplay.textContent = timeLeft;
+});
+
+// Hamburger menu functionality
+menuToggle.addEventListener("click", () => {
+    sideMenu.style.width = "250px";
+});
+
+closeMenuButton.addEventListener("click", () => {
+    sideMenu.style.width = "0";
+});
+
+// Dark mode toggle
+darkModeToggle.addEventListener("change", () => {
+    document.body.classList.toggle("dark-mode");
+});
+
+// Create popup for restart confirmation
+const popup = document.querySelector('.popup');
+
+// Event listener for showing the popup when clicking restart
+restartButton.addEventListener("click", () => {
+    popup.classList.add("show");
+});
+
+// Event listener for confirming restart
+document.getElementById("confirm-restart").addEventListener("click", () => {
+    popup.classList.remove("show");
+    restartGame();
+});
+
+// Event listener for canceling restart
+document.getElementById("cancel-restart").addEventListener("click", () => {
+    popup.classList.remove("show");
+});
 
 // Restart game function
 function restartGame() {
@@ -109,44 +195,3 @@ function restartGame() {
     restartButton.disabled = true; // Disable restart until the game starts again
     resultMessage.textContent = "Game restarted. Press Start Game to play.";
 }
-
-// Event listener for showing the popup when clicking restart
-restartButton.addEventListener("click", () => {
-    popup.classList.add("show");
-});
-
-// Event listener for confirming restart
-document.getElementById("confirm-restart").addEventListener("click", () => {
-    popup.classList.remove("show");
-    restartGame();
-});
-
-// Event listener for canceling restart
-document.getElementById("cancel-restart").addEventListener("click", () => {
-    popup.classList.remove("show");
-});
-
-// Dark Mode Toggle
-darkModeToggle.addEventListener("change", () => {
-    document.body.classList.toggle("dark-mode");
-});
-
-// Mode Select Change
-modeSelect.addEventListener("change", () => {
-    const selectedMode = modeSelect.value;
-    if (selectedMode === "custom") {
-        customTimeLabel.style.display = "block";
-        customTimeInput.style.display = "block";
-        customTimeInput.value = "";
-    } else {
-        customTimeLabel.style.display = "none";
-        customTimeInput.style.display = "none";
-        customTime = selectedMode.includes("s") ? parseInt(selectedMode) : null; // Get the time in seconds
-        currentModeDisplay.textContent = `Mode: ${selectedMode}`;
-    }
-});
-
-// Custom Time Input Change
-customTimeInput.addEventListener("input", () => {
-    customTime = parseInt(customTimeInput.value);
-});
