@@ -182,6 +182,41 @@ body.dark-mode #lives {
     font-size: 16px;
 }
 
+/* Additional CSS for Restart Button */
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.start-btn, .restart-btn {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.start-btn:disabled, .restart-btn:disabled {
+    background-color: #6c757d;
+}
+
+.restart-btn {
+    background-color: #dc3545;
+}
+
+body.dark-mode .restart-btn {
+    background-color: #ff4d4d;
+}
+
+.restart-btn:disabled {
+    background-color: #6c757d;
+}
+
+/* Other existing styles remain unchanged */
+
 @media screen and (max-width: 480px) {
     .container {
         padding: 20px;
