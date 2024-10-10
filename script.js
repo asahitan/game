@@ -1,33 +1,9 @@
-const words = ["javascript", "developer", "framework", "performance", "syntax", "debugging", "algorithm", "data"];
-const wordDisplay = document.getElementById("word-display");
-const wordInput = document.getElementById("word-input");
-const scoreDisplay = document.getElementById("score-value");
-const tpsDisplay = document.getElementById("tps-value");
-const timeDisplay = document.getElementById("time-left");
-const startButton = document.getElementById("start-btn");
-const resultMessage = document.getElementById("result-message");
-const modeSelect = document.getElementById("mode-select");
-const menuToggle = document.getElementById("menu-toggle");
-const sideMenu = document.getElementById("side-menu");
-const closeMenuButton = document.getElementById("close-menu");
-const darkModeToggle = document.getElementById("dark-mode-toggle");
-const livesDisplay = document.getElementById("lives-value");
-const livesContainer = document.getElementById("lives");
-const currentModeDisplay = document.getElementById("current-mode-display");
-
-let currentWord = "";
-let score = 0;
-let timeLeft = 60;
-let totalWordsTyped = 0;
-let isPlaying = false;
-let tps = 0;
-let gameMode = "60s"; // Default mode
-let gameInterval;
-let lives = 3; // Default lives for challenge modes
-
-// Updated mode descriptions including new modes
+// Existing mode descriptions extended with new modes
 const modeDescriptions = {
     "60s": "60-Second Mode",
+    "30s": "30-Second Mode",  // New Mode
+    "45s": "45-Second Mode",  // New Mode
+    "90s": "90-Second Mode",  // New Mode
     "20s": "20-Second Challenge Mode",
     "15s": "15-Second Challenge Mode",
     "10s": "10-Second Challenge Mode",
@@ -35,7 +11,8 @@ const modeDescriptions = {
     "3s-lives": "3-Second Challenge Mode with Lives",
     "7s-lives": "7-Second Challenge Mode with Lives",
     "8s-lives": "8-Second Challenge Mode with Lives",
-    "2s-lives": "2-Second Challenge Mode with Lives"
+    "2s-lives": "2-Second Challenge Mode with Lives",
+    "60s-lives": "1-Minute with Lives",  // New Mode
 };
 
 // Update mode display and timer based on selected mode
@@ -45,6 +22,18 @@ function updateModeDisplayAndTimer() {
     switch (gameMode) {
         case "60s":
             timeLeft = 60;
+            livesContainer.style.display = "none";
+            break;
+        case "30s":
+            timeLeft = 30;
+            livesContainer.style.display = "none";
+            break;
+        case "45s":
+            timeLeft = 45;
+            livesContainer.style.display = "none";
+            break;
+        case "90s":
+            timeLeft = 90;
             livesContainer.style.display = "none";
             break;
         case "20s":
@@ -64,6 +53,7 @@ function updateModeDisplayAndTimer() {
         case "7s-lives":
         case "8s-lives":
         case "2s-lives":
+        case "60s-lives":  // New Mode: 1-minute with lives
             timeLeft = parseInt(gameMode.split('-')[0]); // Extract time from mode name
             livesContainer.style.display = "block";
             livesDisplay.textContent = 3; // Reset lives
