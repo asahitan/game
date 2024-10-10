@@ -13,7 +13,7 @@ const darkModeToggle = document.getElementById("dark-mode-toggle");
 const livesDisplay = document.getElementById("lives-value");
 const livesContainer = document.getElementById("lives");
 const currentModeDisplay = document.getElementById("current-mode-display");
-const multiplierDisplay = document.getElementById("multiplier");
+const multiplierDisplay = document.getElementById("multiplier-display"); // Multiplier display
 
 let words = ["javascript", "developer", "framework", "performance", "syntax", "debugging", "algorithm", "data"];
 let currentWord = "";
@@ -25,23 +25,21 @@ let tps = 0;
 let gameMode = "60s"; // Default mode
 let gameInterval;
 let lives = 3; // Default lives for challenge modes
-let multiplier = 1; // Multiplier starts at 1
-let zenTimer; // Timer for Zen mode
+let multiplier = 1; // Multiplier starts at x1
+let currentStreak = 0; // Tracks user's streak
+let nextStreakTarget = 3; // Streak target to increase multiplier
 
-// Mode descriptions
+// Map modes to descriptions
 const modeDescriptions = {
     "60s": "60-Second Mode",
     "10s": "10-Second Challenge Mode",
     "5s-lives": "5-Second Challenge Mode with Lives",
     "3s-lives": "3-Second Challenge Mode with Lives",
     "7s-lives": "7-Second Challenge Mode with Lives",
-    "2s-lives": "2-Second Challenge Mode with Lives",
-    "hard": "Hard Mode",
-    "extreme": "Extreme Mode",
-    "zen": "Zen Mode",
-    "sudden-death": "Sudden Death Mode"
+    "2s-lives": "2-Second Challenge Mode with Lives"
 };
 
+// Function to update the mode display and sync the timer
 function updateModeDisplayAndTimer() {
     currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
     
@@ -58,27 +56,32 @@ function updateModeDisplayAndTimer() {
         case "3s-lives":
         case "7s-lives":
         case "2s-lives":
-            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Extract the number for the time limit
+            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Sync time to the first number in the mode name
             livesContainer.style.display = "block";
             livesDisplay.textContent = 3;
             break;
-        case "hard":
-            timeLeft = 20; // Hard mode time
-            livesContainer.style.display = "none";
-            break;
-        case "extreme":
-            timeLeft = 10; // Extreme mode time
-            livesContainer.style.display = "none";
-            break;
-        case "zen":
-            livesContainer.style.display = "none"; // No lives in Zen mode
-            break;
-        case "sudden-death":
-            livesContainer.style.display = "block"; // One life
-            livesDisplay.textContent = 1;
-            break;
     }
     timeDisplay.textContent = timeLeft;
+}
+
+// Function to update the multiplier display
+function updateMultiplierDisplay() {
+    multiplierDisplay.textContent = `Multiplier: x${multiplier}`;
+}
+
+function updateMultiplier() {
+    if (currentStreak >= nextStreakTarget) {
+        multiplier++;
+        nextStreakTarget += 3; // Increase the streak target by 3 for the next multiplier
+        updateMultiplierDisplay(); // Update the multiplier display when it increases
+    }
+}
+
+function resetMultiplierAndStreak() {
+    multiplier = 1; // Reset multiplier back to x1
+    currentStreak = 0; // Reset streak
+    nextStreakTarget = 3; // Reset streak target back to 3
+    updateMultiplierDisplay(); // Update the multiplier display when reset
 }
 
 function startGame() {
@@ -90,53 +93,49 @@ function startGame() {
     resultMessage.textContent = "";
     wordInput.disabled = false;
     wordInput.focus();
-    startButton.disabled = false; // Allow starting a new game
+    startButton.disabled = true;
     startButton.textContent = "Playing...";
     lives = 3;
     livesDisplay.textContent = lives;
-
-    multiplier = 1; // Reset multiplier
-    multiplierDisplay.textContent = `Multiplier: x${multiplier}`;
-
+    
     gameMode = modeSelect.value;
     updateModeDisplayAndTimer();
-    
+    resetMultiplierAndStreak(); // Reset multiplier and streak when the game starts
+
     nextWord();
 
-    if (gameMode === "zen") {
-        zenMode();
-    } else {
-        gameInterval = setInterval(() => {
-            if (timeLeft > 0 && isPlaying) {
-                timeLeft--;
-                timeDisplay.textContent = timeLeft;
-                updateTPS();
+    gameInterval = setInterval(() => {
+        if (timeLeft > 0 && isPlaying) {
+            timeLeft--;
+            timeDisplay.textContent = timeLeft;
+            updateTPS();
 
-                if (gameMode === "sudden-death" && timeLeft === 0) {
-                    endGame();
-                }
-            } else if (timeLeft === 0) {
-                clearInterval(gameInterval);
-                endGame();
+            if (gameMode.includes("lives") && timeLeft === 0) {
+                handleLifeLoss();
             }
-        }, 1000);
-    }
-}
-
-function zenMode() {
-    // No time limit in Zen mode; player must type a word within 3 seconds
-    zenTimer = setInterval(() => {
-        if (isPlaying) {
+        } else if (timeLeft === 0) {
+            clearInterval(gameInterval);
             endGame();
         }
-    }, 3000);
+    }, 1000);
+}
+
+function handleLifeLoss() {
+    lives--;
+    livesDisplay.textContent = lives;
+
+    if (lives === 0) {
+        clearInterval(gameInterval);
+        endGame();
+    } else {
+        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1));
+        nextWord();
+    }
 }
 
 function endGame() {
     isPlaying = false;
     wordInput.disabled = true;
-    clearInterval(gameInterval);
-    clearInterval(zenTimer); // Clear Zen mode timer if active
     startButton.disabled = false;
     startButton.textContent = "Start Game";
     resultMessage.textContent = `Game Over! Final Score: ${score} | TPS: ${tps.toFixed(2)}`;
@@ -154,52 +153,36 @@ function updateTPS() {
 
 wordInput.addEventListener("input", () => {
     if (wordInput.value.trim() === currentWord) {
+        currentStreak++; // Increase the streak count
+        updateMultiplier(); // Check if the user hit the streak target for a new multiplier
+
+        // Update score based on multiplier
+        score += (1 * multiplier); 
         totalWordsTyped++;
-        score += multiplier; // Apply multiplier to the score
         scoreDisplay.textContent = score;
 
-        multiplier++; // Increment multiplier for every correct word
-        multiplierDisplay.textContent = `Multiplier: x${multiplier}`;
-
         wordInput.value = "";
-        
-        if (gameMode === "zen") {
-            // Reset the timer in Zen mode
-            clearInterval(zenTimer);
-            zenTimer = setInterval(() => {
-                endGame();
-            }, 3000);
-        } else {
-            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time in challenge modes
-        }
-
+        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time for challenge modes
         nextWord();
         updateTPS();
     }
 });
 
-startButton.addEventListener("click", startGame);
-
-// Change mode event listener
-modeSelect.addEventListener("change", () => {
-    gameMode = modeSelect.value;
-    updateModeDisplayAndTimer();
+startButton.addEventListener("click", () => {
+    updateMultiplierDisplay(); // Ensure the multiplier display is set to `x1` when the game starts
+    startGame();
 });
 
-// Toggle Side Menu
+// Dark mode toggle logic
+darkModeToggle.addEventListener("change", () => {
+    document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+});
+
+// Menu toggle logic
 menuToggle.addEventListener("click", () => {
-    sideMenu.style.width = "250px";
+    sideMenu.classList.toggle("open");
 });
+
 closeMenuButton.addEventListener("click", () => {
-    sideMenu.style.width = "0";
+    sideMenu.classList.remove("open");
 });
-
-// Toggle Dark Mode
-darkModeToggle.addEventListener("change", (e) => {
-    document.body.classList.toggle("dark-mode", e.target.checked);
-});
-
-// Disable copy-paste to prevent cheating
-wordInput.addEventListener('paste', (e) => e.preventDefault());
-wordInput.addEventListener('copy', (e) => e.preventDefault());
-wordInput.addEventListener('contextmenu', (e) => e.preventDefault());
