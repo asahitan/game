@@ -13,21 +13,21 @@
     <div class="container">
         <h1>Typing Speed Test</h1>
 
-        <div id="current-mode-display" class="mode-display">Mode: 60-Second Mode</div>
+        <div id="current-mode-display" class="mode-display">Mode: 60-Second Mode</div> <!-- Dynamic Mode Display -->
 
-        <div id="menu-toggle" class="menu-toggle">&#9776;</div>
+        <div id="menu-toggle" class="menu-toggle">&#9776;</div> <!-- Hamburger Menu -->
 
         <div id="game-info">
             <div id="game-stats">
                 Time: <span id="time-left">60</span> seconds | Score: <span id="score-value">0</span> | TPS: <span id="tps-value">0.00</span>
             </div>
 
-            <div id="lives" style="display:none;">Lives: <span id="lives-value">3</span></div>
+            <div id="lives">Lives: <span id="lives-value">3</span></div> <!-- Life display -->
         </div>
 
         <div id="word-display" class="word-display"></div>
         <input type="text" id="word-input" class="word-input" placeholder="Type here..." autofocus>
-
+        
         <div class="button-container">
             <button id="start-btn" class="start-btn">Start Game</button>
             <button id="restart-btn" class="restart-btn" disabled>Restart Game</button>
@@ -52,14 +52,13 @@
 
             <label for="custom-time" id="custom-time-label" style="display:none;">Custom Time (seconds):</label>
             <input type="number" id="custom-time" style="display:none;" min="1" max="300" placeholder="Enter time in seconds">
-
+            
             <label for="dark-mode-toggle">Dark Mode:</label>
             <input type="checkbox" id="dark-mode-toggle" class="dark-mode-toggle"> Dark Mode
         </div>
     </div>
 
-    <!-- Popup for Restart Confirmation -->
-    <div class="popup" id="restart-popup">
+    <div class="popup">
         <p>Are you sure you want to restart the game?</p>
         <button id="confirm-restart">Yes, Restart</button>
         <button id="cancel-restart">Cancel</button>
