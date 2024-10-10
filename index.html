@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Typing Speed Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
     <div class="container">
         <h1>Typing Speed Test</h1>
 
-        <div id="current-mode-display" class="mode-display">Mode: 60-Second Mode</div> <!-- Dynamic Mode Display -->
+        <div id="current-mode-display" class="mode-display">Mode: 60-Second Mode</div>
 
-        <div id="menu-toggle" class="menu-toggle">&#9776;</div> <!-- Hamburger Menu -->
+        <div id="menu-toggle" class="menu-toggle">&#9776;</div>
 
         <div id="game-info">
             <div id="game-stats">
                 Time: <span id="time-left">60</span> seconds | Score: <span id="score-value">0</span> | TPS: <span id="tps-value">0.00</span>
             </div>
-
-            <div id="lives" style="display:none;">Lives: <span id="lives-value">3</span></div> <!-- Life display, hidden by default -->
+            <div id="lives" style="display:none;">Lives: <span id="lives-value">3</span></div>
         </div>
 
         <div id="word-display" class="word-display"></div>
         <input type="text" id="word-input" class="word-input" placeholder="Type here..." autofocus>
-        <button id="start-btn" class="start-btn">Start Game</button>
+
+        <div class="button-container">
+            <button id="start-btn" class="start-btn">Start Game</button>
+            <button id="restart-btn" class="restart-btn">Restart Game</button>
+        </div>
+
         <div id="result-message"></div>
 
-        <!-- Side Menu -->
         <div id="side-menu" class="side-menu">
             <button id="close-menu" class="close-menu">&times;</button>
             <h2>Settings</h2>
@@ -55,5 +55,4 @@
 
     <script src="script.js"></script>
 </body>
-
 </html>
