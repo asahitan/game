@@ -13,6 +13,7 @@ const darkModeToggle = document.getElementById("dark-mode-toggle");
 const livesDisplay = document.getElementById("lives-value");
 const livesContainer = document.getElementById("lives");
 const currentModeDisplay = document.getElementById("current-mode-display");
+const multiplierDisplay = document.getElementById("multiplier");
 
 let words = ["javascript", "developer", "framework", "performance", "syntax", "debugging", "algorithm", "data"];
 let currentWord = "";
@@ -24,25 +25,21 @@ let tps = 0;
 let gameMode = "60s"; // Default mode
 let gameInterval;
 let lives = 3; // Default lives for challenge modes
+let multiplier = 1; // Multiplier starts at 1
 
-// Map modes to descriptions
+// Mode descriptions
 const modeDescriptions = {
     "60s": "60-Second Mode",
     "10s": "10-Second Challenge Mode",
     "5s-lives": "5-Second Challenge Mode with Lives",
     "3s-lives": "3-Second Challenge Mode with Lives",
     "7s-lives": "7-Second Challenge Mode with Lives",
-    "2s-lives": "2-Second Challenge Mode with Lives",
-    "hard": "Hard Mode",
-    "extreme": "Extreme Mode",
-    "zen": "Zen Mode"
+    "2s-lives": "2-Second Challenge Mode with Lives"
 };
 
-// Function to update the mode display and sync the timer
 function updateModeDisplayAndTimer() {
     currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
     
-    // Sync the time display according to the selected mode
     switch(gameMode) {
         case "60s":
             timeLeft = 60;
@@ -56,22 +53,9 @@ function updateModeDisplayAndTimer() {
         case "3s-lives":
         case "7s-lives":
         case "2s-lives":
-            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Sync time to the first number in the mode name
+            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Extract the number for the time limit
             livesContainer.style.display = "block";
             livesDisplay.textContent = 3;
-            break;
-        case "hard":
-            timeLeft = 2;
-            livesContainer.style.display = "block";
-            livesDisplay.textContent = 1;
-            break;
-        case "extreme":
-            timeLeft = 1.5;
-            livesContainer.style.display = "none";
-            break;
-        case "zen":
-            timeLeft = Infinity;
-            livesContainer.style.display = "none";
             break;
     }
     timeDisplay.textContent = timeLeft;
@@ -88,9 +72,12 @@ function startGame() {
     wordInput.focus();
     startButton.disabled = true;
     startButton.textContent = "Playing...";
-    lives = gameMode.includes("lives") ? 3 : 0;
+    lives = 3;
     livesDisplay.textContent = lives;
-    
+
+    multiplier = 1; // Reset multiplier
+    multiplierDisplay.textContent = `Multiplier: x${multiplier}`;
+
     gameMode = modeSelect.value;
     updateModeDisplayAndTimer();
     
@@ -145,13 +132,15 @@ function updateTPS() {
 
 wordInput.addEventListener("input", () => {
     if (wordInput.value.trim() === currentWord) {
-        score++;
         totalWordsTyped++;
+        score += multiplier; // Apply multiplier to the score
         scoreDisplay.textContent = score;
+
+        multiplier++; // Increment multiplier for every correct word
+        multiplierDisplay.textContent = `Multiplier: x${multiplier}`;
+
         wordInput.value = "";
-        if (gameMode.includes("lives")) {
-            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time in challenge modes
-        }
+        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time in challenge modes
         nextWord();
         updateTPS();
     }
