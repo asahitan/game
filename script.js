@@ -172,7 +172,7 @@ modeSelect.addEventListener("change", () => {
         wordInput.disabled = true;
         startButton.disabled = false;
         startButton.textContent = "Start Game";
-        resultMessage.textContent = `Mode changed to ${modeDescriptions[modeSelect.value]}. Please start the game again.`;
+        resultMessage.textContent = `Mode changed to ${modeDescriptions[gameMode]}. Please start the game again.`;
     }
     gameMode = modeSelect.value;
     updateModeDisplayAndTimer();
