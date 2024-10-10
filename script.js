@@ -16,151 +16,137 @@ const livesContainer = document.getElementById("lives");
 const customTimeInput = document.getElementById("custom-time");
 const customTimeLabel = document.getElementById("custom-time-label");
 const currentModeDisplay = document.getElementById("current-mode-display");
+const popup = document.getElementById("restart-popup");
 
-let words = ["javascript", "developer", "framework", "performance", "syntax", "debugging", "algorithm", "data"];
-let currentWord = "";
+let words = ["javascript", "html", "css", "react", "node", "express", "mongodb", "typescript", "bootstrap"];
 let score = 0;
-let timeLeft = 60;
 let totalWordsTyped = 0;
-let isPlaying = false;
 let tps = 0;
-let gameMode = "60s";
-let gameInterval;
 let lives = 3;
-let customTime = 60;
+let timeLeft = 60;
+let isPlaying = false;
+let gameInterval;
+let customTime;
 
-const modeDescriptions = {
-    "60s": "60-Second Mode",
-    "10s": "10-Second Challenge Mode",
-    "5s-lives": "5-Second Challenge Mode with Lives",
-    "3s-lives": "3-Second Challenge Mode with Lives",
-    "7s-lives": "7-Second Challenge Mode with Lives",
-    "2s-lives": "2-Second Challenge Mode with Lives",
-    "custom": "Custom Mode"
-};
-
-function updateModeDisplayAndTimer() {
-    currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
-    
-    switch (gameMode) {
-        case "60s":
-            timeLeft = 60;
-            break;
-        case "10s":
-            timeLeft = 10;
-            break;
-        case "5s-lives":
-        case "7s-lives":
-        case "3s-lives":
-        case "2s-lives":
-            timeLeft = parseInt(gameMode.split('-')[0]);
-            livesContainer.style.display = "block";
-            lives = 3;
-            livesDisplay.textContent = lives;
-            break;
-        case "custom":
-            timeLeft = customTime;
-            break;
-    }
-    timeDisplay.textContent = timeLeft;
+// Display random word to type
+function displayRandomWord() {
+    const randomIndex = Math.floor(Math.random() * words.length);
+    wordDisplay.textContent = words[randomIndex];
 }
 
-function getRandomWord() {
-    return words[Math.floor(Math.random() * words.length)];
-}
-
-function startGame() {
+// Start the game
+startButton.addEventListener("click", () => {
+    if (isPlaying) return;
     isPlaying = true;
     score = 0;
     totalWordsTyped = 0;
-    resultMessage.textContent = "";
+    timeLeft = customTime || 60;
+    lives = modeSelect.value.includes("lives") ? 3 : null;
+    wordInput.disabled = false;
     wordInput.value = "";
-    wordInput.focus();
+    wordDisplay.textContent = "";
+    scoreDisplay.textContent = "0";
+    tpsDisplay.textContent = "0.00";
+    livesDisplay.textContent = lives ? lives : "N/A";
+    livesContainer.style.display = lives ? "block" : "none";
+    timeDisplay.textContent = timeLeft;
     startButton.disabled = true;
     restartButton.disabled = false;
-    updateModeDisplayAndTimer();
-    setWord();
-    gameInterval = setInterval(updateGame, 1000);
-}
 
-function updateGame() {
-    timeLeft--;
-    timeDisplay.textContent = timeLeft;
+    displayRandomWord();
+    gameInterval = setInterval(() => {
+        if (timeLeft > 0) {
+            timeLeft--;
+            timeDisplay.textContent = timeLeft;
+        } else {
+            clearInterval(gameInterval);
+            endGame();
+        }
+    }, 1000);
+});
 
-    if (timeLeft <= 0 || lives <= 0) {
-        endGame();
-    }
-}
-
-function setWord() {
-    currentWord = getRandomWord();
-    wordDisplay.textContent = currentWord;
-}
-
-function checkWord() {
-    if (wordInput.value === currentWord) {
+// Event listener for word input
+wordInput.addEventListener("input", () => {
+    const typedWord = wordInput.value.trim();
+    if (typedWord === wordDisplay.textContent) {
         score++;
         totalWordsTyped++;
+        tps = (score / totalWordsTyped) * 60; // Calculate TPS
         scoreDisplay.textContent = score;
-        setWord();
-        wordInput.value = "";
-
-        tps = totalWordsTyped / (60 - timeLeft);
         tpsDisplay.textContent = tps.toFixed(2);
+        displayRandomWord();
+        wordInput.value = "";
     }
-}
+});
 
+// End the game
 function endGame() {
-    clearInterval(gameInterval);
     isPlaying = false;
-    resultMessage.textContent = `Game Over! Your score: ${score}`;
+    wordInput.disabled = true;
+    resultMessage.textContent = `Game Over! Your score: ${score}. Press Start Game to play again.`;
     startButton.disabled = false;
     restartButton.disabled = true;
+    clearInterval(gameInterval);
 }
 
+// Restart game function
 function restartGame() {
-    clearInterval(gameInterval);
-    timeLeft = 60;
+    clearInterval(gameInterval); // Clear the existing interval
     score = 0;
     totalWordsTyped = 0;
     tps = 0;
-    resultMessage.textContent = "";
+    lives = 3;
+    isPlaying = false;
+    wordInput.disabled = true;
     wordInput.value = "";
-    scoreDisplay.textContent = score;
-    tpsDisplay.textContent = tps.toFixed(2);
+    wordDisplay.textContent = "";
+    scoreDisplay.textContent = "0";
+    tpsDisplay.textContent = "0.00";
+    livesDisplay.textContent = "3";
+    timeLeft = customTime || 60;
     timeDisplay.textContent = timeLeft;
-    startButton.disabled = false;
-    restartButton.disabled = true;
-    livesContainer.style.display = "none";
+    startButton.disabled = false; // Enable the start button
+    restartButton.disabled = true; // Disable restart until the game starts again
+    resultMessage.textContent = "Game restarted. Press Start Game to play.";
 }
 
-startButton.addEventListener("click", startGame);
-restartButton.addEventListener("click", restartGame);
-wordInput.addEventListener("input", checkWord);
-modeSelect.addEventListener("change", function() {
-    gameMode = this.value;
-    updateModeDisplayAndTimer();
-    if (gameMode === "custom") {
-        customTimeInput.style.display = "block";
+// Event listener for showing the popup when clicking restart
+restartButton.addEventListener("click", () => {
+    popup.classList.add("show");
+});
+
+// Event listener for confirming restart
+document.getElementById("confirm-restart").addEventListener("click", () => {
+    popup.classList.remove("show");
+    restartGame();
+});
+
+// Event listener for canceling restart
+document.getElementById("cancel-restart").addEventListener("click", () => {
+    popup.classList.remove("show");
+});
+
+// Dark Mode Toggle
+darkModeToggle.addEventListener("change", () => {
+    document.body.classList.toggle("dark-mode");
+});
+
+// Mode Select Change
+modeSelect.addEventListener("change", () => {
+    const selectedMode = modeSelect.value;
+    if (selectedMode === "custom") {
         customTimeLabel.style.display = "block";
+        customTimeInput.style.display = "block";
+        customTimeInput.value = "";
     } else {
-        customTimeInput.style.display = "none";
         customTimeLabel.style.display = "none";
+        customTimeInput.style.display = "none";
+        customTime = selectedMode.includes("s") ? parseInt(selectedMode) : null; // Get the time in seconds
+        currentModeDisplay.textContent = `Mode: ${selectedMode}`;
     }
 });
 
-menuToggle.addEventListener("click", () => {
-    sideMenu.style.width = "250px";
-});
-
-closeMenuButton.addEventListener("click", () => {
-    sideMenu.style.width = "0";
-});
-
-darkModeToggle.addEventListener("change", function() {
-    document.body.classList.toggle("dark-mode", this.checked);
-});
-
-customTimeInput.addEventListener("input", function() {
-    customTime = parseInt(this.value) || 60;
+// Custom Time Input Change
+customTimeInput.addEventListener("input", () => {
+    customTime = parseInt(customTimeInput.value);
 });
