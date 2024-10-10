@@ -250,9 +250,7 @@ body.dark-mode .restart-btn {
 .restart-btn:disabled {
     background-color: #6c757d;
 }
-
 /* Other existing styles remain unchanged */
-
 @media screen and (max-width: 480px) {
     .container {
         padding: 20px;
