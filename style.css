@@ -31,7 +31,6 @@ h1 {
     color: #333;
 }
 
-/* Hamburger Menu Style */
 #menu-toggle {
     position: absolute;
     top: 10px;
@@ -65,7 +64,8 @@ h1 {
     outline: none;
 }
 
-.start-btn, .restart-btn {
+.start-btn {
+    margin-top: 20px;
     padding: 10px 20px;
     font-size: 18px;
     background-color: #28a745;
@@ -73,23 +73,10 @@ h1 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    width: 150px; /* Ensures both buttons have the same width */
-    text-align: center;
 }
 
-.start-btn:disabled, .restart-btn:disabled {
+.start-btn:disabled {
     background-color: #6c757d;
-}
-
-.restart-btn {
-    background-color: #dc3545; /* Different color for Restart button */
-}
-
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    gap: 20px; /* Ensures space between buttons */
 }
 
 #result-message {
@@ -98,7 +85,6 @@ h1 {
     color: #007bff;
 }
 
-/* Side Menu */
 .side-menu {
     height: 100%;
     width: 0;
@@ -137,7 +123,6 @@ h1 {
     cursor: pointer;
 }
 
-/* Dark Mode Styling */
 body.dark-mode {
     background-color: #333;
     color: white;
@@ -157,48 +142,43 @@ body.dark-mode .start-btn {
     background-color: #007bff;
 }
 
-/* Popup styling */
-.popup {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    border: 1px solid #ccc;
-    padding: 20px;
-    z-index: 10;
-    display: none; /* Hidden by default */
-}
-
-.popup.show {
-    display: block;
-}
-
-.popup button {
+#lives {
     margin-top: 10px;
-    padding: 5px 10px;
-    background-color: #007bff;
+    font-size: 16px;
+    color: #dc3545;
+}
+
+body.dark-mode #lives {
+    color: #f77;
+}
+
+#custom-time, #custom-time-label {
+    margin-left: 30px;
     color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+}
+
+#custom-time {
+    width: 80%;
+    margin: 20px 30px;
+    padding: 5px;
+    font-size: 16px;
 }
 
 @media screen and (max-width: 480px) {
     .container {
         padding: 20px;
     }
-    
+
     h1 {
         font-size: 20px;
     }
-    
+
     #word-display {
         font-size: 18px;
         height: 40px;
         line-height: 40px;
     }
-    
+
     .word-input {
         font-size: 16px;
     }
