@@ -18,17 +18,17 @@
             <div id="lives" style="display:none;">Lives: <span id="lives-value">3</span></div>
         </div>
         <div id="word-display" class="word-display"></div>
-        <input type="text" id="word-input" class="word-input" placeholder="Type here..." autofocus disabled>
+        <input type="text" id="word-input" class="word-input" placeholder="Type here..." autofocus>
         
-        <!-- Dropdown Menu for Start/Restart buttons -->
+        <!-- Dropdown for Start and Restart buttons -->
         <div class="dropdown">
             <button class="dropbtn">Game Controls</button>
             <div class="dropdown-content">
-                <button id="start-btn" class="start-btn">Start Game</button>
-                <button id="restart-btn" class="restart-btn" disabled>Restart Game</button>
+                <button id="start-btn" class="control-btn">Start Game</button>
+                <button id="restart-btn" class="control-btn" style="display:none;">Restart Game</button>
             </div>
         </div>
-        
+
         <div id="result-message"></div>
         <div id="side-menu" class="side-menu">
             <button id="close-menu" class="close-menu">&times;</button>
