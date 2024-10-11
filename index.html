@@ -22,17 +22,12 @@
                 Time: <span id="time-left">60</span> seconds | Score: <span id="score-value">0</span> | TPS: <span id="tps-value">0.00</span>
             </div>
 
-            <div id="lives">Lives: <span id="lives-value">3</span></div> <!-- Life display -->
+            <div id="lives" style="display:none;">Lives: <span id="lives-value">3</span></div> <!-- Life display, hidden by default -->
         </div>
 
         <div id="word-display" class="word-display"></div>
         <input type="text" id="word-input" class="word-input" placeholder="Type here..." autofocus>
-        
-        <div class="button-container">
-            <button id="start-btn" class="start-btn">Start Game</button>
-            <button id="restart-btn" class="restart-btn" disabled>Restart Game</button>
-        </div>
-        
+        <button id="start-btn" class="start-btn">Start Game</button>
         <div id="result-message"></div>
 
         <!-- Side Menu -->
@@ -56,12 +51,6 @@
             <label for="dark-mode-toggle">Dark Mode:</label>
             <input type="checkbox" id="dark-mode-toggle" class="dark-mode-toggle"> Dark Mode
         </div>
-    </div>
-
-    <div class="popup">
-        <p>Are you sure you want to restart the game?</p>
-        <button id="confirm-restart">Yes, Restart</button>
-        <button id="cancel-restart">Cancel</button>
     </div>
 
     <script src="script.js"></script>
