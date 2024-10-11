@@ -64,8 +64,13 @@ h1 {
     outline: none;
 }
 
-.start-btn {
+.button-container {
+    display: flex;
+    justify-content: space-around; /* Space buttons evenly */
     margin-top: 20px;
+}
+
+.start-btn, .restart-btn {
     padding: 10px 20px;
     font-size: 18px;
     background-color: #28a745;
@@ -75,8 +80,12 @@ h1 {
     cursor: pointer;
 }
 
-.start-btn:disabled {
+.start-btn:disabled, .restart-btn:disabled {
     background-color: #6c757d;
+}
+
+.restart-btn {
+    background-color: #dc3545; /* Red for Restart */
 }
 
 #result-message {
@@ -85,6 +94,7 @@ h1 {
     color: #007bff;
 }
 
+/* Side Menu */
 .side-menu {
     height: 100%;
     width: 0;
@@ -123,6 +133,7 @@ h1 {
     cursor: pointer;
 }
 
+/* Dark Mode Styling */
 body.dark-mode {
     background-color: #333;
     color: white;
@@ -138,25 +149,14 @@ body.dark-mode .word-input {
     color: white;
 }
 
-body.dark-mode .start-btn {
+body.dark-mode .start-btn, .restart-btn {
     background-color: #007bff;
-}
-
-#game-info {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    font-size: 14px;
 }
 
 #lives {
     margin-top: 10px;
     font-size: 16px;
-    color: #dc3545;
-}
-
-.hidden {
-    display: none;
+    color: #dc3545; /* Red color for life indicator */
 }
 
 body.dark-mode #lives {
@@ -179,17 +179,17 @@ body.dark-mode #lives {
     .container {
         padding: 20px;
     }
-
+    
     h1 {
         font-size: 20px;
     }
-
+    
     #word-display {
         font-size: 18px;
         height: 40px;
         line-height: 40px;
     }
-
+    
     .word-input {
         font-size: 16px;
     }
