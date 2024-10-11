@@ -29,7 +29,6 @@ let gameMode = "60s";
 let lives = 3;
 let customTime = 60;
 
-// Handle mode switching
 function updateModeDisplayAndTimer() {
     switch (gameMode) {
         case "60s":
@@ -110,24 +109,34 @@ function updateGameTimer() {
     }
 }
 
-// Restart Game function
+// Restart Game function - Fully resets the game without auto-starting
 function restartGame() {
-    clearInterval(gameInterval);  // Clear existing timer
-    isPlaying = false;  // Set game to "not playing" state
+    clearInterval(gameInterval);  // Clear the interval
+    isPlaying = false;  // Ensure game is not running
     wordInput.disabled = true;  // Disable word input
-
-    // Reset the initial state
-    timeLeft = customTimeInput.value ? parseInt(customTimeInput.value) : (gameMode === "custom" ? customTime : timeLeft);
-    updateModeDisplayAndTimer();  // Update the time display based on the selected mode
+    
+    // Reset game state
     score = 0;
     totalWordsTyped = 0;
     tps = 0;
-    updateScoreAndTPS();
-
-    startButton.disabled = false;  // Enable the Start button
-    restartButton.disabled = true;  // Disable the Restart button
+    updateScoreAndTPS();  // Update score and TPS display
+    wordInput.value = "";  // Clear the input
+    wordDisplay.textContent = "";  // Clear the word display
+    resultMessage.textContent = "Press 'Start Game' to play again.";
+    
+    // Reset time based on the selected game mode
+    if (gameMode === "custom") {
+        customTime = parseInt(customTimeInput.value) || 60;
+        timeLeft = customTime;
+    } else {
+        updateModeDisplayAndTimer();  // Reset time based on mode
+    }
+    
+    timeDisplay.textContent = timeLeft;  // Sync time display
+    
+    startButton.disabled = false;  // Re-enable the start button
+    restartButton.disabled = true;  // Disable restart button (until game starts)
     startButton.textContent = "Start Game";  // Reset start button text
-    resultMessage.textContent = "Press 'Start Game' to play again.";  // Display restart message
 }
 
 wordInput.addEventListener("input", () => {
