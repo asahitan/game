@@ -1,3 +1,4 @@
+/* General Styling */
 * {
     margin: 0;
     padding: 0;
@@ -31,6 +32,7 @@ h1 {
     color: #333;
 }
 
+/* Hamburger Menu Style */
 #menu-toggle {
     position: absolute;
     top: 10px;
@@ -64,13 +66,8 @@ h1 {
     outline: none;
 }
 
-.button-container {
-    display: flex;
-    justify-content: space-around; /* Space buttons evenly */
-    margin-top: 20px;
-}
-
 .start-btn, .restart-btn {
+    margin-top: 10px;
     padding: 10px 20px;
     font-size: 18px;
     background-color: #28a745;
@@ -84,8 +81,48 @@ h1 {
     background-color: #6c757d;
 }
 
-.restart-btn {
-    background-color: #dc3545; /* Red for Restart */
+/* Dropdown Styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 5px;
+}
+
+.dropdown-content button {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-content button:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 #result-message {
@@ -153,44 +190,7 @@ body.dark-mode .start-btn, .restart-btn {
     background-color: #007bff;
 }
 
-#lives {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #dc3545; /* Red color for life indicator */
-}
-
-body.dark-mode #lives {
-    color: #f77;
-}
-
-#custom-time, #custom-time-label {
-    margin-left: 30px;
-    color: white;
-}
-
-#custom-time {
-    width: 80%;
-    margin: 20px 30px;
-    padding: 5px;
-    font-size: 16px;
-}
-
-@media screen and (max-width: 480px) {
-    .container {
-        padding: 20px;
-    }
-    
-    h1 {
-        font-size: 20px;
-    }
-    
-    #word-display {
-        font-size: 18px;
-        height: 40px;
-        line-height: 40px;
-    }
-    
-    .word-input {
-        font-size: 16px;
-    }
+/* Hidden class for hiding elements */
+.hidden {
+    display: none;
 }
