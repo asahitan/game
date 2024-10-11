@@ -22,14 +22,25 @@ let currentWord = "";
 let score = 0;
 let timeLeft = 60;
 let totalWordsTyped = 0;
-let tps = 0;
 let isPlaying = false;
-let gameInterval;
+let tps = 0;
 let gameMode = "60s";
+let gameInterval;
 let lives = 3;
 let customTime = 60;
 
+const modeDescriptions = {
+    "60s": "60-Second Mode",
+    "10s": "10-Second Challenge Mode",
+    "5s-lives": "5-Second Challenge Mode with Lives",
+    "3s-lives": "3-Second Challenge Mode with Lives",
+    "7s-lives": "7-Second Challenge Mode with Lives",
+    "2s-lives": "2-Second Challenge Mode with Lives",
+    "custom": "Custom Mode"
+};
+
 function updateModeDisplayAndTimer() {
+    currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
     switch (gameMode) {
         case "60s":
             timeLeft = 60;
@@ -61,7 +72,6 @@ function updateModeDisplayAndTimer() {
             livesContainer.style.display = "none";
             break;
     }
-    timeDisplay.textContent = timeLeft;
 }
 
 function startGame() {
@@ -72,11 +82,15 @@ function startGame() {
     wordInput.disabled = false;
     wordInput.focus();
     startButton.disabled = true;
-    restartButton.disabled = false;
-    startButton.textContent = "Game in Progress...";
+    restartButton.style.display = "inline";
     resultMessage.textContent = "";
     loadNextWord();
     gameInterval = setInterval(updateGameTimer, 1000);
+}
+
+function restartGame() {
+    clearInterval(gameInterval);
+    startGame();
 }
 
 function endGame() {
@@ -84,8 +98,7 @@ function endGame() {
     clearInterval(gameInterval);
     wordInput.disabled = true;
     startButton.disabled = false;
-    restartButton.disabled = true;
-    startButton.textContent = "Start Game";
+    restartButton.style.display = "none";
     resultMessage.textContent = `Game Over! You scored ${score} points and had a TPS of ${tps.toFixed(2)}.`;
 }
 
@@ -107,36 +120,6 @@ function updateGameTimer() {
     if (timeLeft <= 0) {
         endGame();
     }
-}
-
-// Restart Game function - Fully resets the game without auto-starting
-function restartGame() {
-    clearInterval(gameInterval);  // Clear the interval
-    isPlaying = false;  // Ensure game is not running
-    wordInput.disabled = true;  // Disable word input
-    
-    // Reset game state
-    score = 0;
-    totalWordsTyped = 0;
-    tps = 0;
-    updateScoreAndTPS();  // Update score and TPS display
-    wordInput.value = "";  // Clear the input
-    wordDisplay.textContent = "";  // Clear the word display
-    resultMessage.textContent = "Press 'Start Game' to play again.";
-    
-    // Reset time based on the selected game mode
-    if (gameMode === "custom") {
-        customTime = parseInt(customTimeInput.value) || 60;
-        timeLeft = customTime;
-    } else {
-        updateModeDisplayAndTimer();  // Reset time based on mode
-    }
-    
-    timeDisplay.textContent = timeLeft;  // Sync time display
-    
-    startButton.disabled = false;  // Re-enable the start button
-    restartButton.disabled = true;  // Disable restart button (until game starts)
-    startButton.textContent = "Start Game";  // Reset start button text
 }
 
 wordInput.addEventListener("input", () => {
