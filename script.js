@@ -62,6 +62,7 @@ function updateModeDisplayAndTimer() {
             livesContainer.style.display = "none";
             break;
     }
+    timeDisplay.textContent = timeLeft;
 }
 
 function startGame() {
@@ -109,11 +110,24 @@ function updateGameTimer() {
     }
 }
 
-// Restart Game
+// Restart Game function
 function restartGame() {
-    clearInterval(gameInterval);
-    isPlaying = false;
-    startGame();
+    clearInterval(gameInterval);  // Clear existing timer
+    isPlaying = false;  // Set game to "not playing" state
+    wordInput.disabled = true;  // Disable word input
+
+    // Reset the initial state
+    timeLeft = customTimeInput.value ? parseInt(customTimeInput.value) : (gameMode === "custom" ? customTime : timeLeft);
+    updateModeDisplayAndTimer();  // Update the time display based on the selected mode
+    score = 0;
+    totalWordsTyped = 0;
+    tps = 0;
+    updateScoreAndTPS();
+
+    startButton.disabled = false;  // Enable the Start button
+    restartButton.disabled = true;  // Disable the Restart button
+    startButton.textContent = "Start Game";  // Reset start button text
+    resultMessage.textContent = "Press 'Start Game' to play again.";  // Display restart message
 }
 
 wordInput.addEventListener("input", () => {
