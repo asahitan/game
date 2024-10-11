@@ -142,10 +142,21 @@ body.dark-mode .start-btn {
     background-color: #007bff;
 }
 
+#game-info {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
 #lives {
     margin-top: 10px;
     font-size: 16px;
     color: #dc3545;
+}
+
+.hidden {
+    display: none;
 }
 
 body.dark-mode #lives {
