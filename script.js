@@ -4,7 +4,6 @@ const scoreDisplay = document.getElementById("score-value");
 const tpsDisplay = document.getElementById("tps-value");
 const timeDisplay = document.getElementById("time-left");
 const startButton = document.getElementById("start-btn");
-const restartButton = document.getElementById("restart-btn");
 const resultMessage = document.getElementById("result-message");
 const modeSelect = document.getElementById("mode-select");
 const menuToggle = document.getElementById("menu-toggle");
@@ -17,181 +16,127 @@ const customTimeInput = document.getElementById("custom-time");
 const customTimeLabel = document.getElementById("custom-time-label");
 const currentModeDisplay = document.getElementById("current-mode-display");
 
-let words = [];
+let words = ["javascript", "developer", "framework", "performance", "syntax", "debugging", "algorithm", "data"];
+let currentWord = "";
 let score = 0;
-let totalWordsTyped = 0;
-let tps = 0;
 let timeLeft = 60;
-let lives = 3;
+let totalWordsTyped = 0;
 let isPlaying = false;
+let tps = 0;
+let gameMode = "60s"; // Default mode
 let gameInterval;
-let customTime = null;
+let lives = 3; // Default lives for challenge modes
+let customTime = 60; // Default custom time
 
-// Function to start the game
+const modeDescriptions = {
+    "60s": "60-Second Mode",
+    "10s": "10-Second Challenge Mode",
+    "5s-lives": "5-Second Challenge Mode with Lives",
+    "3s-lives": "3-Second Challenge Mode with Lives",
+    "7s-lives": "7-Second Challenge Mode with Lives",
+    "2s-lives": "2-Second Challenge Mode with Lives",
+    "custom": "Custom Mode"
+};
+
+function updateModeDisplayAndTimer() {
+    currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
+    timeLeft = gameMode === "custom" ? customTime : getGameModeTime();
+    timeDisplay.textContent = timeLeft;
+}
+
+function getGameModeTime() {
+    switch (gameMode) {
+        case "60s": return 60;
+        case "10s": return 10;
+        case "5s-lives": return 5;
+        case "3s-lives": return 3;
+        case "7s-lives": return 7;
+        case "2s-lives": return 2;
+        default: return 60;
+    }
+}
+
+wordInput.addEventListener("input", matchWords);
 startButton.addEventListener("click", startGame);
+menuToggle.addEventListener("click", openSideMenu);
+closeMenuButton.addEventListener("click", closeSideMenu);
+darkModeToggle.addEventListener("change", toggleDarkMode);
+customTimeInput.addEventListener("input", updateCustomTime);
+
+function updateCustomTime() {
+    customTime = customTimeInput.value;
+    timeDisplay.textContent = customTime;
+}
 
 function startGame() {
-    score = 0;
-    totalWordsTyped = 0;
-    timeLeft = customTime || 60; // use custom time or default 60 seconds
-    isPlaying = true;
-    wordInput.disabled = false;
-    wordInput.value = "";
-    wordInput.focus();
-    generateWords();
-    startButton.disabled = true; // Disable start button
-    restartButton.disabled = false; // Enable restart button
-    resultMessage.textContent = "";
-
-    gameInterval = setInterval(() => {
-        timeLeft--;
-        timeDisplay.textContent = timeLeft;
-        if (timeLeft <= 0) {
-            endGame();
-        }
-    }, 1000);
-}
-
-// Function to generate random words
-function generateWords() {
-    const wordList = ["apple", "banana", "orange", "grape", "watermelon", "strawberry", "blueberry"];
-    words = [];
-    for (let i = 0; i < 10; i++) {
-        words.push(wordList[Math.floor(Math.random() * wordList.length)]);
+    if (!isPlaying) {
+        isPlaying = true;
+        score = 0;
+        totalWordsTyped = 0;
+        wordInput.value = "";
+        wordInput.disabled = false;
+        resultMessage.textContent = "";
+        lives = 3;
+        updateModeDisplayAndTimer();
+        livesContainer.style.display = gameMode.includes("lives") ? "block" : "none";
+        livesDisplay.textContent = lives;
+        startButton.disabled = true;
+        wordInput.focus();
+        nextWord();
+        gameInterval = setInterval(countdown, 1000);
+        
+        // Disable mode change and menu toggle during the game
+        modeSelect.disabled = true;
+        menuToggle.style.pointerEvents = "none"; // Disable the menu button
     }
-    wordDisplay.textContent = words.join(" ");
 }
 
-// Function to handle input
-wordInput.addEventListener("input", () => {
-    if (!isPlaying) return;
-    const inputText = wordInput.value;
-    const currentWord = words[totalWordsTyped];
-    if (inputText === currentWord) {
+function countdown() {
+    timeLeft--;
+    timeDisplay.textContent = timeLeft;
+    if (timeLeft === 0 || (gameMode.includes("lives") && lives <= 0)) {
+        endGame();
+    }
+}
+
+function nextWord() {
+    const randomIndex = Math.floor(Math.random() * words.length);
+    currentWord = words[randomIndex];
+    wordDisplay.textContent = currentWord;
+}
+
+function matchWords() {
+    if (wordInput.value.toLowerCase() === currentWord.toLowerCase()) {
+        wordInput.value = "";
         score++;
         totalWordsTyped++;
         scoreDisplay.textContent = score;
-        tps = (score / (60 - timeLeft)) || 0; // Calculate TPS
-        tpsDisplay.textContent = tps.toFixed(2);
-        wordInput.value = "";
-        if (totalWordsTyped === words.length) {
-            generateWords();
-        }
+        nextWord();
     }
-});
-
-// Function to end the game
-function endGame() {
-    isPlaying = false;
-    clearInterval(gameInterval);
-    wordInput.disabled = true; // Disable input after game ends
-    resultMessage.textContent = `Game Over! Your Score: ${score}`;
-    startButton.disabled = false; // Enable start button for next round
-    restartButton.disabled = true; // Disable restart until the game starts again
 }
 
-// Event listeners for mode changes
-modeSelect.addEventListener("change", () => {
-    const selectedMode = modeSelect.value;
-    switch (selectedMode) {
-        case "60s":
-            timeLeft = 60;
-            currentModeDisplay.textContent = "Mode: 60-Second Mode";
-            customTimeInput.style.display = "none";
-            customTimeLabel.style.display = "none";
-            break;
-        case "10s":
-            timeLeft = 10;
-            currentModeDisplay.textContent = "Mode: 10-Second Challenge Mode";
-            customTimeInput.style.display = "none";
-            customTimeLabel.style.display = "none";
-            break;
-        case "5s-lives":
-            timeLeft = 5;
-            currentModeDisplay.textContent = "Mode: 5-Second Challenge Mode with Lives";
-            customTimeInput.style.display = "none";
-            customTimeLabel.style.display = "none";
-            break;
-        case "3s-lives":
-            timeLeft = 3;
-            currentModeDisplay.textContent = "Mode: 3-Second Challenge Mode with Lives";
-            customTimeInput.style.display = "none";
-            customTimeLabel.style.display = "none";
-            break;
-        case "7s-lives":
-            timeLeft = 7;
-            currentModeDisplay.textContent = "Mode: 7-Second Challenge Mode with Lives";
-            customTimeInput.style.display = "none";
-            customTimeLabel.style.display = "none";
-            break;
-        case "2s-lives":
-            timeLeft = 2;
-            currentModeDisplay.textContent = "Mode: 2-Second Challenge Mode with Lives";
-            customTimeInput.style.display = "none";
-            customTimeLabel.style.display = "none";
-            break;
-        case "custom":
-            currentModeDisplay.textContent = "Mode: Custom Mode";
-            customTimeInput.style.display = "block";
-            customTimeLabel.style.display = "block";
-            break;
-        default:
-            timeLeft = 60;
-            currentModeDisplay.textContent = "Mode: 60-Second Mode";
-    }
-    timeDisplay.textContent = timeLeft;
-});
-
-// Hamburger menu functionality
-menuToggle.addEventListener("click", () => {
-    sideMenu.style.width = "250px";
-});
-
-closeMenuButton.addEventListener("click", () => {
-    sideMenu.style.width = "0";
-});
-
-// Dark mode toggle
-darkModeToggle.addEventListener("change", () => {
-    document.body.classList.toggle("dark-mode");
-});
-
-// Create popup for restart confirmation
-const popup = document.querySelector('.popup');
-
-// Event listener for showing the popup when clicking restart
-restartButton.addEventListener("click", () => {
-    popup.classList.add("show");
-});
-
-// Event listener for confirming restart
-document.getElementById("confirm-restart").addEventListener("click", () => {
-    popup.classList.remove("show");
-    restartGame();
-});
-
-// Event listener for canceling restart
-document.getElementById("cancel-restart").addEventListener("click", () => {
-    popup.classList.remove("show");
-});
-
-// Restart game function
-function restartGame() {
-    clearInterval(gameInterval); // Clear the existing interval
-    score = 0;
-    totalWordsTyped = 0;
-    tps = 0;
-    lives = 3;
+function endGame() {
+    clearInterval(gameInterval);
     isPlaying = false;
+    startButton.disabled = false;
     wordInput.disabled = true;
-    wordInput.value = "";
-    wordDisplay.textContent = "";
-    scoreDisplay.textContent = "0";
-    tpsDisplay.textContent = "0.00";
-    livesDisplay.textContent = "3";
-    timeLeft = customTime || 60;
-    timeDisplay.textContent = timeLeft;
-    startButton.disabled = false; // Enable the start button
-    restartButton.disabled = true; // Disable restart until the game starts again
-    resultMessage.textContent = "Game restarted. Press Start Game to play.";
+    tps = totalWordsTyped / getGameModeTime();
+    tpsDisplay.textContent = tps.toFixed(2);
+    resultMessage.textContent = `Game Over! Your score is ${score}.`;
+    
+    // Re-enable mode change and menu toggle after the game ends
+    modeSelect.disabled = false;
+    menuToggle.style.pointerEvents = "auto"; // Re-enable the menu button
+}
+
+function openSideMenu() {
+    sideMenu.style.width = "250px";
+}
+
+function closeSideMenu() {
+    sideMenu.style.width = "0";
+}
+
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
 }
