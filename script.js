@@ -39,6 +39,14 @@ const modeDescriptions = {
 function updateModeDisplayAndTimer() {
     currentModeDisplay.textContent = `Mode: ${modeDescriptions[gameMode]}`;
     
+    // Pause the game if currently playing
+    if (isPlaying) {
+        clearInterval(gameInterval);
+        isPlaying = false;
+        startButton.disabled = false;
+        startButton.textContent = "Start Game";
+    }
+
     // Sync the time display according to the selected mode
     switch(gameMode) {
         case "60s":
