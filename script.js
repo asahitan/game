@@ -53,7 +53,7 @@ function updateModeDisplayAndTimer() {
         case "3s-lives":
         case "7s-lives":
         case "2s-lives":
-            timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Sync time to the first number in the mode name
+            timeLeft = parseInt(gameMode.split('-')[0]); // Correct time parsing
             livesContainer.style.display = "block";
             livesDisplay.textContent = 3;
             break;
@@ -104,7 +104,7 @@ function handleLifeLoss() {
         clearInterval(gameInterval);
         endGame();
     } else {
-        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1));
+        timeLeft = parseInt(gameMode.split('-')[0]); // Correct time reset
         nextWord();
     }
 }
@@ -133,7 +133,11 @@ wordInput.addEventListener("input", () => {
         totalWordsTyped++;
         scoreDisplay.textContent = score;
         wordInput.value = "";
-        timeLeft = parseInt(gameMode.split('-')[0].slice(0, 1)); // Reset time in challenge modes
+
+        if (gameMode.includes("lives")) {
+            timeLeft = parseInt(gameMode.split('-')[0]); // Only reset time in challenge modes
+        }
+        
         nextWord();
         updateTPS();
     }
