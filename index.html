@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -28,6 +28,7 @@
         <div id="word-display" class="word-display"></div>
         <input type="text" id="word-input" class="word-input" placeholder="Type here..." autofocus>
         <button id="start-btn" class="start-btn">Start Game</button>
+        <button id="restart-btn" class="restart-btn">🔄 Restart</button> <!-- Added Restart Button -->
         <div id="result-message"></div>
 
         <!-- Side Menu -->
@@ -42,8 +43,12 @@
                 <option value="3s-lives">3-Second Challenge Mode with Lives</option>
                 <option value="7s-lives">7-Second Challenge Mode with Lives</option>
                 <option value="2s-lives">2-Second Challenge Mode with Lives</option>
+                <option value="custom">Custom Mode</option>
             </select>
 
+            <label for="custom-time" id="custom-time-label" style="display:none;">Custom Time (seconds):</label>
+            <input type="number" id="custom-time" style="display:none;" min="1" max="300" placeholder="Enter time in seconds">
+            
             <label for="dark-mode-toggle">Dark Mode:</label>
             <input type="checkbox" id="dark-mode-toggle" class="dark-mode-toggle"> Dark Mode
         </div>
