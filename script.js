@@ -20,6 +20,7 @@ let score = 0;
 let timeLeft = 60;
 let totalWordsTyped = 0;
 let isPlaying = false;
+let isPaused = false;
 let tps = 0;
 let gameMode = "60s"; // Default mode
 let gameInterval;
@@ -43,8 +44,9 @@ function updateModeDisplayAndTimer() {
     if (isPlaying) {
         clearInterval(gameInterval);
         isPlaying = false;
+        isPaused = true;
         startButton.disabled = false;
-        startButton.textContent = "Start Game";
+        startButton.textContent = "Resume Game";
     }
 
     // Sync the time display according to the selected mode
@@ -70,10 +72,37 @@ function updateModeDisplayAndTimer() {
 }
 
 function startGame() {
+    if (isPaused) {
+        // If game was paused, resume instead of resetting everything
+        isPlaying = true;
+        isPaused = false;
+        startButton.disabled = true;
+        startButton.textContent = "Playing...";
+
+        gameInterval = setInterval(() => {
+            if (timeLeft > 0 && isPlaying) {
+                timeLeft--;
+                timeDisplay.textContent = timeLeft;
+                updateTPS();
+
+                if (gameMode.includes("lives") && timeLeft === 0) {
+                    handleLifeLoss();
+                }
+            } else if (timeLeft === 0) {
+                clearInterval(gameInterval);
+                endGame();
+            }
+        }, 1000);
+
+        return; // Exit function to resume from where it was paused
+    }
+
+    // Otherwise, start a new game
     score = 0;
     totalWordsTyped = 0;
     tps = 0;
     isPlaying = true;
+    isPaused = false;
     wordInput.value = "";
     resultMessage.textContent = "";
     wordInput.disabled = false;
@@ -119,6 +148,7 @@ function handleLifeLoss() {
 
 function endGame() {
     isPlaying = false;
+    isPaused = false;
     wordInput.disabled = true;
     startButton.disabled = false;
     startButton.textContent = "Start Game";
